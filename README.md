@@ -8,7 +8,7 @@ The goal of this repo is to demonstrate a complete, minimal contribution cycle:
 
 1. Clone the repository
 2. Create a feature branch
-3. Make a small, safe improvment
+3. Make a small, safe improvement
 4. Open a pull request
 
 ## Contributing
