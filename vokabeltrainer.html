@@ -101,7 +101,7 @@
   .stage{perspective:1600px;margin-bottom:18px}
   .card{position:relative;width:100%;min-height:340px;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.3,.1,.2,1);cursor:pointer}
   .card.flipped{transform:rotateY(180deg)}
-  .face{position:absolute;inset:0;backface-visibility:hidden;background:var(--paper);color:var(--ink);border-radius:22px;padding:28px 26px;display:flex;flex-direction:column;box-shadow:0 26px 60px -26px rgba(0,0,0,.75), inset 0 0 0 1px var(--paper-edge)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;background:var(--paper);color:var(--ink);border-radius:22px;padding:28px 26px;display:flex;flex-direction:column;overflow-y:auto;box-shadow:0 26px 60px -26px rgba(0,0,0,.75), inset 0 0 0 1px var(--paper-edge)}
   .face.back{transform:rotateY(180deg);background:linear-gradient(180deg,#fbf8f1 0%,#f2ece0 100%)}
   .tagrow{display:flex;gap:8px;align-items:center;margin-bottom:auto;flex-wrap:wrap}
   .tag{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--amber);background:rgba(240,168,60,.13);padding:5px 10px;border-radius:7px}
@@ -130,6 +130,13 @@
   .answer .say-btn{font-size:14px;padding:7px 14px}
   .respell-back{font-size:14px;color:var(--ink-soft);margin-bottom:12px}
   .respell-back b{color:var(--teal-deep);font-weight:600}
+  /* cloze (Lückentext) cards */
+  .cloze-de{font-family:"Fraunces",serif;font-weight:500;font-size:23px;line-height:1.24;color:var(--ink);margin:16px 0 12px}
+  .cloze-en{font-size:17px;line-height:1.65;color:var(--ink-soft);margin-bottom:13px}
+  .cloze-en .blank{display:inline-block;min-width:76px;border-bottom:2px solid var(--amber);margin:0 4px;vertical-align:baseline}
+  .cloze-hint{font-size:13px;color:#0e5147;background:rgba(67,194,173,.14);border:1px solid rgba(67,194,173,.3);border-radius:10px;padding:8px 12px;margin-bottom:8px;align-self:flex-start}
+  .cloze-hint b{font-weight:700;color:var(--teal-deep)}
+  .example .blank-fill{color:var(--teal-deep);font-weight:700}
   .example{font-size:15px;line-height:1.5;color:var(--ink);border-left:3px solid var(--teal);padding-left:14px;margin-bottom:14px}
   .example b{color:var(--teal-deep);font-weight:700}
   .note{font-size:13px;line-height:1.5;color:var(--ink-soft);background:#efe8da;border-radius:12px;padding:12px 14px;margin-top:auto}
@@ -175,7 +182,7 @@
   .modal .row2 .field{flex:1}
   .modal .m-actions{display:flex;gap:10px;margin-top:8px}
 
-  @media (max-width:420px){.prompt{font-size:29px}.answer{font-size:27px}}
+  @media (max-width:420px){.prompt{font-size:29px}.answer{font-size:27px}.cloze-de{font-size:20px}.cloze-en{font-size:16px}}
   @media (prefers-reduced-motion:reduce){.card,.bar>span,.week .col,.btn{transition:none}}
 </style>
 </head>
@@ -1019,6 +1026,373 @@ const CARDS = [
   {lvl:"C2",cat:"idioms",de:"über die Bühne gehen",en:"to go off / to proceed",ex:"It all <b>went off</b> smoothly."},
   {lvl:"C2",cat:"meetings",de:"unter dem Strich / letztlich",en:"at the end of the day",ex:"<b>At the end of the day,</b> results count."},
   {lvl:"C2",cat:"email",de:"in Erwartung Ihrer Rückmeldung",en:"awaiting your reply",ex:"<b>Awaiting your reply,</b> best regards."},
+
+  // ================= NEU · Wortschatz (Recht, Wirtschaft, Charakter) =================
+  // --- Recht & Justiz ---
+  {lvl:"C1",cat:"law",de:"angeblich",en:"alleged",ex:"The <b>alleged</b> thief fled the scene."},
+  {lvl:"C1",cat:"law",de:"die Behauptung",en:"allegation",ex:"A serious <b>allegation</b> was made."},
+  {lvl:"C1",cat:"law",de:"die Änderung / der Zusatz",en:"amendment",ex:"An <b>amendment</b> to the contract."},
+  {lvl:"C1",cat:"law",de:"festhalten / inhaftieren",en:"to detain",ex:"Police may <b>detain</b> a suspect."},
+  {lvl:"C1",cat:"law",de:"die Anklage / Staatsanwaltschaft",en:"prosecution",ex:"The <b>prosecution</b> presented evidence."},
+  {lvl:"C1",cat:"law",de:"die Vergeltungsmaßnahme",en:"retaliation",ex:"He acted in <b>retaliation</b>."},
+  {lvl:"B2",cat:"law",de:"der Rechtsanwalt / Anwalt",en:"attorney",ex:"Speak to your <b>attorney</b> first."},
+  {lvl:"C1",cat:"law",de:"aussagen / bezeugen",en:"to testify",ex:"She agreed to <b>testify</b> in court."},
+  {lvl:"C1",cat:"law",de:"die Zeugenaussage",en:"testimony",ex:"His <b>testimony</b> was convincing."},
+  {lvl:"C1",cat:"law",de:"(Akte) löschen",en:"to expunge",ex:"The court will <b>expunge</b> the record."},
+  {lvl:"C2",cat:"law",de:"die Verleumdung",en:"aspersion",ex:"Don't cast <b>aspersions</b> on her."},
+  {lvl:"C1",cat:"law",de:"der Anklagepunkt / die Anklage",en:"indictment",ex:"A federal <b>indictment</b> was filed."},
+  {lvl:"C1",cat:"law",de:"der Verbleib / Aufenthaltsort",en:"whereabouts",ex:"His <b>whereabouts</b> are unknown."},
+  {lvl:"B2",cat:"law",de:"die Klage",en:"lawsuit",ex:"They filed a <b>lawsuit</b>."},
+  {lvl:"C1",cat:"law",de:"die Anschuldigung",en:"accusation",ex:"A false <b>accusation</b>."},
+  {lvl:"C1",cat:"law",de:"der Mordfall / das Tötungsdelikt",en:"homicide",ex:"A <b>homicide</b> investigation."},
+  {lvl:"C1",cat:"law",de:"unparteiisch",en:"impartial",ex:"An <b>impartial</b> judge."},
+  {lvl:"C1",cat:"law",de:"die Strafverfolgungsbehörden",en:"law enforcement",ex:"<b>Law enforcement</b> was called."},
+  {lvl:"C1",cat:"law",de:"der Antrag (vor Gericht)",en:"motion",ex:"The lawyer filed a <b>motion</b>."},
+  {lvl:"C1",cat:"law",de:"die Vorladung",en:"subpoena",ex:"He received a <b>subpoena</b>."},
+  {lvl:"C1",cat:"law",de:"die Vorladung(en)",en:"summonses",ex:"The <b>summonses</b> were issued."},
+  {lvl:"C1",cat:"law",de:"der Betrug / die Täuschung",en:"deception",ex:"A deliberate <b>deception</b>."},
+  {lvl:"C1",cat:"law",de:"bestechen",en:"to bribe",ex:"He tried to <b>bribe</b> the official."},
+  {lvl:"C1",cat:"law",de:"die Bestechung",en:"bribery",ex:"He was charged with <b>bribery</b>."},
+  {lvl:"C1",cat:"law",de:"das Plädoyer / das Bekenntnis",en:"plea",ex:"He entered a <b>plea</b> of not guilty."},
+  {lvl:"B2",cat:"law",de:"angeklagt",en:"charged",ex:"She was <b>charged</b> with fraud."},
+  {lvl:"B2",cat:"law",de:"beschuldigt / angeklagt",en:"accused",ex:"The <b>accused</b> stayed silent."},
+  {lvl:"B2",cat:"law",de:"der Angeklagte",en:"defendant",ex:"The <b>defendant</b> pleaded not guilty."},
+  {lvl:"B2",cat:"law",de:"der Ehevertrag",en:"prenup",ex:"They signed a <b>prenup</b>."},
+  {lvl:"C1",cat:"law",de:"verurteilt",en:"convicted",ex:"He was <b>convicted</b> of theft."},
+  {lvl:"C2",cat:"law",de:"(als Anwalt) ausgeschlossen",en:"disbarred",ex:"The lawyer was <b>disbarred</b>."},
+  {lvl:"C1",cat:"law",de:"auf Indizien beruhend",en:"circumstantial",ex:"Only <b>circumstantial</b> evidence."},
+  {lvl:"C1",cat:"law",de:"die einstweilige Verfügung / das Kontaktverbot",en:"restraining order",ex:"She got a <b>restraining order</b>."},
+  {lvl:"C2",cat:"law",de:"anfechten / in Frage stellen",en:"to impeach",ex:"This <b>impeaches</b> the witness."},
+  {lvl:"B2",cat:"law",de:"gestehen / bekennen",en:"to confess",ex:"He decided to <b>confess</b>."},
+  {lvl:"B2",cat:"law",de:"der Eid / Schwur",en:"oath",ex:"He took an <b>oath</b>."},
+  {lvl:"C2",cat:"law",de:"vorsätzlich",en:"premeditated",ex:"A <b>premeditated</b> crime."},
+  {lvl:"C1",cat:"law",de:"festnehmen",en:"to apprehend",ex:"Police <b>apprehend</b> the suspect."},
+  {lvl:"C1",cat:"law",de:"illegal / unerlaubt",en:"illicit",ex:"<b>Illicit</b> trade was uncovered."},
+  {lvl:"C1",cat:"law",de:"die Bewährung",en:"parole",ex:"He is out on <b>parole</b>."},
+  {lvl:"C1",cat:"law",de:"die Schmuggelware",en:"contraband",ex:"<b>Contraband</b> was found."},
+  {lvl:"B2",cat:"law",de:"der Einspruch",en:"objection",ex:"<b>Objection</b>, your honour!"},
+  {lvl:"C2",cat:"law",de:"die Schuldhaftigkeit",en:"culpability",ex:"His <b>culpability</b> is clear."},
+  {lvl:"C1",cat:"law",de:"die Auslassung / Unterlassung",en:"omission",ex:"A serious <b>omission</b> in the report."},
+  {lvl:"C1",cat:"law",de:"verhören / abfragen",en:"to interrogate",ex:"They <b>interrogate</b> the witness."},
+  {lvl:"C1",cat:"law",de:"die Gesetzgebung",en:"legislation",ex:"New <b>legislation</b> was passed."},
+  {lvl:"C1",cat:"law",de:"haftbar / verantwortlich",en:"liable",ex:"You are <b>liable</b> for the damage."},
+  {lvl:"C1",cat:"law",de:"verstorben",en:"deceased",ex:"The <b>deceased</b> left no will."},
+  {lvl:"C1",cat:"law",de:"rückgängig machen / widerrufen",en:"to rescind",ex:"They <b>rescind</b> the offer."},
+  {lvl:"B2",cat:"law",de:"die Pause / Sitzungsunterbrechung",en:"recess",ex:"The court is in <b>recess</b>."},
+  {lvl:"C1",cat:"feelings",de:"außerehelich",en:"extramarital",ex:"An <b>extramarital</b> affair."},
+
+  // --- Arbeit & Wirtschaft ---
+  {lvl:"B2",cat:"work",de:"anerkennen / bestätigen",en:"to acknowledge",ex:"Please <b>acknowledge</b> receipt."},
+  {lvl:"B2",cat:"work",de:"unterbringen / anpassen",en:"to accommodate",ex:"We can <b>accommodate</b> your request."},
+  {lvl:"B2",cat:"work",de:"erfüllen / verwirklichen",en:"to accomplish",ex:"We <b>accomplish</b> a lot together."},
+  {lvl:"B2",cat:"work",de:"zuweisen",en:"to assign",ex:"I'll <b>assign</b> the task to you."},
+  {lvl:"B1",cat:"work",de:"zusammengestellt / montiert",en:"assembled",ex:"The parts were <b>assembled</b> quickly."},
+  {lvl:"B2",cat:"work",de:"die Vereinigung / der Verband",en:"association",ex:"A trade <b>association</b>."},
+  {lvl:"B2",cat:"work",de:"schaffen / gründen",en:"to establish",ex:"They <b>establish</b> a new firm."},
+  {lvl:"B2",cat:"work",de:"verbessern / steigern",en:"to enhance",ex:"We <b>enhance</b> the user experience."},
+  {lvl:"B2",cat:"work",de:"einbeziehen / eingliedern",en:"to incorporate",ex:"We <b>incorporate</b> your feedback."},
+  {lvl:"C1",cat:"work",de:"vermischen / vermengen",en:"to commingle",ex:"Don't <b>commingle</b> the funds."},
+  {lvl:"B2",cat:"work",de:"bestimmen / ermitteln",en:"to determine",ex:"We must <b>determine</b> the cause."},
+  {lvl:"C1",cat:"work",de:"abweichend",en:"deviating",ex:"A <b>deviating</b> result."},
+  {lvl:"B1",cat:"work",de:"bereitstellen / bieten",en:"to provide",ex:"We <b>provide</b> full support."},
+  {lvl:"B2",cat:"work",de:"bewahren / erhalten",en:"to preserve",ex:"We <b>preserve</b> the original files."},
+  {lvl:"C1",cat:"work",de:"neu bewerten",en:"to reassess",ex:"Let's <b>reassess</b> the plan."},
+  {lvl:"C1",cat:"work",de:"korrigieren / berichtigen",en:"to rectify",ex:"We'll <b>rectify</b> the error."},
+  {lvl:"B2",cat:"work",de:"besetzen / belegen",en:"to occupy",ex:"The team will <b>occupy</b> floor two."},
+  {lvl:"B2",cat:"work",de:"zulässig / erlaubt",en:"permitted",ex:"Parking is not <b>permitted</b> here."},
+  {lvl:"B2",cat:"work",de:"ausrichten / abstimmen",en:"to align",ex:"Let's <b>align</b> on the goals."},
+  {lvl:"B2",cat:"work",de:"verfassen / abfassen",en:"to compose",ex:"She'll <b>compose</b> the reply."},
+  {lvl:"B2",cat:"work",de:"ausgewählt / bestimmt",en:"designated",ex:"The <b>designated</b> area."},
+  {lvl:"B2",cat:"work",de:"die Rohstoffe / Waren",en:"commodities",ex:"Prices of <b>commodities</b> rose."},
+  {lvl:"C1",cat:"work",de:"das Umgehen / die Umgehung",en:"circumventing",ex:"<b>Circumventing</b> the rules is risky."},
+  {lvl:"C1",cat:"work",de:"falsch angegeben",en:"misstated",ex:"The figures were <b>misstated</b>."},
+  {lvl:"B2",cat:"work",de:"aktivieren / einbinden",en:"to engage",ex:"We <b>engage</b> our customers online."},
+  {lvl:"C1",cat:"work",de:"das Bestreben / die Verfolgung",en:"the pursuit",ex:"<b>The pursuit</b> of quality never ends."},
+  {lvl:"B2",cat:"work",de:"die Zusicherung / Versicherung",en:"assurance",ex:"We need written <b>assurance</b>."},
+  {lvl:"B2",cat:"work",de:"der Anreiz",en:"incentive",ex:"A strong <b>incentive</b> to perform."},
+  {lvl:"B2",cat:"work",de:"betreuen / überwachen",en:"to supervise",ex:"She'll <b>supervise</b> the team."},
+  {lvl:"B2",cat:"work",de:"der Vorschlag / das Angebot",en:"proposition",ex:"An attractive <b>proposition</b>."},
+  {lvl:"C1",cat:"work",de:"das Wagnis / Unternehmung",en:"venture",ex:"A risky business <b>venture</b>."},
+  {lvl:"B2",cat:"work",de:"verfolgen / anstreben",en:"to pursue",ex:"She'll <b>pursue</b> a career in law."},
+  {lvl:"B2",cat:"work",de:"der Vorstand",en:"the board",ex:"<b>The board</b> approved the plan."},
+  {lvl:"B2",cat:"work",de:"der Botschafter",en:"ambassador",ex:"A brand <b>ambassador</b>."},
+  {lvl:"C1",cat:"work",de:"mildern / abschwächen",en:"to mitigate",ex:"We <b>mitigate</b> the risk."},
+  {lvl:"C1",cat:"work",de:"im Inland / inländisch",en:"domestically",ex:"Sold <b>domestically</b> and abroad."},
+  {lvl:"C1",cat:"work",de:"die Verzögerung / Verlangsamung",en:"deceleration",ex:"An economic <b>deceleration</b>."},
+  {lvl:"C1",cat:"work",de:"die Schätzung / Bewertung",en:"appraisal",ex:"An annual performance <b>appraisal</b>."},
+  {lvl:"C1",cat:"work",de:"Rücksprache halten mit",en:"to confer with",ex:"Let me <b>confer with</b> my team."},
+  {lvl:"B2",cat:"work",de:"das Erbe / Vermächtnis",en:"legacy",ex:"A lasting <b>legacy</b>."},
+  {lvl:"B2",cat:"work",de:"ablehnen / abweisen",en:"to dismiss",ex:"The judge may <b>dismiss</b> the case."},
+  {lvl:"B2",cat:"work",de:"ignorieren / nicht beachten",en:"to disregard",ex:"Please <b>disregard</b> the last email."},
+  {lvl:"B2",cat:"work",de:"die Räumlichkeiten",en:"premises",ex:"No smoking on the <b>premises</b>."},
+  {lvl:"B2",cat:"work",de:"einstudiert / geprobt",en:"rehearsed",ex:"A well-<b>rehearsed</b> presentation."},
+  {lvl:"B2",cat:"work",de:"die Probezeit",en:"probationary period",ex:"A three-month <b>probationary period</b>."},
+  {lvl:"B2",cat:"work",de:"entsorgt (of)",en:"disposed",ex:"The waste was <b>disposed</b> of safely."},
+  {lvl:"B2",cat:"work",de:"aufgehört / eingestellt",en:"ceased",ex:"Production <b>ceased</b> last year."},
+  {lvl:"B2",cat:"work",de:"aufhören / einstellen",en:"to cease",ex:"They <b>cease</b> operations at 6."},
+  {lvl:"C1",cat:"work",de:"zügig / rasch",en:"expeditiously",ex:"We act <b>expeditiously</b>."},
+  {lvl:"B2",cat:"work",de:"umfassend / umfangreich",en:"extensive",ex:"An <b>extensive</b> review."},
+  {lvl:"B2",cat:"work",de:"errichtet / aufgebaut",en:"erected",ex:"A statue was <b>erected</b> here."},
+  {lvl:"B2",cat:"work",de:"das Gerüst",en:"scaffolding",ex:"<b>Scaffolding</b> covered the wall."},
+  {lvl:"C1",cat:"work",de:"vorrangig / wichtigste(r)",en:"foremost",ex:"Safety is our <b>foremost</b> concern."},
+  {lvl:"B2",cat:"work",de:"selbsterklärend",en:"self-explanatory",ex:"The form is <b>self-explanatory</b>."},
+  {lvl:"C1",cat:"work",de:"zusammenfallen (mit)",en:"to coincide",ex:"The dates <b>coincide</b>."},
+  {lvl:"B2",cat:"work",de:"ausnutzen / ausbeuten",en:"to exploit",ex:"They <b>exploit</b> a loophole."},
+  {lvl:"C1",cat:"work",de:"langwierig / in die Länge gezogen",en:"protracted",ex:"A <b>protracted</b> negotiation."},
+  {lvl:"C1",cat:"work",de:"der Amtsinhaber",en:"incumbent",ex:"The <b>incumbent</b> won again."},
+  {lvl:"B2",cat:"work",de:"zusammentragen / zusammenstellen",en:"to compile",ex:"I'll <b>compile</b> the data."},
+  {lvl:"C1",cat:"work",de:"der Verlauf / die Entwicklung / Flugbahn",en:"trajectory",ex:"An upward <b>trajectory</b>."},
+  {lvl:"C1",cat:"work",de:"untersuchen / sondieren",en:"to probe",ex:"They <b>probe</b> the issue further."},
+  {lvl:"B2",cat:"work",de:"weglassen / auslassen",en:"to omit",ex:"Don't <b>omit</b> the details."},
+  {lvl:"C1",cat:"work",de:"der Abbau / die Demontage",en:"dismantling",ex:"The <b>dismantling</b> took days."},
+  {lvl:"B2",cat:"work",de:"rechtzeitig",en:"in a timely manner",ex:"Reply <b>in a timely manner</b>."},
+  {lvl:"C1",cat:"work",de:"die Pauschalsumme / der Pauschalbetrag",en:"lump sum",ex:"Paid as a <b>lump sum</b>."},
+  {lvl:"C1",cat:"work",de:"die Lesbarkeit",en:"legibility",ex:"Poor <b>legibility</b> of the text."},
+  {lvl:"C2",cat:"work",de:"die Grundlagen / das Fundament",en:"underpinnings",ex:"The <b>underpinnings</b> of the theory."},
+  {lvl:"C1",cat:"work",de:"senkrecht / rechtwinklig",en:"perpendicular",ex:"The line is <b>perpendicular</b>."},
+  {lvl:"C2",cat:"work",de:"ankündigen / einläuten",en:"to herald",ex:"This <b>heralds</b> a new era."},
+  {lvl:"B2",cat:"work",de:"berechtigt / infrage kommend",en:"eligible",ex:"You are <b>eligible</b> for the bonus."},
+  {lvl:"C2",cat:"work",de:"verkörpern / ein Musterbeispiel sein",en:"to epitomize",ex:"She <b>epitomizes</b> professionalism."},
+  {lvl:"B2",cat:"work",de:"umstritten / bestritten",en:"disputed",ex:"A <b>disputed</b> claim."},
+  {lvl:"C1",cat:"work",de:"unkenntlich machen / verschleiern",en:"to obscure",ex:"Clouds <b>obscure</b> the view."},
+  {lvl:"B2",cat:"work",de:"der Ruf / die Bekanntheit",en:"reputation",ex:"A strong <b>reputation</b>."},
+  {lvl:"C1",cat:"work",de:"beschleunigt",en:"expedited",ex:"We chose <b>expedited</b> shipping."},
+
+  // --- Gefühle, Charakter & Meinung ---
+  {lvl:"C1",cat:"feelings",de:"die Auseinandersetzung / der Streit",en:"altercation",ex:"A brief <b>altercation</b> broke out."},
+  {lvl:"B2",cat:"feelings",de:"zweideutig / mehrdeutig",en:"ambiguous",ex:"An <b>ambiguous</b> answer."},
+  {lvl:"B2",cat:"feelings",de:"ungeschützt / ausgesetzt",en:"exposed",ex:"They felt <b>exposed</b> to risk."},
+  {lvl:"B2",cat:"feelings",de:"das Vermögen / Glück / Schicksal",en:"fortune",ex:"He made a <b>fortune</b>."},
+  {lvl:"B2",cat:"feelings",de:"wirklich / aufrichtig",en:"genuinely",ex:"I'm <b>genuinely</b> grateful."},
+  {lvl:"B2",cat:"feelings",de:"zögerlich / zaudernd",en:"hesitant",ex:"She was <b>hesitant</b> at first."},
+  {lvl:"B1",cat:"feelings",de:"beleidigt",en:"insulted",ex:"He felt <b>insulted</b>."},
+  {lvl:"B2",cat:"feelings",de:"bewusst / absichtlich",en:"consciously",ex:"I <b>consciously</b> slowed down."},
+  {lvl:"B2",cat:"feelings",de:"überzeugt",en:"convinced",ex:"I'm <b>convinced</b> it works."},
+  {lvl:"B2",cat:"feelings",de:"überzeugen",en:"to convince",ex:"Let me <b>convince</b> you."},
+  {lvl:"B2",cat:"feelings",de:"überzeugen / überreden",en:"to persuade",ex:"She'll <b>persuade</b> them to stay."},
+  {lvl:"B2",cat:"feelings",de:"überzeugt / überredet",en:"persuaded",ex:"I'm not <b>persuaded</b> yet."},
+  {lvl:"C1",cat:"feelings",de:"dauerhaft / beständig",en:"enduring",ex:"An <b>enduring</b> friendship."},
+  {lvl:"C1",cat:"feelings",de:"aufgeschlossen / aufnahmefähig",en:"receptive",ex:"He's <b>receptive</b> to feedback."},
+  {lvl:"B1",cat:"feelings",de:"das Bedauern / bedauern",en:"regret",ex:"I <b>regret</b> nothing."},
+  {lvl:"B2",cat:"feelings",de:"verstehen / begreifen",en:"to comprehend",ex:"It's hard to <b>comprehend</b>."},
+  {lvl:"C1",cat:"feelings",de:"eigenartig / seltsam",en:"peculiar",ex:"A <b>peculiar</b> smell."},
+  {lvl:"C1",cat:"feelings",de:"kräftig / energisch",en:"vigorously",ex:"She nodded <b>vigorously</b>."},
+  {lvl:"B1",cat:"feelings",de:"leiden",en:"to suffer",ex:"Many <b>suffer</b> in silence."},
+  {lvl:"B2",cat:"feelings",de:"absichtlich / zielgerichtet",en:"purposefully",ex:"He acted <b>purposefully</b>."},
+  {lvl:"B2",cat:"feelings",de:"die Ähnlichkeit",en:"resemblance",ex:"A strong <b>resemblance</b>."},
+  {lvl:"C1",cat:"feelings",de:"der Aufruhr / das Chaos",en:"turmoil",ex:"The country was in <b>turmoil</b>."},
+  {lvl:"C1",cat:"feelings",de:"lindern / erleichtern",en:"to alleviate",ex:"This may <b>alleviate</b> the pain."},
+  {lvl:"C1",cat:"feelings",de:"erlesen / edel",en:"exquisite",ex:"An <b>exquisite</b> meal."},
+  {lvl:"C1",cat:"feelings",de:"anfällig / neigend zu",en:"prone",ex:"He's <b>prone</b> to mistakes."},
+  {lvl:"B2",cat:"feelings",de:"die Spannung / Anspannung",en:"tension",ex:"You could feel the <b>tension</b>."},
+  {lvl:"B2",cat:"feelings",de:"außergewöhnlich",en:"exceptional",ex:"An <b>exceptional</b> talent."},
+  {lvl:"B2",cat:"feelings",de:"aufgeben / kapitulieren",en:"to surrender",ex:"They refused to <b>surrender</b>."},
+  {lvl:"C1",cat:"feelings",de:"scharf / sehr (intensiv)",en:"keenly",ex:"She's <b>keenly</b> aware of it."},
+  {lvl:"B2",cat:"feelings",de:"bewundernswert",en:"admirable",ex:"An <b>admirable</b> effort."},
+  {lvl:"C1",cat:"feelings",de:"der Anstand",en:"decency",ex:"Have the <b>decency</b> to apologise."},
+  {lvl:"C1",cat:"feelings",de:"nachtragend / verärgert",en:"resentful",ex:"He grew <b>resentful</b>."},
+  {lvl:"B2",cat:"feelings",de:"geerbt / vererbt",en:"inherited",ex:"An <b>inherited</b> trait."},
+  {lvl:"C1",cat:"feelings",de:"die Zwickmühle / Klemme",en:"bind",ex:"I'm in a real <b>bind</b>."},
+  {lvl:"C1",cat:"feelings",de:"greifbar / spürbar",en:"tangible",ex:"A <b>tangible</b> improvement."},
+  {lvl:"B1",cat:"feelings",de:"verängstigt / entsetzt",en:"terrified",ex:"I was <b>terrified</b>."},
+  {lvl:"C1",cat:"feelings",de:"die Nachsicht",en:"indulgence",ex:"Thank you for your <b>indulgence</b>."},
+  {lvl:"C1",cat:"feelings",de:"beruhigen / besänftigen",en:"to pacify",ex:"Nothing could <b>pacify</b> him."},
+  {lvl:"C1",cat:"feelings",de:"die Verachtung",en:"contempt",ex:"She looked at him with <b>contempt</b>."},
+  {lvl:"B2",cat:"feelings",de:"nüchtern",en:"sober",ex:"He stayed <b>sober</b> all night."},
+  {lvl:"B1",cat:"feelings",de:"am Verhungern / ausgehungert",en:"starving",ex:"I'm absolutely <b>starving</b>."},
+  {lvl:"B2",cat:"feelings",de:"der Außenseiter",en:"underdog",ex:"Everyone loves an <b>underdog</b>."},
+  {lvl:"C1",cat:"feelings",de:"riskant / heikel",en:"dicey",ex:"Things got a bit <b>dicey</b>."},
+  {lvl:"C1",cat:"feelings",de:"unausweichlich / unvermeidbar",en:"inescapable",ex:"The conclusion is <b>inescapable</b>."},
+  {lvl:"B2",cat:"feelings",de:"sich verbinden / eine Bindung aufbauen",en:"to bond",ex:"They quickly <b>bond</b>."},
+  {lvl:"C1",cat:"feelings",de:"das Verhalten / Auftreten",en:"demeanor",ex:"A calm <b>demeanor</b>."},
+  {lvl:"C1",cat:"feelings",de:"unaufgefordert / spontan",en:"unprompted",ex:"She apologised <b>unprompted</b>."},
+  {lvl:"B2",cat:"feelings",de:"vertrauenswürdig",en:"trustworthy",ex:"A <b>trustworthy</b> partner."},
+  {lvl:"C1",cat:"feelings",de:"entschlossen / unbeirrt",en:"resolutely",ex:"She <b>resolutely</b> refused."},
+  {lvl:"C1",cat:"feelings",de:"sich anvertrauen",en:"to confide",ex:"She'll <b>confide</b> in a friend."},
+  {lvl:"C1",cat:"feelings",de:"aufsehenerregend / atemberaubend",en:"staggering",ex:"A <b>staggering</b> amount."},
+  {lvl:"B2",cat:"feelings",de:"der Bösewicht / Schurke",en:"villain",ex:"The <b>villain</b> of the story."},
+  {lvl:"C1",cat:"feelings",de:"die Untreue",en:"infidelity",ex:"<b>Infidelity</b> ended the marriage."},
+  {lvl:"C1",cat:"feelings",de:"feierlich",en:"solemnly",ex:"He <b>solemnly</b> swore."},
+  {lvl:"B2",cat:"feelings",de:"das Vorurteil",en:"prejudice",ex:"Racial <b>prejudice</b> is harmful."},
+  {lvl:"C1",cat:"feelings",de:"unermüdlich",en:"tirelessly",ex:"She worked <b>tirelessly</b>."},
+  {lvl:"B2",cat:"feelings",de:"verraten",en:"betrayed",ex:"He felt <b>betrayed</b>."},
+  {lvl:"B2",cat:"feelings",de:"bescheiden",en:"modest",ex:"A <b>modest</b> income."},
+  {lvl:"C1",cat:"feelings",de:"verachtenswert / abscheulich",en:"despicable",ex:"A <b>despicable</b> act."},
+  {lvl:"C1",cat:"feelings",de:"die Gelassenheit / Fassung",en:"composure",ex:"She kept her <b>composure</b>."},
+  {lvl:"B2",cat:"feelings",de:"zuverlässig",en:"dependable",ex:"A <b>dependable</b> friend."},
+  {lvl:"C1",cat:"feelings",de:"die Widrigkeiten / Not",en:"adversity",ex:"He overcame great <b>adversity</b>."},
+  {lvl:"C1",cat:"feelings",de:"selbstzufrieden / selbstgefällig",en:"complacent",ex:"Don't get <b>complacent</b>."},
+  {lvl:"B2",cat:"feelings",de:"geneigt / veranlagt",en:"inclined",ex:"I'm <b>inclined</b> to agree."},
+  {lvl:"C1",cat:"feelings",de:"achtsam / bedacht",en:"mindful",ex:"Be <b>mindful</b> of others."},
+  {lvl:"B2",cat:"feelings",de:"die Überzeugung / Verurteilung",en:"conviction",ex:"She spoke with <b>conviction</b>."},
+  {lvl:"B1",cat:"feelings",de:"großzügig",en:"generous",ex:"A <b>generous</b> tip."},
+  {lvl:"B2",cat:"feelings",de:"einschüchternd",en:"intimidating",ex:"An <b>intimidating</b> opponent."},
+  {lvl:"B2",cat:"feelings",de:"vertieft / eingetaucht",en:"immersed",ex:"He was <b>immersed</b> in the book."},
+  {lvl:"B2",cat:"feelings",de:"geweckt / erregt",en:"aroused",ex:"It <b>aroused</b> suspicion."},
+  {lvl:"C1",cat:"feelings",de:"vorübergehend / flüchtig",en:"transitory",ex:"A <b>transitory</b> phase."},
+  {lvl:"C1",cat:"feelings",de:"leichtgläubig",en:"gullible",ex:"He's far too <b>gullible</b>."},
+  {lvl:"C1",cat:"feelings",de:"die Vernunft / geistige Gesundheit",en:"sanity",ex:"I'm losing my <b>sanity</b>."},
+  {lvl:"C1",cat:"feelings",de:"wachsam",en:"vigilant",ex:"Stay <b>vigilant</b>."},
+  {lvl:"B2",cat:"feelings",de:"fluchen / der Fluch",en:"to curse",ex:"He began to <b>curse</b>."},
+  {lvl:"C1",cat:"feelings",de:"sich verschlechtern / verschlimmern",en:"to deteriorate",ex:"His health began to <b>deteriorate</b>."},
+  {lvl:"C2",cat:"feelings",de:"verschlimmern / verschärfen",en:"exacerbating",ex:"<b>Exacerbating</b> the problem."},
+  {lvl:"B2",cat:"feelings",de:"übertrieben",en:"exaggerated",ex:"An <b>exaggerated</b> claim."},
+  {lvl:"C1",cat:"feelings",de:"versöhnen / in Einklang bringen",en:"to reconcile",ex:"They finally <b>reconcile</b>."},
+  {lvl:"C2",cat:"feelings",de:"die Grübeleien / Gedanken",en:"musings",ex:"His late-night <b>musings</b>."},
+  {lvl:"B2",cat:"feelings",de:"der Waffenstillstand",en:"truce",ex:"They called a <b>truce</b>."},
+  {lvl:"B2",cat:"feelings",de:"das Aufsehen / der Aufruhr",en:"stir",ex:"The news caused a <b>stir</b>."},
+  {lvl:"C1",cat:"feelings",de:"Anklang finden / nachhallen",en:"to resonate",ex:"The message <b>resonates</b> with people."},
+  {lvl:"C1",cat:"idioms",de:"das Kriegsbeil (begraben)",en:"hatchet",ex:"They buried the <b>hatchet</b>."},
+  {lvl:"C1",cat:"feelings",de:"jemandem etwas übelnehmen",en:"to resent someone",ex:"She'll <b>resent</b> you for it."},
+  {lvl:"C1",cat:"feelings",de:"bezeichnend (für) / ein Indiz",en:"indicative",ex:"It's <b>indicative</b> of a bigger problem."},
+
+  // --- Grundwortschatz & Sonstiges ---
+  {lvl:"B1",cat:"basics",de:"besonders / vor allem",en:"especially",ex:"I love it, <b>especially</b> the ending."},
+  {lvl:"A2",cat:"basics",de:"gemeinsam / gewöhnlich",en:"common",ex:"A <b>common</b> mistake."},
+  {lvl:"B2",cat:"basics",de:"anzünden / entzünden",en:"to ignite",ex:"A spark can <b>ignite</b> the fuel."},
+  {lvl:"B2",cat:"basics",de:"auflösen / sich auflösen",en:"dissolving",ex:"The tablet is <b>dissolving</b> in water."},
+  {lvl:"B2",cat:"basics",de:"besitzen",en:"to possess",ex:"He <b>possesses</b> rare talent."},
+  {lvl:"B1",cat:"basics",de:"richtig / ordnungsgemäß",en:"properly",ex:"Do it <b>properly</b>."},
+  {lvl:"B1",cat:"basics",de:"gewöhnlich / üblich",en:"ordinary",ex:"An <b>ordinary</b> day."},
+  {lvl:"B1",cat:"basics",de:"gehorchen / befolgen",en:"to obey",ex:"You must <b>obey</b> the rules."},
+  {lvl:"B2",cat:"feelings",de:"schlicht und einfach",en:"plain and simple",ex:"It's wrong, <b>plain and simple</b>."},
+  {lvl:"B2",cat:"basics",de:"erobern / bezwingen",en:"to conquer",ex:"They set out to <b>conquer</b> the peak."},
+  {lvl:"B1",cat:"basics",de:"gleich / ähnlich",en:"alike",ex:"The twins look <b>alike</b>."},
+  {lvl:"B2",cat:"basics",de:"begraben / vergraben",en:"to bury",ex:"They <b>bury</b> the past."},
+  {lvl:"B1",cat:"basics",de:"schmal / eng",en:"narrow",ex:"A <b>narrow</b> street."},
+  {lvl:"B1",cat:"basics",de:"flach / seicht",en:"shallow",ex:"The water is <b>shallow</b> here."},
+  {lvl:"B1",cat:"basics",de:"angemessen / richtig / korrekt",en:"proper",ex:"Wear <b>proper</b> shoes."},
+  {lvl:"B2",cat:"basics",de:"weit / riesig",en:"vast",ex:"A <b>vast</b> desert."},
+  {lvl:"B2",cat:"basics",de:"der Geruch",en:"odor",ex:"A strange <b>odor</b> filled the room."},
+  {lvl:"B2",cat:"body",de:"blinzeln / die Augen zusammenkneifen",en:"to squint",ex:"He <b>squints</b> in the sun."},
+  {lvl:"C2",cat:"basics",de:"die Unmengen / Haufen",en:"oodles",ex:"They have <b>oodles</b> of time."},
+  {lvl:"B2",cat:"basics",de:"leicht / bereitwillig",en:"readily",ex:"Help is <b>readily</b> available."},
+  {lvl:"B2",cat:"basics",de:"überhaupt / was auch immer",en:"whatsoever",ex:"No doubt <b>whatsoever</b>."},
+  {lvl:"C1",cat:"basics",de:"heftig / stattlich / schwer",en:"hefty",ex:"A <b>hefty</b> fee."},
+  {lvl:"B2",cat:"basics",de:"bleiben / einhalten (abide by)",en:"to abide",ex:"You must <b>abide</b> by the rules."},
+
+  // --- Meetings, Präsentation & Redewendungen ---
+  {lvl:"C1",cat:"meetings",de:"unmissverständlich",en:"unambiguous",ex:"An <b>unambiguous</b> answer."},
+  {lvl:"C1",cat:"meetings",de:"umstritten / strittig",en:"contentious",ex:"A <b>contentious</b> topic."},
+  {lvl:"C2",cat:"meetings",de:"zweifelsfrei / unmissverständlich",en:"unequivocally",ex:"I <b>unequivocally</b> agree."},
+  {lvl:"B2",cat:"meetings",de:"widersprechen / widerlegen",en:"to contradict",ex:"That <b>contradicts</b> the report."},
+  {lvl:"B2",cat:"meetings",de:"der Widerspruch",en:"contradiction",ex:"A clear <b>contradiction</b>."},
+  {lvl:"B2",cat:"meetings",de:"bestätigend / bejahend",en:"affirmative",ex:"An <b>affirmative</b> response."},
+  {lvl:"B2",cat:"meetings",de:"das würde bedeuten",en:"that would imply",ex:"<b>That would imply</b> we were wrong."},
+  {lvl:"B2",cat:"meetings",de:"wenn ich mich recht erinnere",en:"as I recall",ex:"<b>As I recall,</b> it was Friday."},
+  {lvl:"B2",cat:"meetings",de:"es kam mir in den Sinn",en:"it occurred to me",ex:"<b>It occurred to me</b> later."},
+  {lvl:"B2",cat:"meetings",de:"wir haben festgestellt, dass",en:"we established that",ex:"<b>We established that</b> earlier."},
+
+  // --- Gesundheit, Reisen, Zeit, Technik, Smalltalk ---
+  {lvl:"C1",cat:"health",de:"krebserregend",en:"carcinogenic",ex:"A <b>carcinogenic</b> substance."},
+  {lvl:"B2",cat:"health",de:"das Pflegeheim",en:"nursing home",ex:"She works in a <b>nursing home</b>."},
+  {lvl:"B2",cat:"health",de:"die Spritze",en:"syringe",ex:"A sterile <b>syringe</b>."},
+  {lvl:"B1",cat:"travel",de:"der Stau / die Verstopfung",en:"congestion",ex:"Heavy traffic <b>congestion</b>."},
+  {lvl:"B2",cat:"travel",de:"der Veranstaltungsort",en:"venue",ex:"A great <b>venue</b> for the event."},
+  {lvl:"B1",cat:"time",de:"der Anlass",en:"occasion",ex:"A special <b>occasion</b>."},
+  {lvl:"A2",cat:"time",de:"der Mittag",en:"noon",ex:"See you at <b>noon</b>."},
+  {lvl:"B1",cat:"time",de:"seitdem",en:"ever since",ex:"We've been friends <b>ever since</b>."},
+  {lvl:"B1",cat:"time",de:"selten / nur selten",en:"rarely",ex:"I <b>rarely</b> eat out."},
+  {lvl:"C1",cat:"tech",de:"das Präfix / die Vorsilbe",en:"prefix",ex:"Add the country <b>prefix</b>."},
+  {lvl:"C1",cat:"tech",de:"der Stand der Technik / modernste",en:"state of the art",ex:"A <b>state of the art</b> lab."},
+  {lvl:"C1",cat:"tech",de:"betätigen / auslösen",en:"to actuate",ex:"A sensor will <b>actuate</b> the alarm."},
+  {lvl:"B2",cat:"work",de:"die Reinigungs-/Hausmeisterdienste",en:"janitorial",ex:"<b>Janitorial</b> staff cleaned up."},
+  {lvl:"B2",cat:"education",de:"das Graduiertenstudium / die Hochschule",en:"grad school",ex:"She's in <b>grad school</b>."},
+  {lvl:"C1",cat:"feelings",de:"düstere / schlimme Vorhersagen",en:"dire predictions",ex:"<b>Dire predictions</b> about the economy."},
+  {lvl:"B1",cat:"basics",de:"praktisch / handlich",en:"handy",ex:"This app is really <b>handy</b>."},
+  {lvl:"B2",cat:"feelings",de:"fassen / begreifen",en:"to grasp",ex:"I can't <b>grasp</b> the idea."},
+  {lvl:"B2",cat:"feelings",de:"die Ausdauer / das Durchhaltevermögen",en:"endurance",ex:"A test of <b>endurance</b>."},
+  {lvl:"B1",cat:"feelings",de:"wertvoll / kostbar",en:"precious",ex:"<b>Precious</b> memories."},
+  {lvl:"B2",cat:"smalltalk",de:"Entschuldigung für die Störung",en:"sorry to intrude",ex:"<b>Sorry to intrude,</b> may I ask something?"},
+  {lvl:"B2",cat:"smalltalk",de:"aber deinetwegen / um deinetwillen",en:"but for your sake",ex:"<b>But for your sake,</b> I'll stay."},
+  {lvl:"C1",cat:"smalltalk",de:"es hat mich verunsichert",en:"it rattled me",ex:"<b>It rattled me</b> a little."},
+  {lvl:"B2",cat:"smalltalk",de:"erspare mir",en:"spare me",ex:"<b>Spare me</b> the details."},
+  {lvl:"B2",cat:"smalltalk",de:"ich bitte um Verzeihung",en:"I beg your pardon",ex:"<b>I beg your pardon?</b>"},
+  {lvl:"B2",cat:"smalltalk",de:"also dachte ich mir",en:"so I figured",ex:"<b>So I figured</b> I'd ask you."},
+  {lvl:"C1",cat:"smalltalk",de:"danke, dass Sie mich auf dem Laufenden halten",en:"thank you for keeping me abreast",ex:"<b>Thank you for keeping me abreast</b> of things."},
+  {lvl:"B2",cat:"smalltalk",de:"eine uralte Geschichte",en:"an ancient history",ex:"That's <b>an ancient history</b> now."},
+
+  // ================= NEU · Lückentexte (ganze Sätze – ein Wort ausfüllen) =================
+  {lvl:"C1",cat:"cloze",cloze:true,en:"tangible",hint:"greifbar",de:"Die Anspannung im Raum war fast greifbar.",sentence:"The tension in the room was almost tangible."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"alleged",hint:"angeblich",de:"Der angebliche Dieb wurde in der Nähe des Tatorts gesehen.",sentence:"The alleged thief was seen near the crime scene."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"composure",hint:"Fassung / Gelassenheit",de:"Trotz der schlechten Nachrichten bewahrte sie ihre Gelassenheit.",sentence:"Despite the bad news, she managed to keep her composure."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"reconcile",hint:"sich versöhnen",de:"Es dauerte Jahre, bis sich die beiden Brüder nach ihrem Streit versöhnten.",sentence:"It took years for the two brothers to reconcile after their argument."},
+  {lvl:"B1",cat:"cloze",cloze:true,en:"obey",hint:"befolgen / gehorchen",de:"Du musst die Regeln befolgen, um im Wettbewerb zu bleiben.",sentence:"You must obey the rules to stay in the competition."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"vigilant",hint:"wachsam",de:"Die Wachen blieben die ganze Nacht wachsam.",sentence:"The guards remained vigilant throughout the night."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"eligible",hint:"berechtigt / wahlberechtigt",de:"Nur Bürger über 18 sind wahlberechtigt.",sentence:"Only citizens over 18 are eligible to vote."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"curse",hint:"fluchen",de:"Er begann laut zu fluchen, als ihm das Handy herunterfiel.",sentence:"He began to curse loudly when he dropped his phone."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"exaggerated",hint:"übertrieben",de:"Die Gefahr wurde von den Medien übertrieben dargestellt.",sentence:"The danger was exaggerated by the media."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"compiled",hint:"zusammengestellt",de:"Sie stellte alle Berichte in einem Dokument zusammen.",sentence:"She compiled all the reports into one document."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"testify",hint:"aussagen",de:"Der Zeuge wurde gebeten, vor Gericht auszusagen.",sentence:"The witness was asked to testify in court."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"enhance",hint:"verbessern",de:"Wir müssen die Qualität unseres Service verbessern.",sentence:"We need to enhance the quality of our service."},
+  {lvl:"B1",cat:"cloze",cloze:true,en:"encouraged",hint:"ermutigte",de:"Sie ermutigte ihn, sich auf die Stelle zu bewerben.",sentence:"She encouraged him to apply for the job."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"established",hint:"gründeten",de:"Sie gründeten ein neues Unternehmen in Berlin.",sentence:"They established a new company in Berlin."},
+  {lvl:"A2",cat:"cloze",cloze:true,en:"noon",hint:"Mittag",de:"Die Veranstaltung findet mittags statt.",sentence:"The event will take place at noon."},
+  {lvl:"B1",cat:"cloze",cloze:true,en:"assembled",hint:"bauten … zusammen",de:"Die Kinder bauten das Spielzeug ohne Hilfe zusammen.",sentence:"The children assembled the toy without help."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"assigned",hint:"zugewiesen",de:"Ihm wurde eine neue Rolle im Team zugewiesen.",sentence:"He was assigned a new role in the team."},
+  {lvl:"B1",cat:"cloze",cloze:true,en:"appointment",hint:"Termin",de:"Sie machte einen Termin bei ihrem Arzt.",sentence:"She made an appointment with her doctor."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"ambiguous",hint:"zweideutig",de:"Seine Botschaft war zu zweideutig, um sie klar zu verstehen.",sentence:"His message was too ambiguous to understand clearly."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"amendment",hint:"Änderung / Zusatz",de:"Das Gesetz wurde durch eine offizielle Änderung geändert.",sentence:"The law was changed through an official amendment."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"detained",hint:"festgehalten",de:"Der Verdächtige wurde von der Polizei festgehalten.",sentence:"The suspect was detained by the police."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"determine",hint:"ermitteln / bestimmen",de:"Die Wissenschaftler versuchen, die Ursache der Krankheit zu ermitteln.",sentence:"The scientists are trying to determine the cause of the disease."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"deviated",hint:"wich ab",de:"Er wich vom ursprünglichen Plan ab.",sentence:"He deviated from the original plan."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"embraced",hint:"nahm … an",de:"Sie nahm die neue Technologie begeistert an.",sentence:"She embraced the new technology with excitement."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"preserved",hint:"aufbewahrt / bewahrt",de:"Dieses Dokument muss für zukünftige Generationen aufbewahrt werden.",sentence:"This document must be preserved for future generations."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"reassess",hint:"neu bewerten",de:"Wir müssen unsere Strategie regelmäßig neu bewerten.",sentence:"We must reassess our strategy regularly."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"receptive",hint:"aufgeschlossen",de:"Er ist neuen Ideen gegenüber sehr aufgeschlossen.",sentence:"He is very receptive to new ideas."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"rectify",hint:"korrigieren",de:"Wir müssen den Fehler sofort korrigieren.",sentence:"We need to rectify the mistake immediately."},
+  {lvl:"B1",cat:"cloze",cloze:true,en:"regret",hint:"Bedauern",de:"Sie äußerte tiefes Bedauern über die Entscheidung.",sentence:"She expressed deep regret about the decision."},
+  {lvl:"B1",cat:"cloze",cloze:true,en:"proper",hint:"korrekt / angemessen",de:"Der Vorstand schätzte sein korrektes Verhalten.",sentence:"The board appreciated his proper conduct."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"prosecution",hint:"Anklage",de:"Die Anklage brachte neue Beweise vor.",sentence:"The prosecution presented new evidence."},
+  {lvl:"B1",cat:"cloze",cloze:true,en:"provide",hint:"bereitstellen / bieten",de:"Wir bieten allen Kunden technischen Support.",sentence:"We provide technical support to all customers."},
+  {lvl:"B1",cat:"cloze",cloze:true,en:"insulted",hint:"beleidigt",de:"Sie fühlte sich durch seinen unhöflichen Kommentar beleidigt.",sentence:"She was insulted by his rude comment."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"consciously",hint:"bewusst",de:"Er vermied das Thema bewusst.",sentence:"He consciously avoided the topic."},
+  {lvl:"B1",cat:"cloze",cloze:true,en:"congestion",hint:"Stau",de:"Der Unfall verursachte einen schweren Stau auf der Autobahn.",sentence:"The accident caused severe congestion on the highway."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"fortune",hint:"Vermögen",de:"Das Vermögen, das er erbte, veränderte sein Leben.",sentence:"The fortune he inherited changed his life."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"genuinely",hint:"wirklich",de:"Er ist wirklich daran interessiert, anderen zu helfen.",sentence:"He is genuinely interested in helping others."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"hesitant",hint:"zögerlich",de:"Sie war zögerlich, in der Öffentlichkeit zu sprechen.",sentence:"She was hesitant to speak in public."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"omit",hint:"weglassen",de:"Lassen Sie keine Details in Ihrem Bericht aus.",sentence:"Do not omit any details from your report."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"no-frills",hint:"schnörkellos",de:"Ihr Unternehmen bietet schnörkellose Servicepakete an.",sentence:"Their company offers no-frills service packages."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"dismantle",hint:"demontieren / auseinanderbauen",de:"Er musste die Maschine vor dem Transport demontieren.",sentence:"He had to dismantle the machine before moving it."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"conscious",hint:"bewusst",de:"Sie gab sich bewusst Mühe, ruhig zu bleiben.",sentence:"She made a conscious effort to stay calm."},
+  {lvl:"B1",cat:"cloze",cloze:true,en:"congestion",hint:"Stau",de:"Die Autobahn war wegen starken Staus blockiert.",sentence:"The highway was blocked due to severe congestion."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"inherited",hint:"erbte",de:"Er erbte ein großes Vermögen von seinem Onkel.",sentence:"He inherited a large fortune from his uncle."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"genuinely",hint:"wirklich",de:"Sie war wirklich glücklich über die Nachricht.",sentence:"She was genuinely happy about the news."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"hesitant",hint:"zögerlich",de:"Er wirkte zögerlich, bevor er den Raum betrat.",sentence:"He looked hesitant before entering the room."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"omitted",hint:"weggelassen",de:"Das Dokument wurde im Abschlussbericht weggelassen.",sentence:"The document was omitted from the final report."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"no-frills",hint:"schnörkellos",de:"Sie bieten einen schnörkellosen Flug an, um Kosten zu sparen.",sentence:"They offer a no-frills flight to save costs."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"dismantling",hint:"bauten … ab / Abbau",de:"Die Arbeiter begannen mit der Demontage der alten Brücke.",sentence:"The workers began dismantling the old bridge."},
+  {lvl:"C2",cat:"cloze",cloze:true,en:"musings",hint:"Grübeleien",de:"Seine Grübeleien über das Leben waren tiefgründig und nachdenklich.",sentence:"His musings on life were deep and thoughtful."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"truce",hint:"Waffenstillstand",de:"Die Truppen stimmten einem vorübergehenden Waffenstillstand zu.",sentence:"The troops agreed to a temporary truce."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"deterioration",hint:"Verschlechterung",de:"Wir waren alle schockiert über die plötzliche Verschlechterung seines Gesundheitszustands.",sentence:"We were all shocked by the sudden deterioration of his health."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"mesmerizing",hint:"faszinierend",de:"Die Vorstellung war absolut faszinierend.",sentence:"The performance was absolutely mesmerizing."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"reinvigorated",hint:"wiederbelebt / neu belebt",de:"Das Team fühlte sich nach der kurzen Pause wiederbelebt.",sentence:"The team felt reinvigorated after the short break."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"reinstated",hint:"wiedereingesetzt",de:"Der Manager wurde nach der Untersuchung wiedereingesetzt.",sentence:"The manager was reinstated after the investigation."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"prerequisite",hint:"Voraussetzung",de:"Gute Kommunikation ist eine Voraussetzung für Teamarbeit.",sentence:"Good communication is a prerequisite for teamwork."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"prospective",hint:"voraussichtlich / angehend",de:"Sie ist eine voraussichtliche Studentin an der Universität.",sentence:"She is a prospective student at the university."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"foremost",hint:"wichtigste / vorrangig",de:"Der erste und wichtigste Punkt ist, sicher zu bleiben.",sentence:"The first and foremost point is to stay safe."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"refrained",hint:"enthielt sich",de:"Er enthielt sich eines Kommentars zu der Angelegenheit.",sentence:"He refrained from commenting on the matter."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"amenities",hint:"Annehmlichkeiten",de:"Das Hotel bietet viele moderne Annehmlichkeiten.",sentence:"The hotel offers many modern amenities."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"reign",hint:"herrschen",de:"In einer gerechten Gesellschaft muss Gerechtigkeit immer herrschen.",sentence:"Justice must always reign in a fair society."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"supreme",hint:"oberste",de:"Er ist die oberste Autorität in der Organisation.",sentence:"He is the supreme authority in the organization."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"apprentice",hint:"Auszubildender / Lehrling",de:"Der Azubi lernt schnell im Arbeitsalltag.",sentence:"The apprentice is learning quickly on the job."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"expeditiously",hint:"zügig",de:"Wir müssen zügig handeln, um das Problem zu lösen.",sentence:"We need to act expeditiously to solve the issue."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"pressing",hint:"dringend",de:"Es besteht ein dringender Bedarf an medizinischen Vorräten.",sentence:"There is a pressing need for more medical supplies."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"erected",hint:"errichtet",de:"Die Struktur wurde innerhalb einer Woche errichtet.",sentence:"The structure was erected within a week."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"scaffolding",hint:"Gerüst",de:"Rund um das Gebäude wurde ein Gerüst aufgebaut.",sentence:"Scaffolding was set up around the building."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"hefty",hint:"schwer / stattlich",de:"Die Kiste war überraschend schwer für ihre Größe.",sentence:"The box was surprisingly hefty for its size."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"dependable",hint:"zuverlässig",de:"Sie ist eine sehr zuverlässige Kollegin.",sentence:"She is a very dependable colleague."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"adversity",hint:"Widrigkeiten",de:"Sie begegneten den Widrigkeiten mit Stärke und Zusammenhalt.",sentence:"They faced adversity with strength and unity."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"complacent",hint:"selbstzufrieden",de:"Er wurde nach frühem Erfolg selbstzufrieden.",sentence:"He became complacent after early success."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"inclined",hint:"geneigt",de:"Sie ist geneigt, seiner Geschichte zu glauben.",sentence:"She is inclined to believe his story."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"mindful",hint:"achtsam",de:"Er blieb achtsam gegenüber seiner Umgebung.",sentence:"He remained mindful of his surroundings."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"self-explanatory",hint:"selbsterklärend",de:"Die Anweisungen sind völlig selbsterklärend.",sentence:"The instructions are completely self-explanatory."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"coincided",hint:"fiel zusammen",de:"Der Sturm fiel mit unserer Ankunft zusammen.",sentence:"The storm coincided with our arrival."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"conviction",hint:"Überzeugung",de:"Er sprach mit tiefer Überzeugung.",sentence:"He spoke with deep conviction."},
+  {lvl:"B1",cat:"cloze",cloze:true,en:"generous",hint:"großzügig",de:"Sie ist dafür bekannt, großzügig mit ihrer Zeit umzugehen.",sentence:"She is known for being generous with her time."},
+  {lvl:"C1",cat:"cloze",cloze:true,en:"actuated",hint:"betätigt / ausgelöst",de:"Die Maschine wird mit einem Fußpedal betätigt.",sentence:"The machine is actuated by a foot pedal."},
+  {lvl:"B1",cat:"cloze",cloze:true,en:"handy",hint:"praktisch",de:"Dieses Werkzeug ist sehr praktisch für schnelle Reparaturen.",sentence:"This tool is very handy for quick fixes."},
+  {lvl:"B2",cat:"cloze",cloze:true,en:"janitorial",hint:"Reinigungs- / Hausmeister-",de:"Das Hausmeisterpersonal reinigte den Flur.",sentence:"Janitorial staff cleaned the hallway."},
 ];
 const CAT_LABELS = {
   all:"Alle", smalltalk:"Smalltalk", basics:"Grundwörter", work:"Arbeit", meetings:"Meetings", email:"E-Mail",
@@ -1028,6 +1402,7 @@ const CAT_LABELS = {
   home:"Zuhause", health:"Gesundheit",
   family:"Familie", body:"Körper", animals:"Tiere", nature:"Natur",
   numbers:"Zahlen", sport:"Sport & Freizeit", education:"Schule", tech:"Technik & Internet",
+  law:"Recht & Justiz", cloze:"Sätze (Lücke)",
   custom:"Eigene",
 };
 const LEVELS = ["all","A1","A2","B1","B2","C1","C2"];
@@ -1211,6 +1586,62 @@ const IPA_DICT = {
   "confidence":"ˈkɒnfɪdəns","consensus":"kənˈsensəs","sustainability":"səˌsteɪnəˈbɪlɪti","matter":"ˈmætə","significance":"sɪɡˈnɪfɪkəns",
   "discrepancy":"dɪsˈkrepənsi","assert":"əˈsɜːt","claim":"kleɪm","accountable":"əˈkaʊntəbəl","pedantic":"pɪˈdæntɪk",
   "offhand":"ˌɒfˈhænd","casual":"ˈkæʒuəl",
+  // NEU · Recht, Wirtschaft, Charakter, Lückentexte
+  "alleged":"əˈledʒd","allegation":"ˌælɪˈɡeɪʃən","amendment":"əˈmendmənt","detain":"dɪˈteɪn","detained":"dɪˈteɪnd",
+  "prosecution":"ˌprɒsɪˈkjuːʃən","retaliation":"rɪˌtæliˈeɪʃən","attorney":"əˈtɜːni","testify":"ˈtestɪfaɪ","testimony":"ˈtestɪməni",
+  "expunge":"ɪkˈspʌndʒ","aspersion":"əˈspɜːʃən","indictment":"ɪnˈdaɪtmənt","whereabouts":"ˈweərəbaʊts","lawsuit":"ˈlɔːsuːt",
+  "accusation":"ˌækjʊˈzeɪʃən","homicide":"ˈhɒmɪsaɪd","impartial":"ɪmˈpɑːʃəl","subpoena":"səˈpiːnə","summonses":"ˈsʌmənsɪz",
+  "deception":"dɪˈsepʃən","bribe":"braɪb","bribery":"ˈbraɪbəri","plea":"pliː","charged":"tʃɑːdʒd","accused":"əˈkjuːzd",
+  "defendant":"dɪˈfendənt","prenup":"ˈpriːnʌp","convicted":"kənˈvɪktɪd","disbarred":"dɪsˈbɑːd","circumstantial":"ˌsɜːkəmˈstænʃəl",
+  "impeach":"ɪmˈpiːtʃ","confess":"kənˈfes","oath":"əʊθ","premeditated":"priːˈmedɪteɪtɪd","apprehend":"ˌæprɪˈhend",
+  "illicit":"ɪˈlɪsɪt","parole":"pəˈrəʊl","contraband":"ˈkɒntrəbænd","objection":"əbˈdʒekʃən","culpability":"ˌkʌlpəˈbɪlɪti",
+  "omission":"əˈmɪʃən","interrogate":"ɪnˈterəɡeɪt","legislation":"ˌledʒɪsˈleɪʃən","liable":"ˈlaɪəbəl","deceased":"dɪˈsiːst",
+  "rescind":"rɪˈsɪnd","recess":"rɪˈses","extramarital":"ˌekstrəˈmærɪtəl","motion":"ˈməʊʃən",
+  "acknowledge":"əkˈnɒlɪdʒ","accommodate":"əˈkɒmədeɪt","accomplish":"əˈkʌmplɪʃ","assign":"əˈsaɪn","assembled":"əˈsembəld",
+  "association":"əˌsəʊsiˈeɪʃən","establish":"ɪˈstæblɪʃ","established":"ɪˈstæblɪʃt","enhance":"ɪnˈhɑːns","incorporate":"ɪnˈkɔːpəreɪt",
+  "commingle":"kɒˈmɪŋɡəl","determine":"dɪˈtɜːmɪn","deviating":"ˈdiːvieɪtɪŋ","deviated":"ˈdiːvieɪtɪd","provide":"prəˈvaɪd",
+  "preserve":"prɪˈzɜːv","preserved":"prɪˈzɜːvd","reassess":"ˌriːəˈses","rectify":"ˈrektɪfaɪ","occupy":"ˈɒkjʊpaɪ",
+  "permitted":"pəˈmɪtɪd","align":"əˈlaɪn","compose":"kəmˈpəʊz","designated":"ˈdezɪɡneɪtɪd","commodities":"kəˈmɒdɪtiz",
+  "circumventing":"ˌsɜːkəmˈventɪŋ","misstated":"ˌmɪsˈsteɪtɪd","engage":"ɪnˈɡeɪdʒ","pursuit":"pəˈsjuːt","assurance":"əˈʃʊərəns",
+  "incentive":"ɪnˈsentɪv","supervise":"ˈsuːpəvaɪz","proposition":"ˌprɒpəˈzɪʃən","venture":"ˈventʃə","pursue":"pəˈsjuː",
+  "board":"bɔːd","ambassador":"æmˈbæsədə","mitigate":"ˈmɪtɪɡeɪt","domestically":"dəˈmestɪkli","deceleration":"diːˌseləˈreɪʃən",
+  "appraisal":"əˈpreɪzəl","confer":"kənˈfɜː","legacy":"ˈleɡəsi","dismiss":"dɪsˈmɪs","disregard":"ˌdɪsrɪˈɡɑːd",
+  "premises":"ˈpremɪsɪz","rehearsed":"rɪˈhɜːst","probationary":"prəˈbeɪʃənəri","disposed":"dɪsˈpəʊzd","ceased":"siːst",
+  "cease":"siːs","expeditiously":"ˌekspɪˈdɪʃəsli","extensive":"ɪkˈstensɪv","erected":"ɪˈrektɪd","scaffolding":"ˈskæfəldɪŋ",
+  "foremost":"ˈfɔːməʊst","self-explanatory":"ˌself ɪkˈsplænətri","coincide":"ˌkəʊɪnˈsaɪd","coincided":"ˌkəʊɪnˈsaɪdɪd",
+  "exploit":"ɪkˈsplɔɪt","protracted":"prəˈtræktɪd","incumbent":"ɪnˈkʌmbənt","compile":"kəmˈpaɪl","compiled":"kəmˈpaɪld",
+  "trajectory":"trəˈdʒektəri","probe":"prəʊb","omit":"əˈmɪt","omitted":"əˈmɪtɪd","dismantle":"dɪsˈmæntəl","dismantling":"dɪsˈmæntlɪŋ",
+  "legibility":"ˌledʒəˈbɪlɪti","underpinnings":"ˈʌndəpɪnɪŋz","perpendicular":"ˌpɜːpənˈdɪkjʊlə","herald":"ˈherəld",
+  "eligible":"ˈelɪdʒəbəl","epitomize":"ɪˈpɪtəmaɪz","disputed":"dɪˈspjuːtɪd","obscure":"əbˈskjʊə","reputation":"ˌrepjʊˈteɪʃən",
+  "expedited":"ˈekspɪdaɪtɪd","altercation":"ˌɔːltəˈkeɪʃən","ambiguous":"æmˈbɪɡjuəs","exposed":"ɪkˈspəʊzd","fortune":"ˈfɔːtʃuːn",
+  "genuinely":"ˈdʒenjʊɪnli","hesitant":"ˈhezɪtənt","insulted":"ɪnˈsʌltɪd","consciously":"ˈkɒnʃəsli","convinced":"kənˈvɪnst",
+  "convince":"kənˈvɪns","persuade":"pəˈsweɪd","persuaded":"pəˈsweɪdɪd","enduring":"ɪnˈdjʊərɪŋ","receptive":"rɪˈseptɪv",
+  "regret":"rɪˈɡret","comprehend":"ˌkɒmprɪˈhend","peculiar":"pɪˈkjuːliə","vigorously":"ˈvɪɡərəsli","suffer":"ˈsʌfə",
+  "purposefully":"ˈpɜːpəsfʊli","resemblance":"rɪˈzembləns","turmoil":"ˈtɜːmɔɪl","alleviate":"əˈliːvieɪt","exquisite":"ɪkˈskwɪzɪt",
+  "prone":"prəʊn","tension":"ˈtenʃən","exceptional":"ɪkˈsepʃənəl","surrender":"səˈrendə","keenly":"ˈkiːnli",
+  "admirable":"ˈædmərəbəl","decency":"ˈdiːsənsi","resentful":"rɪˈzentfʊl","inherited":"ɪnˈherɪtɪd","bind":"baɪnd",
+  "tangible":"ˈtændʒəbəl","terrified":"ˈterɪfaɪd","indulgence":"ɪnˈdʌldʒəns","pacify":"ˈpæsɪfaɪ","contempt":"kənˈtempt",
+  "sober":"ˈsəʊbə","starving":"ˈstɑːvɪŋ","underdog":"ˈʌndədɒɡ","dicey":"ˈdaɪsi","inescapable":"ˌɪnɪˈskeɪpəbəl",
+  "bond":"bɒnd","demeanor":"dɪˈmiːnə","unprompted":"ʌnˈprɒmptɪd","trustworthy":"ˈtrʌstwɜːði","resolutely":"ˈrezəluːtli",
+  "confide":"kənˈfaɪd","staggering":"ˈstæɡərɪŋ","villain":"ˈvɪlən","infidelity":"ˌɪnfɪˈdeləti","solemnly":"ˈsɒləmli",
+  "prejudice":"ˈpredʒʊdɪs","tirelessly":"ˈtaɪələsli","betrayed":"bɪˈtreɪd","modest":"ˈmɒdɪst","despicable":"dɪˈspɪkəbəl",
+  "composure":"kəmˈpəʊʒə","dependable":"dɪˈpendəbəl","adversity":"ədˈvɜːsɪti","complacent":"kəmˈpleɪsənt","inclined":"ɪnˈklaɪnd",
+  "mindful":"ˈmaɪndfʊl","conviction":"kənˈvɪkʃən","generous":"ˈdʒenərəs","intimidating":"ɪnˈtɪmɪdeɪtɪŋ","immersed":"ɪˈmɜːst",
+  "aroused":"əˈraʊzd","transitory":"ˈtrænzɪtəri","gullible":"ˈɡʌlɪbəl","sanity":"ˈsænɪti","vigilant":"ˈvɪdʒɪlənt",
+  "curse":"kɜːs","deteriorate":"dɪˈtɪəriəreɪt","deterioration":"dɪˌtɪəriəˈreɪʃən","exacerbating":"ɪɡˈzæsəbeɪtɪŋ","exaggerated":"ɪɡˈzædʒəreɪtɪd",
+  "reconcile":"ˈrekənsaɪl","musings":"ˈmjuːzɪŋz","truce":"truːs","stir":"stɜː","resonate":"ˈrezəneɪt",
+  "hatchet":"ˈhætʃɪt","resent":"rɪˈzent","indicative":"ɪnˈdɪkətɪv","especially":"ɪˈspeʃəli","common":"ˈkɒmən",
+  "ignite":"ɪɡˈnaɪt","dissolving":"dɪˈzɒlvɪŋ","possess":"pəˈzes","properly":"ˈprɒpəli","ordinary":"ˈɔːdɪnəri",
+  "obey":"əˈbeɪ","conquer":"ˈkɒŋkə","alike":"əˈlaɪk","bury":"ˈberi","narrow":"ˈnærəʊ","shallow":"ˈʃæləʊ",
+  "proper":"ˈprɒpə","vast":"vɑːst","odor":"ˈəʊdə","squint":"skwɪnt","oodles":"ˈuːdəlz","readily":"ˈredɪli",
+  "whatsoever":"ˌwɒtsəʊˈevə","hefty":"ˈhefti","abide":"əˈbaɪd","unambiguous":"ˌʌnæmˈbɪɡjuəs","contentious":"kənˈtenʃəs",
+  "unequivocally":"ˌʌnɪˈkwɪvəkli","contradict":"ˌkɒntrəˈdɪkt","contradiction":"ˌkɒntrəˈdɪkʃən","affirmative":"əˈfɜːmətɪv",
+  "carcinogenic":"ˌkɑːsɪnəˈdʒenɪk","syringe":"sɪˈrɪndʒ","venue":"ˈvenjuː","occasion":"əˈkeɪʒən","noon":"nuːn",
+  "rarely":"ˈreəli","prefix":"ˈpriːfɪks","actuate":"ˈæktʃueɪt","janitorial":"ˌdʒænɪˈtɔːriəl","grad":"ɡræd",
+  "grasp":"ɡrɑːsp","endurance":"ɪnˈdjʊərəns","precious":"ˈpreʃəs","intrude":"ɪnˈtruːd","abreast":"əˈbrest",
+  "ancient":"ˈeɪnʃənt","mesmerizing":"ˈmezməraɪzɪŋ","reinvigorated":"ˌriːɪnˈvɪɡəreɪtɪd","reinstated":"ˌriːɪnˈsteɪtɪd",
+  "prerequisite":"ˌpriːˈrekwɪzɪt","prospective":"prəˈspektɪv","refrained":"rɪˈfreɪnd","amenities":"əˈmiːnɪtiz","reign":"reɪn",
+  "supreme":"suːˈpriːm","apprentice":"əˈprentɪs","pressing":"ˈpresɪŋ","conscious":"ˈkɒnʃəs","no-frills":"ˌnəʊˈfrɪlz",
 };
 function ipaFallbackWord(w){
   // very rough grapheme->IPA (approximate; marked with ≈)
@@ -1232,18 +1663,19 @@ function ipaFor(en){
   const tokens=primary.split(/\s+/);
   const parts=[]; let approx=false;
   for(const tok of tokens){
-    if(IPA_DICT[tok]){ parts.push(IPA_DICT[tok]); continue; }
-    // single word (incl. hyphen) fallback
-    if(tokens.length===1){ parts.push(ipaFallbackWord(tok)); approx=true; }
-    else { return null; } // phrase with an unknown word -> use audio/respell instead
+    const base=tok.replace(/[^a-z\-]/g,"");
+    if(IPA_DICT[tok]){ parts.push(IPA_DICT[tok]); }
+    else if(IPA_DICT[base]){ parts.push(IPA_DICT[base]); }
+    else { parts.push(ipaFallbackWord(tok)); approx=true; } // approximate IPA for any unknown word
   }
   const text=parts.join(" ").trim();
   return text ? {text, approx} : null;
 }
+// nur IPA-Lautschrift (keine vereinfachte Umschrift)
 function pronLine(en){
   const ip=ipaFor(en);
-  if(ip) return `<div class="respell-back">IPA <b>${ip.approx?"≈ ":""}/${ip.text}/</b> <span style="opacity:.5">· 🔊 für Audio</span></div>`;
-  return `<div class="respell-back">🗣 <b>${respell(en)}</b> <span style="opacity:.55">· vereinfacht · 🔊 für Audio</span></div>`;
+  if(!ip) return "";
+  return `<div class="respell-back">IPA <b>${ip.approx?"≈ ":""}/${ip.text}/</b> <span style="opacity:.5">· 🔊 Audio</span></div>`;
 }
 
 // simplified German-style respelling (reading aid; audio is the accurate source)
@@ -1393,6 +1825,10 @@ function coreFormsDE(str){
 }
 function isCorrect(card, input){
   if(!input || !input.trim()) return false;
+  if(card.cloze){ // Lückentext: immer das englische Zielwort prüfen
+    const cand = coreForms(input); const set = acceptedSetEN(card);
+    for(const x of cand){ if(set.has(x)) return true; } return false;
+  }
   if(direction==="en2de"){
     const cand = coreFormsDE(input); const set = coreFormsDE(card.de);
     for(const x of cand){ if(set.has(x)) return true; } return false;
@@ -1562,8 +1998,24 @@ function promptSide(c){ return direction==="en2de" ? c.en : c.de; }
 function answerSide(c){ return direction==="en2de" ? c.de : c.en; }
 
 function sayBlock(text, big){
-  return `<span class="say"><button class="say-btn" data-say="${text.replace(/"/g,'&quot;')}">🔊 Anhören</button>
-    <span class="respell" title="vereinfachte Aussprache – das Audio ist maßgeblich">🗣 <b>${respell(text)}</b> <span style="opacity:.6">· vereinfacht</span></span></span>`;
+  return `<span class="say"><button class="say-btn" data-say="${text.replace(/"/g,'&quot;')}">🔊 Anhören</button></span>`;
+}
+/* ---- Cloze (Lückentext) helpers: ganze Sätze, nur ein Wort wird ausgefüllt ---- */
+function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); }
+function clozeBlank(c){
+  const re = new RegExp("\\b"+escapeRegExp(c.en)+"\\b","i");
+  if(!re.test(c.sentence)) return c.sentence + ' <span class="blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+  return c.sentence.replace(re, '<span class="blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
+}
+function clozeReveal(c){
+  const re = new RegExp("\\b"+escapeRegExp(c.en)+"\\b","i");
+  if(!re.test(c.sentence)) return c.sentence;
+  return c.sentence.replace(re, m=>`<span class="blank-fill">${m}</span>`);
+}
+function clozePromptHTML(c){
+  return `<div class="cloze-de">${c.de}</div>
+    <div class="cloze-en">${clozeBlank(c)}</div>
+    ${c.hint?`<div class="cloze-hint">Gesuchtes Wort: <b>${c.hint}</b></div>`:""}`;
 }
 
 function render(){
@@ -1587,34 +2039,42 @@ function render(){
   }
 
   const c=allCards()[queue[pos]];
-  const engProm = direction==="en2de";   // English is the prompt
+  const isCloze = !!c.cloze;
+  const engProm = isCloze ? false : direction==="en2de";   // English is the prompt
   const banner=(mode==="type"&&checked)
     ? (lastCorrect?`<div class="banner ok">✓ Richtig!</div>`
         :`<div class="banner no">✗ Nicht ganz.${lastTyped?` <span class="typed">Du: „${lastTyped}“</span>`:` <span class="typed">(keine Eingabe)</span>`}</div>`):"";
-  const dirBadge = `<span class="dir-badge">${direction==="en2de"?"EN → DE":"DE → EN"}</span>`;
-  const tagrow=`<div class="tagrow"><span class="lvl-badge">${c.lvl}</span><span class="tag">${CAT_LABELS[c.cat]||c.cat}</span>${dirBadge}</div>`;
+  const dirBadge = isCloze ? "" : `<span class="dir-badge">${direction==="en2de"?"EN → DE":"DE → EN"}</span>`;
+  const tagLabel = isCloze ? "✍︎ Lückentext" : (CAT_LABELS[c.cat]||c.cat);
+  const tagrow=`<div class="tagrow"><span class="lvl-badge">${c.lvl}</span><span class="tag">${tagLabel}</span>${dirBadge}</div>`;
 
-  const frontExtra = engProm ? `<div style="margin:2px 0 6px">${sayBlock(c.en)}</div>` : "";
+  const promptBlock = isCloze
+    ? clozePromptHTML(c)
+    : `<div class="prompt">${promptSide(c)}</div>${engProm ? `<div style="margin:2px 0 6px">${sayBlock(c.en)}</div>` : ""}`;
+  const inPlace = isCloze ? "Fehlendes Wort eintippen…" : (direction==="en2de"?"Deutsche":"Englische")+" Antwort eintippen…";
   const front=(mode==="type"&&!checked)
-    ? `<div class="face front">${tagrow}<div class="prompt">${promptSide(c)}</div>${frontExtra}
+    ? `<div class="face front">${tagrow}${promptBlock}
         <div class="type-wrap">
-          <input id="answerInput" class="answer-input" placeholder="${direction==="en2de"?"Deutsche":"Englische"} Antwort eintippen…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          <input id="answerInput" class="answer-input" placeholder="${inPlace}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
           <div class="type-hint"><kbd style="font-family:inherit;background:#fff;box-shadow:inset 0 0 0 1px var(--paper-edge);border-radius:6px;padding:3px 8px;font-weight:600">Enter</kbd> zum Prüfen · leer = „Weiß ich nicht“</div>
         </div></div>`
-    : `<div class="face front">${tagrow}<div class="prompt">${promptSide(c)}</div>${frontExtra}
+    : `<div class="face front">${tagrow}${promptBlock}
         <div class="hint"><kbd>Leertaste</kbd> Antwort zeigen · <kbd>P</kbd> anhören</div></div>`;
 
-  const engAns = !engProm;  // English is the answer side
+  const engAns = isCloze ? true : !engProm;  // English is the answer side
+  const backTag = isCloze ? "Lösung" : (direction==="en2de"?"Deutsch":"Englisch");
+  const answerText = isCloze ? c.en : answerSide(c);
+  const exampleHTML = isCloze ? clozeReveal(c) : (c.ex||"");
   main.innerHTML=`
     <div class="stage"><div class="card ${flipped?"flipped":""}" id="card">
       ${front}
       <div class="face back">
         ${banner}
-        <div class="tagrow"><span class="tag">${direction==="en2de"?"Deutsch":"Englisch"}</span></div>
-        <div class="answer">${answerSide(c)} ${engAns?`<button class="say-btn" data-say="${c.en.replace(/"/g,'&quot;')}">🔊</button>`:""}</div>
+        <div class="tagrow"><span class="tag">${backTag}</span></div>
+        <div class="answer">${answerText} ${engAns?`<button class="say-btn" data-say="${c.en.replace(/"/g,'&quot;')}">🔊</button>`:""}</div>
         ${engAns?pronLine(c.en):""}
-        <div class="example">${c.ex||""}</div>
-        ${c.note?`<div class="note">${c.note}</div>`:`<div class="note" style="opacity:.55">Beispiel oben zeigt die typische Verwendung.</div>`}
+        <div class="example">${exampleHTML}</div>
+        ${isCloze?`<div class="note" style="opacity:.7">${c.de}</div>`:(c.note?`<div class="note">${c.note}</div>`:`<div class="note" style="opacity:.55">Beispiel oben zeigt die typische Verwendung.</div>`)}
       </div>
     </div></div>
     <div class="actions" id="actions"></div>
@@ -1688,20 +2148,23 @@ function renderQuiz(){
     return;
   }
   const c=allCards()[quiz.items[quiz.i]];
-  const engProm = quiz.dir==="en2de";
-  const prompt = engProm ? c.en : c.de;
-  const answer = engProm ? c.de : c.en;
+  const isCloze = !!c.cloze;
+  const engProm = isCloze ? false : quiz.dir==="en2de";
+  const answer = isCloze ? c.en : (engProm ? c.de : c.en);
   const banner = quiz.checked ? (quiz.lastOK?`<div class="banner ok">✓ Richtig!</div>`:`<div class="banner no">✗ Richtig: <b style="margin-left:4px">${answer}</b>${quiz.typed?` <span class="typed">· du: „${quiz.typed}“</span>`:""}</div>`) : "";
-  const engVisible = engProm || quiz.checked;
+  const engVisible = isCloze ? quiz.checked : (engProm || quiz.checked);
   const say = engVisible ? `<div style="margin:6px 0">${sayBlock(c.en)}${pronLine(c.en)}</div>` : "";
+  const promptBlock = isCloze ? clozePromptHTML(c) : `<div class="prompt">${engProm ? c.en : c.de}</div>`;
+  const dirBadge = isCloze ? `<span class="dir-badge">✍︎ Lücke</span>` : `<span class="dir-badge">${engProm?"EN → DE":"DE → EN"}</span>`;
+  const placeholder = isCloze ? "Fehlendes Wort…" : (engProm?"Deutsche":"Englische")+" Antwort…";
   main.innerHTML=`
     <div class="stage"><div class="card" id="card"><div class="face front">
-      <div class="tagrow"><span class="lvl-badge">${c.lvl}</span><span class="tag">🎯 Prüfung</span><span class="dir-badge">${engProm?"EN → DE":"DE → EN"}</span></div>
+      <div class="tagrow"><span class="lvl-badge">${c.lvl}</span><span class="tag">🎯 Prüfung</span>${dirBadge}</div>
       ${banner}
-      <div class="prompt">${prompt}</div>
+      ${promptBlock}
       ${say}
       <div class="type-wrap">
-        <input id="quizInput" class="answer-input" placeholder="${engProm?"Deutsche":"Englische"} Antwort…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${quiz.checked?"disabled":""}>
+        <input id="quizInput" class="answer-input" placeholder="${placeholder}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${quiz.checked?"disabled":""}>
         <div class="type-hint">${quiz.checked?"<kbd style='font-family:inherit;background:#fff;box-shadow:inset 0 0 0 1px var(--paper-edge);border-radius:6px;padding:3px 8px;font-weight:600'>Leertaste</kbd> weiter":"<kbd style='font-family:inherit;background:#fff;box-shadow:inset 0 0 0 1px var(--paper-edge);border-radius:6px;padding:3px 8px;font-weight:600'>Enter</kbd> prüfen"}</div>
       </div></div></div></div>
     <div class="actions">${quiz.checked?`<button class="btn reveal" id="qNext">Weiter</button>`:`<button class="btn reveal" id="qCheck">Prüfen</button>`}</div>
@@ -1718,7 +2181,7 @@ async function quizCheck(){
   quiz.typed=inp?inp.value.trim():""; quiz.lastOK=isCorrectDir(c,quiz.typed,quiz.dir); quiz.checked=true;
   const box=ensureBox(keyOf(idx)); box.seen++;
   if(quiz.lastOK){ quiz.correct++; box.b=Math.min(3,box.b+1); stats.correct++; stats.streak++; if(stats.streak>stats.best)stats.best=stats.streak; }
-  else{ box.b=1; box.wrong++; stats.streak=0; quiz.wrong.push({idx, prompt:(quiz.dir==="en2de"?c.en:c.de), answer:(quiz.dir==="en2de"?c.de:c.en)}); }
+  else{ box.b=1; box.wrong++; stats.streak=0; quiz.wrong.push(c.cloze?{idx, prompt:c.de, answer:c.en}:{idx, prompt:(quiz.dir==="en2de"?c.en:c.de), answer:(quiz.dir==="en2de"?c.de:c.en)}); }
   stats.reviewed++; registerActivity();
   await saveBoxes(); await saveStats();
   render();
