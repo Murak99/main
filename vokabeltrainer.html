@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0e1524">
+<title>Englisch-Vokabeltrainer · A1–C2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1524; --bg-2:#141d31;
+    --surface:#1a2438; --surface-2:#212d45;
+    --stroke:rgba(255,255,255,.09); --stroke-2:rgba(255,255,255,.14);
+    --paper:#f7f3ea; --paper-edge:#e7dfcf;
+    --ink:#20242e; --ink-soft:#5d6472;
+    --text:#eaf0f7; --muted:#93a0b5;
+    --amber:#f0a83c; --amber-soft:#f7cd86;
+    --teal:#43c2ad; --teal-deep:#2b8f80; --teal-soft:#cfeee7;
+    --violet:#8f8cf0; --rust:#e08363;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(130% 80% at 88% -8%, #21335c 0%, transparent 52%),
+      radial-gradient(110% 70% at -5% 108%, #163a44 0%, transparent 55%),
+      var(--bg);
+    color:var(--text);font-family:"Instrument Sans",system-ui,sans-serif;
+    min-height:100%;display:flex;flex-direction:column;align-items:center;padding:26px 16px 52px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{width:100%;max-width:620px;display:flex;flex-direction:column;min-height:calc(100vh - 78px)}
+
+  header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
+  .brand .eyebrow{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--amber);font-weight:600;margin-bottom:6px}
+  .brand h1{font-family:"Fraunces",serif;font-weight:500;font-size:27px;line-height:1.05;letter-spacing:-.01em}
+  .brand h1 em{font-style:italic;color:var(--amber-soft)}
+  .streak-pill{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--stroke);border-radius:99px;padding:9px 15px;font-weight:600;font-size:14px;flex-shrink:0}
+  .streak-pill .fire{font-size:16px}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+  .kpi{background:linear-gradient(180deg,var(--surface) 0%,var(--bg-2) 100%);border:1px solid var(--stroke);border-radius:16px;padding:13px 12px;position:relative;overflow:hidden}
+  .kpi::after{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:var(--accent,var(--teal));opacity:.85}
+  .kpi .k-val{font-family:"Fraunces",serif;font-weight:600;font-size:22px;line-height:1;color:var(--text)}
+  .kpi .k-lbl{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-top:7px;font-weight:500}
+  .kpi .k-sub{font-size:11px;color:var(--muted);margin-top:2px}
+  @media (max-width:470px){.kpis{grid-template-columns:repeat(2,1fr)}.kpi .k-val{font-size:20px}}
+
+  .panel{background:var(--surface);border:1px solid var(--stroke);border-radius:16px;padding:13px 15px;margin-bottom:14px}
+  .panel .p-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:11px}
+  .week{display:flex;gap:8px;align-items:flex-end;height:56px}
+  .week .day{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+  .week .col{width:100%;max-width:26px;background:linear-gradient(180deg,var(--teal),var(--teal-deep));border-radius:6px 6px 3px 3px;min-height:3px;transition:height .4s}
+  .week .col.today{background:linear-gradient(180deg,var(--amber-soft),var(--amber))}
+  .week .dl{font-size:10px;color:var(--muted)}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{display:flex;align-items:center;gap:6px;background:var(--bg-2);border:1px solid var(--stroke);border-radius:99px;padding:6px 12px;font-size:12.5px;font-weight:600}
+  .badge.locked{opacity:.4;filter:grayscale(1)}
+  .badge .b-i{font-size:14px}
+
+  .ctl-label{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 8px 3px}
+  .rowflex{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+
+  .users{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+  .user{font-family:inherit;font-size:13px;font-weight:600;color:var(--text);background:var(--surface);border:1px solid var(--stroke);border-radius:99px;padding:9px 17px;cursor:pointer;transition:.15s}
+  .user:hover{border-color:var(--stroke-2)}
+  .user.on{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+  .user-edit{font-family:inherit;font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .user-edit:hover{color:var(--amber-soft)}
+  .user-input{font-family:inherit;font-size:13px;font-weight:600;color:var(--ink);background:var(--paper);border:none;border-radius:99px;padding:9px 15px;outline:2px solid var(--amber);width:135px}
+
+  .seg{display:inline-flex;gap:5px;background:var(--surface);border:1px solid var(--stroke);border-radius:99px;padding:5px;margin-bottom:16px;flex-wrap:wrap;max-width:100%}
+  .seg button{font-family:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:transparent;border:none;border-radius:99px;padding:8px 15px;cursor:pointer;transition:.15s}
+  .seg button:hover{color:var(--text)}
+  .seg button.on{color:#0e1524}
+  .seg.lv button.on{background:var(--teal)}
+  .seg.md button.on{background:var(--amber)}
+  .seg.dir button.on{background:var(--violet);color:#0e1524}
+
+  .cats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .chip{font-family:inherit;font-size:12.5px;font-weight:500;background:var(--surface);color:var(--text);border:1px solid var(--stroke);border-radius:99px;padding:8px 14px;cursor:pointer;transition:.16s}
+  .chip:hover{border-color:var(--amber);color:var(--amber-soft)}
+  .chip.on{background:var(--amber);border-color:var(--amber);color:#221704;font-weight:600}
+  .chip.hard{border-color:var(--rust)}
+  .chip.hard.on{background:var(--rust);border-color:var(--rust);color:#2a0f06}
+
+  .tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+  .tool{font-family:inherit;font-size:13.5px;font-weight:600;border-radius:12px;padding:11px 16px;cursor:pointer;transition:.15s;border:1px solid var(--stroke);background:var(--surface);color:var(--text)}
+  .tool:hover{transform:translateY(-1px);border-color:var(--stroke-2)}
+  .tool.primary{background:linear-gradient(180deg,var(--violet),#6d6adf);border:none;color:#0e1524}
+
+  .bar{height:6px;background:var(--surface);border:1px solid var(--stroke);border-radius:99px;overflow:hidden;margin-bottom:22px}
+  .bar > span{display:block;height:100%;background:linear-gradient(90deg,var(--teal-deep),var(--teal));border-radius:99px;transition:width .5s cubic-bezier(.3,.1,.2,1)}
+
+  /* study area: fills remaining space so the exercise sits centred on screen */
+  #main{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:44vh}
+  .stats{margin-top:26px;padding-top:20px;border-top:1px solid var(--stroke)}
+
+  .stage{perspective:1600px;margin-bottom:18px}
+  .card{position:relative;width:100%;min-height:340px;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.3,.1,.2,1);cursor:pointer}
+  .card.flipped{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;background:var(--paper);color:var(--ink);border-radius:22px;padding:28px 26px;display:flex;flex-direction:column;box-shadow:0 26px 60px -26px rgba(0,0,0,.75), inset 0 0 0 1px var(--paper-edge)}
+  .face.back{transform:rotateY(180deg);background:linear-gradient(180deg,#fbf8f1 0%,#f2ece0 100%)}
+  .tagrow{display:flex;gap:8px;align-items:center;margin-bottom:auto;flex-wrap:wrap}
+  .tag{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--amber);background:rgba(240,168,60,.13);padding:5px 10px;border-radius:7px}
+  .lvl-badge{font-size:10.5px;letter-spacing:.08em;font-weight:700;color:#0e5147;background:rgba(67,194,173,.18);padding:5px 9px;border-radius:7px}
+  .dir-badge{font-size:10.5px;letter-spacing:.08em;font-weight:700;color:#3a327a;background:rgba(143,140,240,.18);padding:5px 9px;border-radius:7px}
+  .prompt{font-family:"Fraunces",serif;font-weight:500;font-size:34px;line-height:1.12;color:var(--ink);margin:18px 0 8px}
+  .say{display:inline-flex;align-items:center;gap:8px;margin-top:4px}
+  .say-btn{font-family:inherit;font-size:13px;font-weight:600;color:#0e5147;background:rgba(67,194,173,.16);border:1px solid rgba(67,194,173,.4);border-radius:99px;padding:6px 13px;cursor:pointer;transition:.15s}
+  .say-btn:hover{background:rgba(67,194,173,.28)}
+  .respell{font-size:14px;color:var(--ink-soft)}
+  .respell b{color:var(--teal-deep);font-weight:600}
+  .hint{font-size:12.5px;color:var(--ink-soft);margin-top:auto;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .hint kbd{font-family:inherit;font-size:11px;background:#fff;box-shadow:inset 0 0 0 1px var(--paper-edge);border-radius:6px;padding:3px 8px;color:var(--ink);font-weight:600}
+
+  .type-wrap{margin-top:8px}
+  .answer-input{width:100%;font-family:"Fraunces",serif;font-size:24px;font-weight:500;color:var(--ink);background:#fffdf8;border:none;border-bottom:2px solid var(--amber);padding:10px 4px;outline:none}
+  .answer-input::placeholder{font-family:"Instrument Sans",sans-serif;font-size:16px;font-weight:400;color:var(--ink-soft)}
+  .answer-input:focus{border-bottom-color:var(--teal-deep)}
+  .type-hint{font-size:12px;color:var(--ink-soft);margin-top:10px}
+  .banner{align-self:stretch;font-size:14px;font-weight:600;border-radius:11px;padding:11px 13px;margin-bottom:12px;line-height:1.4;display:flex;align-items:center;gap:8px}
+  .banner.ok{background:var(--teal-soft);color:#155a4f}
+  .banner.no{background:#f6ddd1;color:#9d4326}
+  .banner .typed{font-weight:400;opacity:.85}
+
+  .answer{font-family:"Fraunces",serif;font-weight:600;font-size:33px;line-height:1.1;color:var(--ink);margin:12px 0 6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .answer .say-btn{font-size:14px;padding:7px 14px}
+  .respell-back{font-size:14px;color:var(--ink-soft);margin-bottom:12px}
+  .respell-back b{color:var(--teal-deep);font-weight:600}
+  .example{font-size:15px;line-height:1.5;color:var(--ink);border-left:3px solid var(--teal);padding-left:14px;margin-bottom:14px}
+  .example b{color:var(--teal-deep);font-weight:700}
+  .note{font-size:13px;line-height:1.5;color:var(--ink-soft);background:#efe8da;border-radius:12px;padding:12px 14px;margin-top:auto}
+  .note strong{color:var(--rust)}
+
+  .actions{display:flex;gap:11px}
+  .btn{flex:1;font-family:inherit;font-size:15px;font-weight:600;border:none;border-radius:14px;padding:15px;cursor:pointer;transition:.15s;letter-spacing:.01em}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn.again{background:var(--surface);color:var(--rust);box-shadow:inset 0 0 0 1.5px var(--rust)}
+  .btn.again:hover{background:rgba(224,131,99,.14)}
+  .btn.know{background:linear-gradient(180deg,var(--teal) 0%,var(--teal-deep) 100%);color:#06201c}
+  .btn.reveal{background:linear-gradient(180deg,var(--amber-soft) 0%,var(--amber) 100%);color:#221704}
+  .btn.dim{opacity:.45;box-shadow:none}
+  .btn.dim:hover{opacity:.7;transform:none}
+  .btn.ghost{background:var(--surface);color:var(--text);border:1px solid var(--stroke)}
+
+  .footline{display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-size:12.5px;color:var(--muted);gap:10px;flex-wrap:wrap}
+  .footline .kb kbd{font-family:inherit;font-size:11px;background:var(--surface);border:1px solid var(--stroke);border-radius:6px;padding:2px 7px;color:var(--text);font-weight:600}
+  .reset{background:none;border:none;color:var(--muted);font-family:inherit;font-size:12.5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .reset:hover{color:var(--amber-soft)}
+
+  .done{background:linear-gradient(180deg,var(--paper) 0%,#efe8da 100%);color:var(--ink);border-radius:22px;padding:40px 28px;text-align:center;box-shadow:0 26px 60px -26px rgba(0,0,0,.7)}
+  .done h2{font-family:"Fraunces",serif;font-weight:500;font-size:27px;margin-bottom:10px}
+  .done p{color:var(--ink-soft);font-size:15px;line-height:1.55;margin-bottom:20px}
+  .score-ring{font-family:"Fraunces",serif;font-size:44px;font-weight:600;margin:6px 0 4px}
+  .miss-list{text-align:left;background:#fff;border:1px solid var(--paper-edge);border-radius:14px;padding:14px 16px;margin:8px 0 20px;max-height:230px;overflow:auto}
+  .miss-list .m{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #eee5d5;font-size:14px}
+  .miss-list .m:last-child{border-bottom:none}
+  .miss-list .m .en{font-weight:700;color:var(--teal-deep)}
+  .done .btnrow{display:flex;gap:11px;flex-wrap:wrap}
+  .done .btnrow .btn{min-width:130px}
+
+  /* modal for add-card */
+  .modal-bg{position:fixed;inset:0;background:rgba(6,10,20,.7);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+  .modal{background:var(--surface-2);border:1px solid var(--stroke-2);border-radius:20px;padding:24px;width:100%;max-width:440px}
+  .modal h3{font-family:"Fraunces",serif;font-weight:500;font-size:22px;margin-bottom:16px}
+  .field{margin-bottom:13px}
+  .field label{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:6px}
+  .field input,.field select{width:100%;font-family:inherit;font-size:15px;color:var(--text);background:var(--bg-2);border:1px solid var(--stroke);border-radius:11px;padding:11px 13px;outline:none}
+  .field input:focus{border-color:var(--violet)}
+  .modal .row2{display:flex;gap:10px}
+  .modal .row2 .field{flex:1}
+  .modal .m-actions{display:flex;gap:10px;margin-top:8px}
+
+  @media (max-width:420px){.prompt{font-size:29px}.answer{font-size:27px}}
+  @media (prefers-reduced-motion:reduce){.card,.bar>span,.week .col,.btn{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="eyebrow">Englisch · A1 → C2</div>
+      <h1>Der <em>Vokabel</em>trainer</h1>
+    </div>
+    <div class="streak-pill"><span class="fire">🔥</span><span id="daysStreak">0</span>&nbsp;<span style="color:var(--muted);font-weight:500">Tage</span></div>
+  </header>
+
+  <div class="kpis" id="kpis"></div>
+
+  <p class="ctl-label">Wer lernt?</p>
+  <div class="users" id="users"></div>
+
+  <p class="ctl-label">Niveau</p>
+  <div class="seg lv" id="levels"></div>
+
+  <p class="ctl-label">Thema</p>
+  <div class="cats" id="cats"></div>
+
+  <div class="rowflex">
+    <div>
+      <p class="ctl-label">Richtung</p>
+      <div class="seg dir" id="dir" style="margin-bottom:0">
+        <button data-dir="de2en">DE → EN</button>
+        <button data-dir="en2de">EN → DE</button>
+      </div>
+    </div>
+    <div>
+      <p class="ctl-label">Modus</p>
+      <div class="seg md" id="modes" style="margin-bottom:0">
+        <button data-mode="type">Eintippen</button>
+        <button data-mode="flip">Umdrehen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tools">
+    <button class="tool primary" id="quizBtn">🎯 Prüfung starten</button>
+    <button class="tool" id="addBtn">＋ Eigene Karte</button>
+  </div>
+
+  <div class="bar"><span id="progressFill" style="width:0%"></span></div>
+
+  <div id="main"></div>
+
+  <div class="stats">
+    <div class="panel">
+      <div class="p-head"><span>Diese Woche</span><span id="weekTotal"></span></div>
+      <div class="week" id="week"></div>
+    </div>
+
+    <div class="panel">
+      <div class="p-head"><span>Abzeichen</span><span id="badgeCount"></span></div>
+      <div class="badges" id="badges"></div>
+    </div>
+  </div>
+</div>
+<div id="modalRoot"></div>
+
+<script>
+/* localStorage fallback so the app persists when opened as a normal file */
+if(!window.storage){
+  window.storage = {
+    get:(k)=>Promise.resolve({value: (()=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } })()}),
+    set:(k,v)=>Promise.resolve((()=>{ try{ localStorage.setItem(k,v); }catch(e){} })()),
+  };
+}
+
+const CARDS = [
+  // ================= A1 =================
+  {lvl:"A1",cat:"smalltalk",de:"Hallo / Guten Tag",en:"Hello / Hi",ex:"<b>Hello!</b> Nice to meet you."},
+  {lvl:"A1",cat:"smalltalk",de:"Guten Morgen",en:"Good morning",ex:"<b>Good morning!</b>"},
+  {lvl:"A1",cat:"smalltalk",de:"Danke",en:"Thank you / Thanks",ex:"<b>Thank you</b> very much."},
+  {lvl:"A1",cat:"smalltalk",de:"Bitte (= gern geschehen)",en:"You're welcome",ex:"„Thanks!“ — „<b>You're welcome.</b>“",note:"<strong>Achtung:</strong> „please“ = bitte nur beim Bitten."},
+  {lvl:"A1",cat:"smalltalk",de:"Ja / Nein",en:"Yes / No",ex:"<b>Yes</b>, please."},
+  {lvl:"A1",cat:"smalltalk",de:"Wie heißt du?",en:"What's your name?",ex:"Hi, <b>what's your name?</b>"},
+  {lvl:"A1",cat:"smalltalk",de:"Ich heiße…",en:"My name is…",ex:"<b>My name is</b> Anna."},
+  {lvl:"A1",cat:"smalltalk",de:"Tschüss",en:"Bye / Goodbye",ex:"See you! <b>Bye!</b>"},
+  {lvl:"A1",cat:"food",de:"das Wasser",en:"water",ex:"A glass of <b>water</b>, please."},
+  {lvl:"A1",cat:"food",de:"das Brot",en:"bread",ex:"I'd like some <b>bread</b>."},
+  {lvl:"A1",cat:"food",de:"der Kaffee",en:"coffee",ex:"A <b>coffee</b>, please."},
+  {lvl:"A1",cat:"food",de:"essen",en:"to eat",ex:"Let's <b>eat</b>!"},
+  {lvl:"A1",cat:"food",de:"trinken",en:"to drink",ex:"What do you want to <b>drink</b>?"},
+  {lvl:"A1",cat:"travel",de:"der Zug",en:"the train",ex:"The <b>train</b> is here."},
+  {lvl:"A1",cat:"travel",de:"das Auto",en:"the car",ex:"We go by <b>car</b>."},
+  {lvl:"A1",cat:"travel",de:"der Flughafen",en:"the airport",ex:"We are at the <b>airport</b>."},
+  {lvl:"A1",cat:"travel",de:"das Ticket / die Fahrkarte",en:"the ticket",ex:"One <b>ticket</b>, please."},
+  {lvl:"A1",cat:"home",de:"das Haus",en:"the house",ex:"This is my <b>house</b>."},
+  {lvl:"A1",cat:"home",de:"das Zimmer",en:"the room",ex:"My <b>room</b> is small."},
+  {lvl:"A1",cat:"home",de:"die Familie",en:"the family",ex:"I love my <b>family</b>."},
+  {lvl:"A1",cat:"home",de:"der Freund / die Freundin",en:"the friend",ex:"She is my <b>friend</b>."},
+  {lvl:"A1",cat:"directions",de:"links / rechts",en:"left / right",ex:"Turn <b>left</b>, then <b>right</b>."},
+  {lvl:"A1",cat:"directions",de:"hier / dort",en:"here / there",ex:"It's <b>here</b>, not <b>there</b>."},
+  {lvl:"A1",cat:"time",de:"heute",en:"today",ex:"We leave <b>today</b>."},
+  {lvl:"A1",cat:"time",de:"morgen",en:"tomorrow",ex:"See you <b>tomorrow</b>!",note:"<strong>Nicht:</strong> „morning“ = der Morgen."},
+  {lvl:"A1",cat:"time",de:"Wie spät ist es?",en:"What time is it?",ex:"Excuse me, <b>what time is it?</b>"},
+  {lvl:"A1",cat:"shopping",de:"kaufen",en:"to buy",ex:"I want to <b>buy</b> this."},
+  {lvl:"A1",cat:"shopping",de:"das Geld",en:"money",ex:"I have no <b>money</b>."},
+  {lvl:"A1",cat:"health",de:"der Arzt / die Ärztin",en:"the doctor",ex:"I need a <b>doctor</b>."},
+  {lvl:"A1",cat:"health",de:"Hilfe!",en:"Help!",ex:"<b>Help!</b>"},
+  {lvl:"A1",cat:"feelings",de:"gut / schlecht",en:"good / bad",ex:"The food is <b>good</b>."},
+  {lvl:"A1",cat:"feelings",de:"glücklich",en:"happy",ex:"I'm so <b>happy</b>!"},
+
+  // ================= A2 =================
+  {lvl:"A2",cat:"smalltalk",de:"Woher kommst du?",en:"Where are you from?",ex:"<b>Where are you from?</b> — Germany."},
+  {lvl:"A2",cat:"smalltalk",de:"Wie geht es dir?",en:"How are you?",ex:"Hi! <b>How are you?</b>",note:"Antwort: „I'm fine, thanks. And you?“"},
+  {lvl:"A2",cat:"smalltalk",de:"Ich verstehe nicht.",en:"I don't understand.",ex:"Sorry, <b>I don't understand.</b>"},
+  {lvl:"A2",cat:"smalltalk",de:"Sprechen Sie Englisch?",en:"Do you speak English?",ex:"Excuse me, <b>do you speak English?</b>"},
+  {lvl:"A2",cat:"smalltalk",de:"Können Sie mir helfen?",en:"Can you help me?",ex:"<b>Can you help me,</b> please?"},
+  {lvl:"A2",cat:"smalltalk",de:"Freut mich (dich kennenzulernen).",en:"Nice to meet you.",ex:"<b>Nice to meet you!</b>",note:"Beim Wiedersehen: „Nice to see you.“"},
+  {lvl:"A2",cat:"travel",de:"das Gepäck",en:"the luggage",ex:"Where is my <b>luggage</b>?",note:"<strong>Merke:</strong> nicht „luggages“ – unzählbar."},
+  {lvl:"A2",cat:"travel",de:"umsteigen (Zug/Bus)",en:"to change / to transfer",ex:"You have to <b>change</b> in Paris."},
+  {lvl:"A2",cat:"travel",de:"verspätet",en:"delayed / late",ex:"The bus is <b>delayed</b>."},
+  {lvl:"A2",cat:"travel",de:"die Abfahrt / die Ankunft",en:"departure / arrival",ex:"<b>Departure</b> at 10, <b>arrival</b> at 12."},
+  {lvl:"A2",cat:"hotel",de:"ein Zimmer buchen",en:"to book a room",ex:"I'd like to <b>book a room</b>."},
+  {lvl:"A2",cat:"hotel",de:"der Schlüssel",en:"the key",ex:"Here is your <b>key</b>."},
+  {lvl:"A2",cat:"hotel",de:"das Frühstück",en:"breakfast",ex:"Is <b>breakfast</b> included?",note:"„included“ = inbegriffen."},
+  {lvl:"A2",cat:"hotel",de:"die Reservierung",en:"the reservation / booking",ex:"I have a <b>reservation</b>."},
+  {lvl:"A2",cat:"food",de:"die Speisekarte",en:"the menu",ex:"Can I see the <b>menu</b>?",note:"<strong>Falscher Freund:</strong> „menu“ = die Karte, nicht das Gericht."},
+  {lvl:"A2",cat:"food",de:"bestellen",en:"to order",ex:"I'd like to <b>order</b>."},
+  {lvl:"A2",cat:"food",de:"die Rechnung",en:"the bill / check",ex:"The <b>bill</b>, please."},
+  {lvl:"A2",cat:"food",de:"Ich hätte gern…",en:"I'd like… / I would like…",ex:"<b>I'd like</b> a coffee.",note:"Höflicher als „I want“."},
+  {lvl:"A2",cat:"food",de:"lecker",en:"delicious / tasty",ex:"This is <b>delicious</b>!"},
+  {lvl:"A2",cat:"shopping",de:"Wie viel kostet das?",en:"How much is it?",ex:"<b>How much is it?</b>"},
+  {lvl:"A2",cat:"shopping",de:"teuer / billig",en:"expensive / cheap",ex:"That's too <b>expensive</b>."},
+  {lvl:"A2",cat:"shopping",de:"bezahlen",en:"to pay",ex:"Can I <b>pay</b> by card?",note:"„in cash“ = bar."},
+  {lvl:"A2",cat:"shopping",de:"geöffnet / geschlossen",en:"open / closed",ex:"The shop is <b>closed</b>."},
+  {lvl:"A2",cat:"directions",de:"geradeaus",en:"straight ahead",ex:"Go <b>straight ahead</b>."},
+  {lvl:"A2",cat:"directions",de:"in der Nähe",en:"nearby / close",ex:"Is there a shop <b>nearby</b>?"},
+  {lvl:"A2",cat:"directions",de:"Wo ist…?",en:"Where is…?",ex:"<b>Where is</b> the station?"},
+  {lvl:"A2",cat:"time",de:"gestern",en:"yesterday",ex:"We arrived <b>yesterday</b>."},
+  {lvl:"A2",cat:"time",de:"oft / manchmal / nie",en:"often / sometimes / never",ex:"I <b>often</b> travel for work."},
+  {lvl:"A2",cat:"health",de:"die Apotheke",en:"the pharmacy",ex:"Where is the <b>pharmacy</b>?"},
+  {lvl:"A2",cat:"health",de:"Mir geht es nicht gut.",en:"I don't feel well.",ex:"<b>I don't feel well.</b>"},
+  {lvl:"A2",cat:"work",de:"die Arbeit / der Job",en:"work / the job",ex:"I have a lot of <b>work</b> today.",note:"„work“ ist meist unzählbar."},
+  {lvl:"A2",cat:"work",de:"der Kollege / die Kollegin",en:"the colleague / coworker",ex:"She is my <b>colleague</b>."},
+  {lvl:"A2",cat:"work",de:"das Büro",en:"the office",ex:"I'm at the <b>office</b>."},
+  {lvl:"A2",cat:"feelings",de:"müde",en:"tired",ex:"I'm very <b>tired</b>."},
+  {lvl:"A2",cat:"feelings",de:"langweilig",en:"boring",ex:"The film was <b>boring</b>.",note:"<strong>Nicht:</strong> „bored“ = gelangweilt (Person)."},
+
+  // ================= B1 =================
+  {lvl:"B1",cat:"smalltalk",de:"Was machst du beruflich?",en:"What do you do (for a living)?",ex:"So, <b>what do you do?</b>"},
+  {lvl:"B1",cat:"smalltalk",de:"Wie war dein Wochenende?",en:"How was your weekend?",ex:"Morning! <b>How was your weekend?</b>"},
+  {lvl:"B1",cat:"smalltalk",de:"Wir sehen uns!",en:"See you!",ex:"<b>See you</b> next week!"},
+  {lvl:"B1",cat:"feelings",de:"Meiner Meinung nach…",en:"In my opinion…",ex:"<b>In my opinion,</b> it's too risky."},
+  {lvl:"B1",cat:"feelings",de:"Ich stimme zu.",en:"I agree.",ex:"<b>I agree</b> with you.",note:"<strong>Nicht:</strong> „I am agree“ – „agree“ ist ein Verb."},
+  {lvl:"B1",cat:"feelings",de:"Ich bin anderer Meinung.",en:"I disagree.",ex:"Sorry, but <b>I disagree</b>."},
+  {lvl:"B1",cat:"feelings",de:"Es kommt darauf an.",en:"It depends.",ex:"<b>It depends</b> on the price.",note:"<strong>Nicht:</strong> „depend of“."},
+  {lvl:"B1",cat:"feelings",de:"Ich bin mir nicht sicher.",en:"I'm not sure.",ex:"<b>I'm not sure</b> about that."},
+  {lvl:"B1",cat:"work",de:"die Besprechung",en:"the meeting",ex:"We have a <b>meeting</b> at 3."},
+  {lvl:"B1",cat:"work",de:"die Frist / der Abgabetermin",en:"the deadline",ex:"The <b>deadline</b> is Friday."},
+  {lvl:"B1",cat:"work",de:"sich (auf eine Stelle) bewerben",en:"to apply (for a job)",ex:"I want to <b>apply for</b> this job."},
+  {lvl:"B1",cat:"work",de:"der Lebenslauf",en:"the CV / résumé",ex:"Send me your <b>CV</b>, please."},
+  {lvl:"B1",cat:"work",de:"die Gehaltserhöhung",en:"a pay rise / a raise",ex:"I asked for a <b>pay rise</b>."},
+  {lvl:"B1",cat:"work",de:"die Überstunden",en:"overtime",ex:"I did a lot of <b>overtime</b>."},
+  {lvl:"B1",cat:"travel",de:"der Reisepass",en:"the passport",ex:"Show me your <b>passport</b>, please."},
+  {lvl:"B1",cat:"travel",de:"die Unterkunft",en:"the accommodation",ex:"The <b>accommodation</b> was great.",note:"Unzählbar – kein Plural."},
+  {lvl:"B1",cat:"travel",de:"die Sehenswürdigkeit",en:"the sight / attraction",ex:"We saw all the <b>sights</b>."},
+  {lvl:"B1",cat:"health",de:"die Erkältung",en:"a cold",ex:"I have <b>a cold</b>."},
+  {lvl:"B1",cat:"health",de:"der (Arzt-)Termin",en:"the appointment",ex:"I have a doctor's <b>appointment</b>.",note:"<strong>Nicht:</strong> „date“ (= Rendezvous)."},
+  {lvl:"B1",cat:"home",de:"die Miete",en:"the rent",ex:"The <b>rent</b> is high."},
+  {lvl:"B1",cat:"home",de:"der Vermieter",en:"the landlord",ex:"Ask the <b>landlord</b>."},
+  {lvl:"B1",cat:"food",de:"Vorspeise / Hauptgang / Nachtisch",en:"starter / main course / dessert",ex:"For <b>starter</b>, I'll take soup."},
+  {lvl:"B1",cat:"food",de:"vegetarisch",en:"vegetarian",ex:"Do you have <b>vegetarian</b> options?"},
+  {lvl:"B1",cat:"phrasal",de:"suchen (nach)",en:"to look for",ex:"I'm <b>looking for</b> my keys."},
+  {lvl:"B1",cat:"phrasal",de:"aufgeben",en:"to give up",ex:"Don't <b>give up</b>!"},
+  {lvl:"B1",cat:"phrasal",de:"herausfinden",en:"to find out",ex:"I need to <b>find out</b> the time."},
+  {lvl:"B1",cat:"phrasal",de:"an-/ausschalten",en:"to turn on / to turn off",ex:"Please <b>turn off</b> the lights."},
+  {lvl:"B1",cat:"phrasal",de:"sich anmelden / registrieren",en:"to sign up",ex:"You can <b>sign up</b> for free."},
+  {lvl:"B1",cat:"phrasal",de:"ausfüllen (Formular)",en:"to fill in / to fill out",ex:"Please <b>fill in</b> this form."},
+  {lvl:"B1",cat:"falsefriends",de:"bekommen",en:"to get / to receive",ex:"Did you <b>get</b> my message?",note:"<strong>Klassiker:</strong> „become“ = werden."},
+  {lvl:"B1",cat:"falsefriends",de:"aktuell (= momentan)",en:"current / currently",ex:"Our <b>current</b> plan is…",note:"„actually“ = tatsächlich / eigentlich."},
+  {lvl:"B1",cat:"falsefriends",de:"eventuell (= vielleicht)",en:"possibly / maybe",ex:"We could <b>possibly</b> meet Friday.",note:"„eventually“ = letztendlich."},
+
+  // ================= B2 =================
+  {lvl:"B2",cat:"meetings",de:"Könntest du das näher ausführen?",en:"Could you elaborate on that?",ex:"Interesting — <b>could you elaborate on that?</b>",note:"Natürlicher als „can you explain more“."},
+  {lvl:"B2",cat:"meetings",de:"Darauf kommen wir später zurück.",en:"Let's circle back to that.",ex:"Good point — <b>let's circle back to that</b>."},
+  {lvl:"B2",cat:"meetings",de:"Ich verstehe deinen Punkt, aber…",en:"I see your point, but…",ex:"<b>I see your point, but</b> the budget…",note:"Weicher als „I disagree“."},
+  {lvl:"B2",cat:"meetings",de:"zusammenfassen / abschließen",en:"to sum up / to wrap up",ex:"<b>To wrap up,</b> we ship Friday."},
+  {lvl:"B2",cat:"meetings",de:"einer Meinung sein",en:"to be on the same page",ex:"We're <b>on the same page</b>."},
+  {lvl:"B2",cat:"meetings",de:"das später unter uns klären",en:"to take it offline",ex:"Let's <b>take this offline</b>.",note:"= unter vier Augen, nicht in der Runde."},
+  {lvl:"B2",cat:"meetings",de:"das Wort ergreifen",en:"to take the floor",ex:"May I <b>take the floor</b> for a second?"},
+  {lvl:"B2",cat:"meetings",de:"unterbrechen",en:"to interrupt",ex:"Sorry to <b>interrupt</b>, but…"},
+  {lvl:"B2",cat:"meetings",de:"auf den Punkt kommen",en:"to get to the point",ex:"Let me <b>get to the point</b>."},
+  {lvl:"B2",cat:"meetings",de:"klarstellen",en:"to clarify",ex:"Let me <b>clarify</b> one thing."},
+  {lvl:"B2",cat:"meetings",de:"die Tagesordnung",en:"the agenda",ex:"What's on the <b>agenda</b> today?"},
+  {lvl:"B2",cat:"meetings",de:"das Protokoll",en:"the minutes",ex:"Who's taking the <b>minutes</b>?",note:"Plural! „the minutes“ = das Protokoll."},
+  {lvl:"B2",cat:"email",de:"Anbei…",en:"Please find attached…",ex:"<b>Please find attached</b> the report.",note:"Lockerer: „I've attached…“."},
+  {lvl:"B2",cat:"email",de:"Melde dich bei Fragen.",en:"Let me know if you have any questions.",ex:"<b>Let me know if you have any questions.</b>"},
+  {lvl:"B2",cat:"email",de:"Ich komme darauf zurück.",en:"I'll get back to you.",ex:"<b>I'll get back to you</b> by EOD."},
+  {lvl:"B2",cat:"email",de:"Bezüglich…",en:"Regarding… / With regard to…",ex:"<b>Regarding</b> the invoice…",note:"„With regards to“ (Plural) ist falsch."},
+  {lvl:"B2",cat:"email",de:"Ich freue mich auf deine Rückmeldung.",en:"I look forward to hearing from you.",ex:"<b>I look forward to hearing from you.</b>",note:"Nach „look forward to“ folgt -ing!"},
+  {lvl:"B2",cat:"email",de:"wie besprochen",en:"as discussed",ex:"<b>As discussed,</b> I'll send the draft."},
+  {lvl:"B2",cat:"email",de:"zur Info / nur zur Kenntnis",en:"FYI (for your information)",ex:"<b>FYI</b> — the meeting moved to 4."},
+  {lvl:"B2",cat:"email",de:"freundliche Grüße",en:"best regards / kind regards",ex:"<b>Best regards,</b> Anna"},
+  {lvl:"B2",cat:"email",de:"eine kurze Erinnerung",en:"a gentle reminder",ex:"Just <b>a gentle reminder</b> about tomorrow."},
+  {lvl:"B2",cat:"work",de:"Ich kümmere mich darum.",en:"I'll take care of it.",ex:"Don't worry — <b>I'll take care of it</b>."},
+  {lvl:"B2",cat:"work",de:"auf dem Laufenden halten",en:"to keep (sb) posted / updated",ex:"I'll <b>keep you posted</b>."},
+  {lvl:"B2",cat:"work",de:"eine Entscheidung treffen",en:"to make a decision",ex:"We need to <b>make a decision</b>.",note:"nicht: „to meet a decision“."},
+  {lvl:"B2",cat:"work",de:"Verantwortung übernehmen",en:"to take responsibility",ex:"She <b>took responsibility</b> for it."},
+  {lvl:"B2",cat:"work",de:"der Umsatz",en:"revenue / turnover",ex:"<b>Revenue</b> grew by 10%.",note:"Gewinn = profit (nicht dasselbe!)."},
+  {lvl:"B2",cat:"work",de:"die Zielgruppe",en:"the target audience",ex:"Who is our <b>target audience</b>?"},
+  {lvl:"B2",cat:"work",de:"die/der Beteiligte(n)",en:"the stakeholders",ex:"Let's align the <b>stakeholders</b>."},
+  {lvl:"B2",cat:"work",de:"die Anforderung",en:"the requirement",ex:"What are the <b>requirements</b>?"},
+  {lvl:"B2",cat:"work",de:"der Meilenstein",en:"the milestone",ex:"We hit an important <b>milestone</b>."},
+  {lvl:"B2",cat:"work",de:"das (Arbeits-)Ergebnis / Liefergegenstand",en:"the deliverable",ex:"The first <b>deliverable</b> is due Monday."},
+  {lvl:"B2",cat:"work",de:"kündigen (selbst)",en:"to quit / to resign",ex:"She decided to <b>quit</b> her job."},
+  {lvl:"B2",cat:"work",de:"jemanden einstellen",en:"to hire",ex:"We plan to <b>hire</b> two engineers."},
+  {lvl:"B2",cat:"work",de:"die Beförderung",en:"the promotion",ex:"He got a <b>promotion</b>."},
+  {lvl:"B2",cat:"work",de:"die Abteilung",en:"the department",ex:"She works in the sales <b>department</b>."},
+  {lvl:"B2",cat:"work",de:"im Zeitplan / hinter dem Zeitplan",en:"on schedule / behind schedule",ex:"We're slightly <b>behind schedule</b>."},
+  {lvl:"B2",cat:"phrasal",de:"nachfassen / nachhaken",en:"to follow up",ex:"I'll <b>follow up</b> tomorrow.",note:"Substantiv: „a follow-up“."},
+  {lvl:"B2",cat:"phrasal",de:"aufsetzen / einrichten",en:"to set up",ex:"Can you <b>set up</b> a call?"},
+  {lvl:"B2",cat:"phrasal",de:"sich kurz abstimmen",en:"to touch base",ex:"Let's <b>touch base</b> next week."},
+  {lvl:"B2",cat:"phrasal",de:"klären / lösen",en:"to sort out / to figure out",ex:"Let's <b>figure out</b> the problem."},
+  {lvl:"B2",cat:"phrasal",de:"sich etw. ausdenken",en:"to come up with",ex:"She <b>came up with</b> a great idea."},
+  {lvl:"B2",cat:"phrasal",de:"sich befassen mit",en:"to deal with",ex:"I'll <b>deal with</b> this later."},
+  {lvl:"B2",cat:"phrasal",de:"untersuchen / prüfen",en:"to look into",ex:"We'll <b>look into</b> the issue."},
+  {lvl:"B2",cat:"phrasal",de:"absagen",en:"to call off",ex:"They <b>called off</b> the event."},
+  {lvl:"B2",cat:"phrasal",de:"vorschlagen / vorbringen",en:"to put forward",ex:"He <b>put forward</b> a new plan."},
+  {lvl:"B2",cat:"phrasal",de:"zufällig treffen / stoßen auf",en:"to run into",ex:"I <b>ran into</b> an old colleague."},
+  {lvl:"B2",cat:"phrasal",de:"abgeben / einreichen",en:"to hand in",ex:"Please <b>hand in</b> the form by Friday."},
+  {lvl:"B2",cat:"falsefriends",de:"sensibel",en:"sensitive",ex:"This is <b>sensitive</b> data.",note:"„sensible“ = vernünftig."},
+  {lvl:"B2",cat:"falsefriends",de:"engagiert / motiviert",en:"committed / dedicated",ex:"She's very <b>committed</b>.",note:"„engaged“ = verlobt / beschäftigt."},
+  {lvl:"B2",cat:"falsefriends",de:"der Chef / Vorgesetzte",en:"boss / manager",ex:"I'll ask my <b>manager</b>.",note:"„chef“ = Küchenchef/Koch."},
+  {lvl:"B2",cat:"falsefriends",de:"das Handy",en:"mobile / cell phone",ex:"Call me on my <b>mobile</b>.",note:"„handy“ (Adj.) = praktisch."},
+  {lvl:"B2",cat:"falsefriends",de:"das Rezept (Arzt)",en:"the prescription",ex:"I need a <b>prescription</b> for this.",note:"Kochrezept = „recipe“."},
+  {lvl:"B2",cat:"falsefriends",de:"also / daher",en:"so / therefore",ex:"It was late, <b>so</b> we left.",note:"„also“ = auch."},
+  {lvl:"B2",cat:"falsefriends",de:"bald",en:"soon",ex:"See you <b>soon</b>!",note:"„bald“ (engl.) = kahl/glatzköpfig."},
+  {lvl:"B2",cat:"presentation",de:"Lasst mich euch das erläutern.",en:"Let me walk you through this.",ex:"<b>Let me walk you through</b> the results."},
+  {lvl:"B2",cat:"presentation",de:"Unterm Strich…",en:"The bottom line is…",ex:"<b>The bottom line is,</b> we're on track."},
+  {lvl:"B2",cat:"presentation",de:"Wie ihr hier sehen könnt…",en:"As you can see here…",ex:"<b>As you can see here,</b> sales doubled."},
+  {lvl:"B2",cat:"presentation",de:"Das bringt mich zu…",en:"That brings me to…",ex:"<b>That brings me to</b> my next point."},
+  {lvl:"B2",cat:"presentation",de:"Ich hebe kurz hervor:",en:"I'd like to highlight…",ex:"<b>I'd like to highlight</b> two risks."},
+  {lvl:"B2",cat:"feelings",de:"Ehrlich gesagt…",en:"To be honest…",ex:"<b>To be honest,</b> I'm not convinced."},
+  {lvl:"B2",cat:"feelings",de:"einerseits… andererseits…",en:"on the one hand… on the other hand…",ex:"<b>On the one hand</b> it's cheap, <b>on the other</b> it's slow."},
+  {lvl:"B2",cat:"feelings",de:"das leuchtet mir ein",en:"that makes sense",ex:"Okay, <b>that makes sense</b>."},
+  {lvl:"B2",cat:"feelings",de:"ich habe gemischte Gefühle",en:"I have mixed feelings",ex:"<b>I have mixed feelings</b> about it."},
+  {lvl:"B2",cat:"feelings",de:"soweit ich weiß",en:"as far as I know",ex:"<b>As far as I know,</b> it's fine."},
+
+  // ================= C1 =================
+  {lvl:"C1",cat:"work",de:"eine Herausforderung angehen",en:"to tackle a challenge",ex:"Let's <b>tackle</b> this <b>challenge</b> head-on."},
+  {lvl:"C1",cat:"work",de:"Prioritäten setzen",en:"to prioritise / to prioritize",ex:"We need to <b>prioritise</b> tasks."},
+  {lvl:"C1",cat:"work",de:"den Überblick behalten",en:"to keep track of",ex:"It's hard to <b>keep track of</b> everything."},
+  {lvl:"C1",cat:"work",de:"Erwartungen erfüllen / übertreffen",en:"to meet / to exceed expectations",ex:"We <b>exceeded expectations</b> this quarter."},
+  {lvl:"C1",cat:"work",de:"der Engpass",en:"the bottleneck",ex:"Approval is the <b>bottleneck</b>."},
+  {lvl:"C1",cat:"work",de:"die Kennzahl",en:"the metric / KPI",ex:"Which <b>metric</b> matters most?"},
+  {lvl:"C1",cat:"work",de:"Erwartungen steuern",en:"to manage expectations",ex:"We should <b>manage expectations</b> early."},
+  {lvl:"C1",cat:"work",de:"reibungslos ablaufen",en:"to run smoothly",ex:"Everything <b>ran smoothly</b>."},
+  {lvl:"C1",cat:"work",de:"an Fahrt gewinnen",en:"to gain momentum",ex:"The project is <b>gaining momentum</b>."},
+  {lvl:"C1",cat:"work",de:"ins Stocken geraten",en:"to stall",ex:"Talks have <b>stalled</b>."},
+  {lvl:"C1",cat:"work",de:"straffen / verschlanken",en:"to streamline",ex:"We <b>streamlined</b> the process."},
+  {lvl:"C1",cat:"work",de:"die Kehrseite / der Nachteil",en:"the downside",ex:"The <b>downside</b> is the cost."},
+  {lvl:"C1",cat:"work",de:"der Vorbehalt / die Einschränkung",en:"the caveat",ex:"One <b>caveat</b>: the data is old."},
+  {lvl:"C1",cat:"work",de:"die Notlösung / der Umweg",en:"a workaround",ex:"We found a <b>workaround</b>."},
+  {lvl:"C1",cat:"work",de:"Kompromisse eingehen",en:"to compromise",ex:"Both sides had to <b>compromise</b>."},
+  {lvl:"C1",cat:"work",de:"eine Lücke schließen",en:"to bridge a gap",ex:"This tool <b>bridges the gap</b>."},
+  {lvl:"C1",cat:"meetings",de:"Ich würde behaupten…",en:"I would argue…",ex:"<b>I would argue</b> the opposite."},
+  {lvl:"C1",cat:"meetings",de:"Bei allem Respekt…",en:"With all due respect…",ex:"<b>With all due respect,</b> that won't work."},
+  {lvl:"C1",cat:"meetings",de:"um es auf den Punkt zu bringen",en:"to cut to the chase",ex:"Let me <b>cut to the chase</b>."},
+  {lvl:"C1",cat:"meetings",de:"das sprengt den Rahmen",en:"that's beyond the scope",ex:"That's <b>beyond the scope</b> of today."},
+  {lvl:"C1",cat:"meetings",de:"um es kurz zu machen",en:"long story short",ex:"<b>Long story short,</b> it worked."},
+  {lvl:"C1",cat:"meetings",de:"am Rande bemerkt",en:"as a side note",ex:"<b>As a side note,</b> prices went up."},
+  {lvl:"C1",cat:"meetings",de:"unter uns gesagt",en:"between you and me",ex:"<b>Between you and me,</b> it's risky."},
+  {lvl:"C1",cat:"meetings",de:"um fair zu sein",en:"to be fair",ex:"<b>To be fair,</b> they had little time."},
+  {lvl:"C1",cat:"idioms",de:"den Nagel auf den Kopf treffen",en:"to hit the nail on the head",ex:"You've <b>hit the nail on the head</b>."},
+  {lvl:"C1",cat:"idioms",de:"ins kalte Wasser springen",en:"to jump in at the deep end",ex:"I had to <b>jump in at the deep end</b>."},
+  {lvl:"C1",cat:"idioms",de:"auf Nummer sicher gehen",en:"to play it safe",ex:"Let's <b>play it safe</b> this time."},
+  {lvl:"C1",cat:"idioms",de:"etw. auf die lange Bank schieben",en:"to put sth on the back burner",ex:"We <b>put it on the back burner</b>."},
+  {lvl:"C1",cat:"idioms",de:"Nägel mit Köpfen machen",en:"to get down to business",ex:"Let's <b>get down to business</b>."},
+  {lvl:"C1",cat:"idioms",de:"den Kürzeren ziehen",en:"to draw the short straw",ex:"I <b>drew the short straw</b> again."},
+  {lvl:"C1",cat:"idioms",de:"auf lange Sicht",en:"in the long run",ex:"It pays off <b>in the long run</b>."},
+  {lvl:"C1",cat:"phrasal",de:"abwägen",en:"to weigh up",ex:"Let's <b>weigh up</b> the options."},
+  {lvl:"C1",cat:"phrasal",de:"(Probleme) ausräumen",en:"to iron out",ex:"We need to <b>iron out</b> the details."},
+  {lvl:"C1",cat:"phrasal",de:"durchführen",en:"to carry out",ex:"They <b>carried out</b> a survey."},
+  {lvl:"C1",cat:"phrasal",de:"(ein Thema) ansprechen",en:"to bring up",ex:"She <b>brought up</b> a good point."},
+  {lvl:"C1",cat:"phrasal",de:"herbeiführen / bewirken",en:"to bring about",ex:"This <b>brought about</b> real change."},
+  {lvl:"C1",cat:"phrasal",de:"weitermachen / fortfahren",en:"to carry on",ex:"Please <b>carry on</b>."},
+  {lvl:"C1",cat:"phrasal",de:"sichern / unterstützen",en:"to back up",ex:"I'll <b>back you up</b> on this."},
+  {lvl:"C1",cat:"falsefriends",de:"konsequent",en:"consistent",ex:"Be <b>consistent</b> in your work.",note:"„consequent“ ist selten – meist „resulting“."},
+  {lvl:"C1",cat:"falsefriends",de:"selbstbewusst / -sicher",en:"confident",ex:"She's very <b>confident</b>.",note:"<strong>Falscher Freund:</strong> „self-conscious“ = verlegen/gehemmt."},
+  {lvl:"C1",cat:"falsefriends",de:"die Kaution",en:"the deposit",ex:"You'll get your <b>deposit</b> back.",note:"„caution“ = Vorsicht."},
+  {lvl:"C1",cat:"falsefriends",de:"spenden",en:"to donate",ex:"They <b>donated</b> to charity.",note:"„to spend“ = (Geld/Zeit) ausgeben."},
+  {lvl:"C1",cat:"feelings",de:"widerwillig / zögerlich",en:"reluctant",ex:"He was <b>reluctant</b> to agree."},
+  {lvl:"C1",cat:"feelings",de:"überwältigt / überfordert",en:"overwhelmed",ex:"I feel a bit <b>overwhelmed</b>."},
+  {lvl:"C1",cat:"feelings",de:"gelassen / entspannt",en:"laid-back / composed",ex:"She stayed <b>composed</b> under pressure."},
+  {lvl:"C1",cat:"feelings",de:"akribisch / sorgfältig",en:"meticulous",ex:"He's <b>meticulous</b> about details."},
+  {lvl:"C1",cat:"feelings",de:"gewissenhaft",en:"conscientious",ex:"A <b>conscientious</b> worker."},
+  {lvl:"C1",cat:"feelings",de:"eigensinnig / stur",en:"stubborn",ex:"Don't be so <b>stubborn</b>."},
+  {lvl:"C1",cat:"feelings",de:"umgänglich / locker",en:"easy-going",ex:"He's really <b>easy-going</b>."},
+  {lvl:"C1",cat:"travel",de:"reibungslos / nahtlos",en:"seamless",ex:"The transfer was <b>seamless</b>."},
+  {lvl:"C1",cat:"travel",de:"überbucht",en:"overbooked",ex:"The flight was <b>overbooked</b>."},
+  {lvl:"C1",cat:"travel",de:"die Verspätung aufholen",en:"to make up for lost time",ex:"We <b>made up for lost time</b>."},
+
+  // ================= C2 =================
+  {lvl:"C2",cat:"feelings",de:"nichtsdestotrotz",en:"nonetheless / nevertheless",ex:"It's risky; <b>nonetheless,</b> it's worth it."},
+  {lvl:"C2",cat:"feelings",de:"im Großen und Ganzen",en:"by and large",ex:"<b>By and large,</b> the plan worked."},
+  {lvl:"C2",cat:"feelings",de:"letzten Endes",en:"ultimately",ex:"<b>Ultimately,</b> it's your call."},
+  {lvl:"C2",cat:"feelings",de:"im Wesentlichen",en:"essentially / in essence",ex:"<b>Essentially,</b> it's a trade-off."},
+  {lvl:"C2",cat:"feelings",de:"differenziert / nuanciert",en:"nuanced",ex:"It's a more <b>nuanced</b> issue."},
+  {lvl:"C2",cat:"feelings",de:"schlagfertig",en:"quick-witted",ex:"He's remarkably <b>quick-witted</b>."},
+  {lvl:"C2",cat:"feelings",de:"beharrlich / hartnäckig",en:"persistent / tenacious",ex:"Her <b>tenacious</b> effort paid off."},
+  {lvl:"C2",cat:"feelings",de:"umständlich / verworren",en:"cumbersome / convoluted",ex:"The process is far too <b>cumbersome</b>."},
+  {lvl:"C2",cat:"feelings",de:"voreilig / verfrüht",en:"premature / hasty",ex:"That conclusion is <b>premature</b>."},
+  {lvl:"C2",cat:"feelings",de:"nachsichtig / milde",en:"lenient",ex:"The judge was <b>lenient</b>."},
+  {lvl:"C2",cat:"meetings",de:"vorausgesetzt, dass…",en:"provided that…",ex:"We'll ship, <b>provided that</b> tests pass."},
+  {lvl:"C2",cat:"meetings",de:"angesichts…",en:"in light of / given…",ex:"<b>In light of</b> the data, we'll pause."},
+  {lvl:"C2",cat:"meetings",de:"ungeachtet / trotz",en:"regardless of / notwithstanding",ex:"<b>Regardless of</b> cost, we proceed."},
+  {lvl:"C2",cat:"meetings",de:"infolgedessen",en:"consequently / as a result",ex:"<b>Consequently,</b> we changed course."},
+  {lvl:"C2",cat:"meetings",de:"stichhaltig / überzeugend (Argument)",en:"valid / compelling",ex:"That's a <b>compelling</b> argument."},
+  {lvl:"C2",cat:"meetings",de:"inwiefern",en:"to what extent",ex:"<b>To what extent</b> is this true?"},
+  {lvl:"C2",cat:"meetings",de:"gegebenenfalls",en:"if applicable / where appropriate",ex:"Add details <b>where appropriate</b>."},
+  {lvl:"C2",cat:"email",de:"im Hinblick auf…",en:"with regard to… / concerning…",ex:"<b>With regard to</b> your query…"},
+  {lvl:"C2",cat:"email",de:"unmissverständlich",en:"unequivocal / unequivocally",ex:"The answer was <b>unequivocal</b>."},
+  {lvl:"C2",cat:"email",de:"anbei / beigefügt (formell)",en:"enclosed / attached herewith",ex:"Please see the <b>enclosed</b> document."},
+  {lvl:"C2",cat:"work",de:"vom Fach sein",en:"to know one's stuff",ex:"She really <b>knows her stuff</b>."},
+  {lvl:"C2",cat:"work",de:"eine Gratwanderung",en:"a balancing act / a fine line",ex:"It's a <b>balancing act</b>."},
+  {lvl:"C2",cat:"work",de:"weitreichend",en:"far-reaching",ex:"The decision has <b>far-reaching</b> effects."},
+  {lvl:"C2",cat:"work",de:"clever / gewieft (geschäftlich)",en:"savvy / shrewd",ex:"She's a <b>savvy</b> negotiator."},
+  {lvl:"C2",cat:"work",de:"tragfähig / rentabel",en:"viable / sustainable",ex:"Is this model <b>viable</b>?"},
+  {lvl:"C2",cat:"work",de:"prägnant / knapp",en:"concise / succinct",ex:"Keep it <b>concise</b>."},
+  {lvl:"C2",cat:"work",de:"fundiert / solide",en:"well-founded / sound",ex:"A <b>sound</b> strategy."},
+  {lvl:"C2",cat:"work",de:"schlüssig / kohärent",en:"coherent / conclusive",ex:"The plan is <b>coherent</b>."},
+  {lvl:"C2",cat:"work",de:"unabdingbar / unverzichtbar",en:"indispensable / essential",ex:"Trust is <b>indispensable</b>."},
+  {lvl:"C2",cat:"work",de:"richtungsweisend / bahnbrechend",en:"groundbreaking / pioneering",ex:"A <b>groundbreaking</b> approach."},
+  {lvl:"C2",cat:"work",de:"verbindlich (Zusage)",en:"binding",ex:"This offer is <b>binding</b>."},
+  {lvl:"C2",cat:"idioms",de:"über den Tellerrand schauen",en:"to think outside the box",ex:"We need to <b>think outside the box</b>."},
+  {lvl:"C2",cat:"idioms",de:"die Extrameile gehen",en:"to go the extra mile",ex:"She always <b>goes the extra mile</b>."},
+  {lvl:"C2",cat:"idioms",de:"das Ruder herumreißen",en:"to turn things around",ex:"They managed to <b>turn things around</b>."},
+  {lvl:"C2",cat:"idioms",de:"die Reißleine ziehen",en:"to pull the plug",ex:"We had to <b>pull the plug</b> on it."},
+  {lvl:"C2",cat:"idioms",de:"am seidenen Faden hängen",en:"to hang by a thread",ex:"The deal <b>hung by a thread</b>."},
+  {lvl:"C2",cat:"idioms",de:"den Nerv treffen",en:"to strike a chord",ex:"The idea <b>struck a chord</b>."},
+  {lvl:"C2",cat:"idioms",de:"zwischen den Zeilen lesen",en:"to read between the lines",ex:"You have to <b>read between the lines</b>."},
+  {lvl:"C2",cat:"idioms",de:"den Ton angeben / das Sagen haben",en:"to call the shots",ex:"She <b>calls the shots</b> here."},
+  {lvl:"C2",cat:"idioms",de:"etw. beschönigen / schönreden",en:"to sugar-coat / to gloss over",ex:"I won't <b>sugar-coat</b> it."},
+  {lvl:"C2",cat:"idioms",de:"die Weichen stellen",en:"to set the course / to lay the groundwork",ex:"This <b>sets the course</b> for next year."},
+  {lvl:"C2",cat:"idioms",de:"mit allen Wassern gewaschen",en:"to know every trick in the book",ex:"He <b>knows every trick in the book</b>."},
+  {lvl:"C2",cat:"idioms",de:"ins Fettnäpfchen treten",en:"to put one's foot in it",ex:"I really <b>put my foot in it</b>."},
+
+  // ================= A1 · Erweiterung =================
+  {lvl:"A1",cat:"basics",de:"was",en:"what",ex:"<b>What</b> is this?"},
+  {lvl:"A1",cat:"basics",de:"wer",en:"who",ex:"<b>Who</b> is that?"},
+  {lvl:"A1",cat:"basics",de:"wo",en:"where",ex:"<b>Where</b> are you?"},
+  {lvl:"A1",cat:"basics",de:"wann",en:"when",ex:"<b>When</b> is the bus?"},
+  {lvl:"A1",cat:"basics",de:"warum",en:"why",ex:"<b>Why</b> not?"},
+  {lvl:"A1",cat:"basics",de:"wie",en:"how",ex:"<b>How</b> does it work?"},
+  {lvl:"A1",cat:"basics",de:"eins / zwei / drei",en:"one / two / three",ex:"<b>One</b>, <b>two</b>, <b>three</b>."},
+  {lvl:"A1",cat:"basics",de:"rot / blau / grün",en:"red / blue / green",ex:"The car is <b>red</b>."},
+  {lvl:"A1",cat:"basics",de:"schwarz / weiß",en:"black / white",ex:"A <b>black</b> coffee, please."},
+  {lvl:"A1",cat:"basics",de:"groß / klein",en:"big / small",ex:"A <b>big</b> house."},
+  {lvl:"A1",cat:"basics",de:"kalt / warm",en:"cold / warm",ex:"It's very <b>cold</b> today."},
+  {lvl:"A1",cat:"basics",de:"der Mann / die Frau",en:"the man / the woman",ex:"That <b>man</b> is my father."},
+  {lvl:"A1",cat:"basics",de:"das Kind",en:"the child",ex:"The <b>child</b> is happy.",note:"Plural: „children“."},
+  {lvl:"A1",cat:"smalltalk",de:"Wie bitte?",en:"Pardon? / Sorry?",ex:"<b>Sorry?</b> Could you repeat that?"},
+  {lvl:"A1",cat:"smalltalk",de:"Ich weiß nicht.",en:"I don't know.",ex:"<b>I don't know.</b>"},
+  {lvl:"A1",cat:"smalltalk",de:"Kein Problem.",en:"No problem.",ex:"„Thanks!“ — „<b>No problem.</b>“"},
+  {lvl:"A1",cat:"smalltalk",de:"Entschuldigung (Verzeihung)",en:"Sorry",ex:"<b>Sorry,</b> I'm late."},
+  {lvl:"A1",cat:"basics",de:"gehen",en:"to go",ex:"I <b>go</b> home now."},
+  {lvl:"A1",cat:"basics",de:"kommen",en:"to come",ex:"Please <b>come</b> here."},
+  {lvl:"A1",cat:"basics",de:"sehen",en:"to see",ex:"I <b>see</b> you."},
+  {lvl:"A1",cat:"basics",de:"haben",en:"to have",ex:"I <b>have</b> a question."},
+  {lvl:"A1",cat:"basics",de:"machen",en:"to do / to make",ex:"What are you <b>doing</b>?"},
+  {lvl:"A1",cat:"basics",de:"sprechen / reden",en:"to speak / to talk",ex:"I <b>speak</b> a little English."},
+  {lvl:"A1",cat:"food",de:"der Tee",en:"tea",ex:"A cup of <b>tea</b>, please."},
+  {lvl:"A1",cat:"food",de:"das Bier / der Wein",en:"beer / wine",ex:"A <b>beer</b>, please."},
+  {lvl:"A1",cat:"food",de:"der Apfel",en:"the apple",ex:"An <b>apple</b> a day…"},
+  {lvl:"A1",cat:"food",de:"das Ei",en:"the egg",ex:"I'd like an <b>egg</b>."},
+  {lvl:"A1",cat:"food",de:"die Milch",en:"milk",ex:"Coffee with <b>milk</b>, please."},
+  {lvl:"A1",cat:"time",de:"der Tag / die Nacht",en:"the day / the night",ex:"Have a nice <b>day</b>!"},
+  {lvl:"A1",cat:"time",de:"die Stunde / die Minute",en:"the hour / the minute",ex:"In one <b>hour</b>."},
+  {lvl:"A1",cat:"health",de:"der Kopf / die Hand",en:"the head / the hand",ex:"My <b>head</b> hurts."},
+  {lvl:"A1",cat:"basics",de:"die Sonne / der Regen",en:"the sun / the rain",ex:"The <b>sun</b> is shining."},
+
+  // ================= A2 · Erweiterung =================
+  {lvl:"A2",cat:"basics",de:"normalerweise",en:"usually",ex:"I <b>usually</b> get up at 7."},
+  {lvl:"A2",cat:"basics",de:"vielleicht",en:"maybe / perhaps",ex:"<b>Maybe</b> tomorrow."},
+  {lvl:"A2",cat:"basics",de:"natürlich",en:"of course",ex:"<b>Of course!</b> No problem."},
+  {lvl:"A2",cat:"basics",de:"wirklich",en:"really",ex:"It's <b>really</b> good."},
+  {lvl:"A2",cat:"basics",de:"zusammen / allein",en:"together / alone",ex:"Let's do it <b>together</b>."},
+  {lvl:"A2",cat:"basics",de:"schnell / langsam",en:"fast / slow",ex:"Not so <b>fast</b>!"},
+  {lvl:"A2",cat:"basics",de:"früh / spät",en:"early / late",ex:"I'm <b>late</b>, sorry."},
+  {lvl:"A2",cat:"basics",de:"einfach / schwierig",en:"easy / difficult",ex:"It's not <b>difficult</b>."},
+  {lvl:"A2",cat:"basics",de:"wichtig",en:"important",ex:"This is very <b>important</b>."},
+  {lvl:"A2",cat:"basics",de:"richtig / falsch",en:"right / wrong",ex:"That's <b>right</b>!"},
+  {lvl:"A2",cat:"basics",de:"neu / alt",en:"new / old",ex:"A <b>new</b> phone."},
+  {lvl:"A2",cat:"basics",de:"brauchen",en:"to need",ex:"I <b>need</b> help."},
+  {lvl:"A2",cat:"basics",de:"versuchen",en:"to try",ex:"Let me <b>try</b> again."},
+  {lvl:"A2",cat:"basics",de:"warten",en:"to wait",ex:"Please <b>wait</b> here."},
+  {lvl:"A2",cat:"basics",de:"vergessen",en:"to forget",ex:"Don't <b>forget</b> your keys."},
+  {lvl:"A2",cat:"basics",de:"sich erinnern",en:"to remember",ex:"I can't <b>remember</b> his name."},
+  {lvl:"A2",cat:"basics",de:"finden",en:"to find",ex:"I can't <b>find</b> it."},
+  {lvl:"A2",cat:"food",de:"das Gemüse / das Obst",en:"vegetables / fruit",ex:"Eat your <b>vegetables</b>!"},
+  {lvl:"A2",cat:"food",de:"das Fleisch / der Fisch",en:"meat / fish",ex:"I don't eat <b>meat</b>."},
+  {lvl:"A2",cat:"shopping",de:"die Tasche / die Tüte",en:"the bag",ex:"Do you need a <b>bag</b>?"},
+  {lvl:"A2",cat:"shopping",de:"das Sonderangebot",en:"the special offer / deal",ex:"It's a great <b>deal</b>."},
+  {lvl:"A2",cat:"travel",de:"die Haltestelle",en:"the (bus) stop",ex:"Get off at the next <b>stop</b>."},
+  {lvl:"A2",cat:"travel",de:"die U-Bahn",en:"the underground / subway",ex:"Take the <b>subway</b>.",note:"UK: „the Tube“ / „underground“, USA: „subway“."},
+  {lvl:"A2",cat:"travel",de:"das Fahrrad",en:"the bike / bicycle",ex:"I go by <b>bike</b>."},
+  {lvl:"A2",cat:"travel",de:"zu Fuß gehen",en:"to walk / to go on foot",ex:"Let's <b>walk</b>."},
+  {lvl:"A2",cat:"travel",de:"die Tankstelle",en:"the petrol station / gas station",ex:"Stop at the <b>gas station</b>."},
+  {lvl:"A2",cat:"time",de:"letzte / nächste Woche",en:"last / next week",ex:"See you <b>next week</b>."},
+  {lvl:"A2",cat:"health",de:"gesund / krank",en:"healthy / ill (sick)",ex:"I feel <b>ill</b>.",note:"USA meist „sick“, UK „ill“."},
+  {lvl:"A2",cat:"home",de:"kochen",en:"to cook",ex:"I'll <b>cook</b> dinner."},
+  {lvl:"A2",cat:"home",de:"aufräumen",en:"to tidy up",ex:"Please <b>tidy up</b> your room."},
+  {lvl:"A2",cat:"home",de:"der Nachbar",en:"the neighbour / neighbor",ex:"My <b>neighbour</b> is nice."},
+
+  // ================= B1 · Erweiterung =================
+  {lvl:"B1",cat:"smalltalk",de:"Was hältst du von…?",en:"What do you think of…?",ex:"<b>What do you think of</b> the plan?"},
+  {lvl:"B1",cat:"smalltalk",de:"auf jeden Fall",en:"definitely / for sure",ex:"<b>Definitely!</b> Count me in."},
+  {lvl:"B1",cat:"smalltalk",de:"auf keinen Fall",en:"no way / definitely not",ex:"<b>No way,</b> that's too much."},
+  {lvl:"B1",cat:"smalltalk",de:"übrigens",en:"by the way",ex:"<b>By the way,</b> nice work."},
+  {lvl:"B1",cat:"smalltalk",de:"zum Beispiel",en:"for example / for instance",ex:"Take fruit, <b>for example</b>."},
+  {lvl:"B1",cat:"smalltalk",de:"deshalb / deswegen",en:"that's why",ex:"<b>That's why</b> I called."},
+  {lvl:"B1",cat:"work",de:"die Erfahrung",en:"experience",ex:"She has a lot of <b>experience</b>.",note:"Unzählbar (Erfahrung) vs. „an experience“ (Erlebnis)."},
+  {lvl:"B1",cat:"work",de:"die Fähigkeit / das Können",en:"the skill / ability",ex:"Good communication <b>skills</b>."},
+  {lvl:"B1",cat:"work",de:"der Kunde / die Kundin",en:"the customer / client",ex:"The <b>customer</b> is waiting."},
+  {lvl:"B1",cat:"work",de:"die Aufgabe",en:"the task",ex:"An easy <b>task</b>."},
+  {lvl:"B1",cat:"work",de:"das Gehalt",en:"the salary",ex:"A good <b>salary</b>."},
+  {lvl:"B1",cat:"work",de:"Vollzeit / Teilzeit",en:"full-time / part-time",ex:"She works <b>part-time</b>."},
+  {lvl:"B1",cat:"work",de:"selbstständig",en:"self-employed",ex:"I'm <b>self-employed</b>."},
+  {lvl:"B1",cat:"travel",de:"buchen / stornieren",en:"to book / to cancel",ex:"I need to <b>cancel</b> my flight."},
+  {lvl:"B1",cat:"travel",de:"die Verbindung",en:"the connection",ex:"A fast <b>connection</b> to Berlin."},
+  {lvl:"B1",cat:"travel",de:"der Aufenthalt",en:"the stay",ex:"Enjoy your <b>stay</b>!"},
+  {lvl:"B1",cat:"health",de:"sich ausruhen",en:"to rest",ex:"You should <b>rest</b>."},
+  {lvl:"B1",cat:"health",de:"wehtun",en:"to hurt",ex:"My back <b>hurts</b>."},
+  {lvl:"B1",cat:"health",de:"die Versicherung",en:"the insurance",ex:"Do you have <b>insurance</b>?"},
+  {lvl:"B1",cat:"feelings",de:"sich freuen auf",en:"to look forward to",ex:"I <b>look forward to</b> the trip.",note:"danach -ing: „to seeing you“."},
+  {lvl:"B1",cat:"feelings",de:"sich Sorgen machen",en:"to worry",ex:"Don't <b>worry</b>."},
+  {lvl:"B1",cat:"feelings",de:"stolz",en:"proud",ex:"I'm <b>proud</b> of you.",note:"„proud of sth/sb“."},
+  {lvl:"B1",cat:"feelings",de:"enttäuscht",en:"disappointed",ex:"I was a bit <b>disappointed</b>."},
+  {lvl:"B1",cat:"feelings",de:"nervös / aufgeregt",en:"nervous",ex:"I'm a little <b>nervous</b>."},
+  {lvl:"B1",cat:"feelings",de:"erleichtert",en:"relieved",ex:"I'm so <b>relieved</b>!"},
+  {lvl:"B1",cat:"phrasal",de:"weitermachen",en:"to carry on / to keep going",ex:"<b>Carry on</b>, you're doing well."},
+  {lvl:"B1",cat:"phrasal",de:"nachschlagen (Wort)",en:"to look up",ex:"<b>Look up</b> the word."},
+  {lvl:"B1",cat:"phrasal",de:"zurückrufen",en:"to call back",ex:"I'll <b>call</b> you <b>back</b>."},
+  {lvl:"B1",cat:"phrasal",de:"abholen",en:"to pick up",ex:"I'll <b>pick you up</b> at 8."},
+  {lvl:"B1",cat:"phrasal",de:"wegwerfen",en:"to throw away",ex:"Don't <b>throw</b> it <b>away</b>."},
+
+  // ================= B2 · Erweiterung =================
+  {lvl:"B2",cat:"work",de:"eine Frist einhalten",en:"to meet a deadline",ex:"We must <b>meet the deadline</b>."},
+  {lvl:"B2",cat:"work",de:"eine Frist verschieben",en:"to push back a deadline",ex:"Can we <b>push back the deadline</b>?"},
+  {lvl:"B2",cat:"work",de:"der Gewinn / der Verlust",en:"profit / loss",ex:"We made a small <b>profit</b>."},
+  {lvl:"B2",cat:"work",de:"das Budget",en:"the budget",ex:"We're over <b>budget</b>."},
+  {lvl:"B2",cat:"work",de:"die Rechnung (Faktura)",en:"the invoice",ex:"I'll send the <b>invoice</b>.",note:"Restaurant-Rechnung = „bill“."},
+  {lvl:"B2",cat:"work",de:"die Lieferung",en:"the delivery / shipment",ex:"The <b>delivery</b> is late."},
+  {lvl:"B2",cat:"work",de:"der Lieferant",en:"the supplier / vendor",ex:"We changed <b>supplier</b>."},
+  {lvl:"B2",cat:"work",de:"die Konkurrenz / der Wettbewerb",en:"competition / competitors",ex:"The <b>competition</b> is tough."},
+  {lvl:"B2",cat:"work",de:"die Nachfrage / das Angebot",en:"demand / supply",ex:"High <b>demand</b>, low <b>supply</b>."},
+  {lvl:"B2",cat:"work",de:"die Umfrage",en:"the survey",ex:"We ran a <b>survey</b>."},
+  {lvl:"B2",cat:"work",de:"der Vorschlag",en:"the proposal / suggestion",ex:"A solid <b>proposal</b>."},
+  {lvl:"B2",cat:"work",de:"verhandeln",en:"to negotiate",ex:"We need to <b>negotiate</b> the price."},
+  {lvl:"B2",cat:"work",de:"die Bedingung",en:"the condition / term",ex:"Under one <b>condition</b>."},
+  {lvl:"B2",cat:"work",de:"eine Einigung erzielen",en:"to reach an agreement",ex:"We <b>reached an agreement</b>."},
+  {lvl:"B2",cat:"meetings",de:"Könntest du das wiederholen?",en:"Could you repeat that?",ex:"Sorry, <b>could you repeat that?</b>"},
+  {lvl:"B2",cat:"meetings",de:"Ich stimme voll und ganz zu.",en:"I couldn't agree more.",ex:"<b>I couldn't agree more.</b>",note:"Bedeutet volle Zustimmung, nicht Ablehnung!"},
+  {lvl:"B2",cat:"meetings",de:"Fassen wir zusammen.",en:"Let's recap.",ex:"<b>Let's recap</b> the main points."},
+  {lvl:"B2",cat:"meetings",de:"Das ist ein guter Einwand.",en:"That's a fair point.",ex:"<b>That's a fair point.</b>"},
+  {lvl:"B2",cat:"meetings",de:"Bleiben wir beim Thema.",en:"Let's stay on topic.",ex:"<b>Let's stay on topic,</b> please."},
+  {lvl:"B2",cat:"email",de:"Ich hoffe, es geht dir gut.",en:"I hope you're doing well.",ex:"Hi Tom, <b>I hope you're doing well.</b>"},
+  {lvl:"B2",cat:"email",de:"Vielen Dank im Voraus.",en:"Thanks in advance.",ex:"<b>Thanks in advance</b> for your help."},
+  {lvl:"B2",cat:"email",de:"Ich melde mich.",en:"I'll be in touch.",ex:"<b>I'll be in touch</b> soon."},
+  {lvl:"B2",cat:"email",de:"bei Rückfragen",en:"should you have any questions",ex:"<b>Should you have any questions,</b> let me know."},
+  {lvl:"B2",cat:"phrasal",de:"hinweisen auf / betonen",en:"to point out",ex:"She <b>pointed out</b> a mistake."},
+  {lvl:"B2",cat:"phrasal",de:"klappen / funktionieren",en:"to work out",ex:"It'll <b>work out</b> fine."},
+  {lvl:"B2",cat:"phrasal",de:"sich herausstellen",en:"to turn out",ex:"It <b>turned out</b> to be true."},
+  {lvl:"B2",cat:"phrasal",de:"letztlich landen bei",en:"to end up",ex:"We <b>ended up</b> staying home."},
+  {lvl:"B2",cat:"phrasal",de:"aufholen / sich austauschen",en:"to catch up",ex:"Let's <b>catch up</b> soon."},
+  {lvl:"B2",cat:"phrasal",de:"sich melden / Kontakt aufnehmen",en:"to reach out",ex:"Feel free to <b>reach out</b>."},
+  {lvl:"B2",cat:"phrasal",de:"aufschlüsseln / zusammenbrechen",en:"to break down",ex:"Let me <b>break</b> it <b>down</b>."},
+  {lvl:"B2",cat:"phrasal",de:"reduzieren / einschränken",en:"to cut down on",ex:"I should <b>cut down on</b> coffee."},
+  {lvl:"B2",cat:"phrasal",de:"Schritt halten mit",en:"to keep up with",ex:"Hard to <b>keep up with</b> the news."},
+  {lvl:"B2",cat:"falsefriends",de:"die Fabrik",en:"the factory",ex:"He works in a <b>factory</b>.",note:"„fabric“ = Stoff."},
+  {lvl:"B2",cat:"falsefriends",de:"die Note (Schule)",en:"the grade / mark",ex:"She got a top <b>grade</b>.",note:"„note“ = Notiz."},
+  {lvl:"B2",cat:"falsefriends",de:"brav / artig",en:"well-behaved",ex:"The kids were <b>well-behaved</b>.",note:"„brave“ = mutig."},
+  {lvl:"B2",cat:"falsefriends",de:"der Rat / Ratschlag",en:"advice",ex:"Some good <b>advice</b>.",note:"Unzählbar! Nicht „advices“; ein Rat = „a piece of advice“."},
+  {lvl:"B2",cat:"falsefriends",de:"die Information(en)",en:"information",ex:"Useful <b>information</b>.",note:"Unzählbar – nie „informations“."},
+  {lvl:"B2",cat:"falsefriends",de:"die Möbel",en:"furniture",ex:"New office <b>furniture</b>.",note:"Unzählbar – nie „furnitures“."},
+  {lvl:"B2",cat:"falsefriends",de:"die Nachrichten",en:"news",ex:"Good <b>news</b>!",note:"Unzählbar, Verb im Singular: „the news is good“."},
+  {lvl:"B2",cat:"feelings",de:"Ich habe Bedenken.",en:"I have concerns / reservations.",ex:"<b>I have some concerns</b> about this."},
+  {lvl:"B2",cat:"feelings",de:"Ich bin überzeugt.",en:"I'm convinced.",ex:"<b>I'm convinced</b> it works."},
+  {lvl:"B2",cat:"feelings",de:"Das ist nachvollziehbar.",en:"That's understandable.",ex:"<b>That's understandable.</b>"},
+  {lvl:"B2",cat:"travel",de:"der Zwischenstopp",en:"the layover / stopover",ex:"A short <b>layover</b> in Rome."},
+  {lvl:"B2",cat:"travel",de:"die Bordkarte",en:"the boarding pass",ex:"Show your <b>boarding pass</b>."},
+  {lvl:"B2",cat:"travel",de:"das Handgepäck",en:"the carry-on / hand luggage",ex:"Only <b>hand luggage</b>, please."},
+  {lvl:"B2",cat:"travel",de:"der Zoll",en:"customs",ex:"Nothing to declare at <b>customs</b>."},
+  {lvl:"B2",cat:"presentation",de:"Gibt es Fragen?",en:"Any questions?",ex:"That's it — <b>any questions?</b>"},
+  {lvl:"B2",cat:"presentation",de:"Kommen wir zum Schluss.",en:"Let's wrap up. / To conclude…",ex:"<b>To conclude,</b> the results are strong."},
+
+  // ================= C1 · Erweiterung =================
+  {lvl:"C1",cat:"work",de:"die Erkenntnis / der Einblick",en:"the insight",ex:"A valuable <b>insight</b>."},
+  {lvl:"C1",cat:"work",de:"der Ansatz",en:"the approach",ex:"A fresh <b>approach</b>."},
+  {lvl:"C1",cat:"work",de:"die Umsetzung",en:"the implementation",ex:"<b>Implementation</b> starts Monday."},
+  {lvl:"C1",cat:"work",de:"die Auswirkung",en:"the impact",ex:"A huge <b>impact</b> on sales."},
+  {lvl:"C1",cat:"work",de:"die Machbarkeit",en:"feasibility",ex:"Let's check the <b>feasibility</b>."},
+  {lvl:"C1",cat:"work",de:"der Rückschlag",en:"the setback",ex:"A minor <b>setback</b>."},
+  {lvl:"C1",cat:"work",de:"der Durchbruch",en:"the breakthrough",ex:"A real <b>breakthrough</b>."},
+  {lvl:"C1",cat:"work",de:"der Spielraum",en:"leeway / room for manoeuvre",ex:"We have some <b>leeway</b>."},
+  {lvl:"C1",cat:"work",de:"der Zeitrahmen",en:"the timeframe",ex:"A tight <b>timeframe</b>."},
+  {lvl:"C1",cat:"work",de:"die Zuständigkeit",en:"the responsibility / remit",ex:"That's not my <b>remit</b>."},
+  {lvl:"C1",cat:"work",de:"die Vorgehensweise",en:"the procedure / approach",ex:"Follow the standard <b>procedure</b>."},
+  {lvl:"C1",cat:"meetings",de:"um ehrlich zu sein",en:"to be frank / frankly",ex:"<b>Frankly,</b> it's not ready."},
+  {lvl:"C1",cat:"meetings",de:"streng genommen",en:"strictly speaking",ex:"<b>Strictly speaking,</b> that's wrong."},
+  {lvl:"C1",cat:"meetings",de:"grob gesagt",en:"roughly speaking",ex:"<b>Roughly speaking,</b> about half."},
+  {lvl:"C1",cat:"meetings",de:"in Anbetracht dessen",en:"considering that",ex:"<b>Considering that,</b> we'll wait."},
+  {lvl:"C1",cat:"meetings",de:"vor diesem Hintergrund",en:"against this backdrop",ex:"<b>Against this backdrop,</b> we adapted."},
+  {lvl:"C1",cat:"idioms",de:"den Ball flach halten",en:"to keep a low profile",ex:"Let's <b>keep a low profile</b>."},
+  {lvl:"C1",cat:"idioms",de:"die Katze aus dem Sack lassen",en:"to let the cat out of the bag",ex:"He <b>let the cat out of the bag</b>."},
+  {lvl:"C1",cat:"idioms",de:"Öl ins Feuer gießen",en:"to add fuel to the fire",ex:"That just <b>added fuel to the fire</b>."},
+  {lvl:"C1",cat:"idioms",de:"alle Register ziehen",en:"to pull out all the stops",ex:"We <b>pulled out all the stops</b>."},
+  {lvl:"C1",cat:"idioms",de:"auf dem Holzweg sein",en:"to be barking up the wrong tree",ex:"You're <b>barking up the wrong tree</b>."},
+  {lvl:"C1",cat:"idioms",de:"den Faden verlieren",en:"to lose one's train of thought",ex:"Sorry, I <b>lost my train of thought</b>."},
+  {lvl:"C1",cat:"feelings",de:"überzeugend",en:"persuasive / convincing",ex:"A <b>persuasive</b> pitch."},
+  {lvl:"C1",cat:"feelings",de:"vielversprechend",en:"promising",ex:"A <b>promising</b> start."},
+  {lvl:"C1",cat:"feelings",de:"heikel / knifflig",en:"tricky / delicate",ex:"A <b>tricky</b> situation."},
+  {lvl:"C1",cat:"feelings",de:"ausschlaggebend / entscheidend",en:"decisive / crucial",ex:"The <b>decisive</b> factor."},
+  {lvl:"C1",cat:"feelings",de:"fragwürdig",en:"questionable / dubious",ex:"A <b>questionable</b> claim."},
+  {lvl:"C1",cat:"feelings",de:"unvermeidlich",en:"inevitable",ex:"The delay was <b>inevitable</b>."},
+  {lvl:"C1",cat:"feelings",de:"bemerkenswert",en:"remarkable",ex:"A <b>remarkable</b> result."},
+  {lvl:"C1",cat:"phrasal",de:"ausmachen / erklären (Anteil)",en:"to account for",ex:"Exports <b>account for</b> 40%."},
+  {lvl:"C1",cat:"phrasal",de:"hinauslaufen auf",en:"to boil down to",ex:"It <b>boils down to</b> trust."},
+  {lvl:"C1",cat:"phrasal",de:"ausschließen",en:"to rule out",ex:"We can't <b>rule</b> it <b>out</b>."},
+  {lvl:"C1",cat:"phrasal",de:"auslaufen lassen",en:"to phase out",ex:"They'll <b>phase out</b> the old model."},
+  {lvl:"C1",cat:"phrasal",de:"scheitern / platzen",en:"to fall through",ex:"The deal <b>fell through</b>."},
+  {lvl:"C1",cat:"phrasal",de:"abhängen von",en:"to hinge on",ex:"It all <b>hinges on</b> funding."},
+
+  // ================= C2 · Erweiterung =================
+  {lvl:"C2",cat:"meetings",de:"wohingegen",en:"whereas",ex:"He agreed, <b>whereas</b> she didn't."},
+  {lvl:"C2",cat:"meetings",de:"zugegebenermaßen",en:"admittedly",ex:"<b>Admittedly,</b> I was wrong."},
+  {lvl:"C2",cat:"meetings",de:"keineswegs / mitnichten",en:"by no means",ex:"That's <b>by no means</b> certain."},
+  {lvl:"C2",cat:"meetings",de:"geschweige denn",en:"let alone",ex:"He can't walk, <b>let alone</b> run."},
+  {lvl:"C2",cat:"meetings",de:"ohnehin / sowieso",en:"anyway / in any case",ex:"We were leaving <b>anyway</b>."},
+  {lvl:"C2",cat:"meetings",de:"demzufolge",en:"accordingly",ex:"Plans changed <b>accordingly</b>."},
+  {lvl:"C2",cat:"meetings",de:"insofern / soweit",en:"in so far as",ex:"<b>In so far as</b> we can tell…"},
+  {lvl:"C2",cat:"email",de:"hinsichtlich",en:"with respect to / regarding",ex:"<b>With respect to</b> costs…"},
+  {lvl:"C2",cat:"email",de:"infolge / aufgrund",en:"owing to / due to",ex:"Delayed <b>owing to</b> weather."},
+  {lvl:"C2",cat:"work",de:"unnachgiebig",en:"uncompromising / relentless",ex:"A <b>relentless</b> focus on quality."},
+  {lvl:"C2",cat:"work",de:"weitsichtig / visionär",en:"far-sighted / visionary",ex:"A <b>visionary</b> leader."},
+  {lvl:"C2",cat:"work",de:"kurzsichtig",en:"short-sighted",ex:"A <b>short-sighted</b> decision."},
+  {lvl:"C2",cat:"work",de:"besonnen / umsichtig",en:"level-headed / prudent",ex:"A <b>prudent</b> approach."},
+  {lvl:"C2",cat:"work",de:"makellos / tadellos",en:"flawless / impeccable",ex:"<b>Impeccable</b> timing."},
+  {lvl:"C2",cat:"work",de:"versiert / bewandert",en:"proficient / well-versed",ex:"<b>Well-versed</b> in finance."},
+  {lvl:"C2",cat:"work",de:"durchdacht",en:"well thought-out",ex:"A <b>well thought-out</b> plan."},
+  {lvl:"C2",cat:"work",de:"gravierend / schwerwiegend",en:"serious / grave",ex:"A <b>grave</b> mistake."},
+  {lvl:"C2",cat:"work",de:"wegweisend / bahnbrechend",en:"trailblazing / pioneering",ex:"A <b>trailblazing</b> product."},
+  {lvl:"C2",cat:"feelings",de:"zwiespältig / hin- und hergerissen",en:"conflicted / ambivalent",ex:"I feel <b>conflicted</b>."},
+  {lvl:"C2",cat:"feelings",de:"unbeirrt",en:"undeterred",ex:"She carried on, <b>undeterred</b>."},
+  {lvl:"C2",cat:"feelings",de:"eloquent / redegewandt",en:"eloquent / articulate",ex:"An <b>articulate</b> speaker."},
+  {lvl:"C2",cat:"idioms",de:"den Spieß umdrehen",en:"to turn the tables",ex:"She <b>turned the tables</b> on them."},
+  {lvl:"C2",cat:"idioms",de:"auf Augenhöhe",en:"on an equal footing",ex:"We met <b>on an equal footing</b>."},
+  {lvl:"C2",cat:"idioms",de:"in trockenen Tüchern",en:"done and dusted / in the bag",ex:"The deal is <b>done and dusted</b>."},
+  {lvl:"C2",cat:"idioms",de:"das Handtuch werfen",en:"to throw in the towel",ex:"Don't <b>throw in the towel</b> yet."},
+  {lvl:"C2",cat:"idioms",de:"am Ball bleiben",en:"to stay on the ball",ex:"You have to <b>stay on the ball</b>."},
+  {lvl:"C2",cat:"idioms",de:"Klartext reden",en:"to talk straight / not mince words",ex:"Let me <b>talk straight</b>."},
+  {lvl:"C2",cat:"idioms",de:"die Spreu vom Weizen trennen",en:"to separate the wheat from the chaff",ex:"Time to <b>separate the wheat from the chaff</b>."},
+  {lvl:"C2",cat:"idioms",de:"die Fühler ausstrecken",en:"to put out feelers",ex:"We <b>put out feelers</b> for a partner."},
+  {lvl:"C2",cat:"work",de:"untermauern / belegen",en:"to underpin / to substantiate",ex:"Data <b>underpins</b> the claim."},
+  {lvl:"C2",cat:"work",de:"relativieren / einordnen",en:"to put into perspective",ex:"Let me <b>put this into perspective</b>."},
+  {lvl:"C2",cat:"work",de:"eindämmen / begrenzen",en:"to curb / to contain",ex:"Measures to <b>curb</b> costs."},
+  {lvl:"C2",cat:"work",de:"vorantreiben / anführen",en:"to drive forward / to spearhead",ex:"She'll <b>spearhead</b> the launch."},
+  {lvl:"C2",cat:"work",de:"ausloten / abschätzen",en:"to gauge / to explore",ex:"Let's <b>gauge</b> the reaction."},
+  {lvl:"C2",cat:"work",de:"verwerfen / abtun",en:"to discard / to dismiss",ex:"They <b>dismissed</b> the idea."},
+
+  // ================= NEU · A1 =================
+  {lvl:"A1",cat:"home",de:"die Katze / der Hund",en:"the cat / the dog",ex:"We have a <b>cat</b> and a <b>dog</b>."},
+  {lvl:"A1",cat:"home",de:"der Tisch / der Stuhl",en:"the table / the chair",ex:"Sit on the <b>chair</b>."},
+  {lvl:"A1",cat:"home",de:"die Tür / das Fenster",en:"the door / the window",ex:"Open the <b>window</b>, please."},
+  {lvl:"A1",cat:"basics",de:"die Stadt",en:"the city",ex:"A big <b>city</b>."},
+  {lvl:"A1",cat:"basics",de:"das Land",en:"the country",ex:"Which <b>country</b> are you from?"},
+  {lvl:"A1",cat:"basics",de:"die Zahl / die Nummer",en:"the number",ex:"What's your phone <b>number</b>?"},
+  {lvl:"A1",cat:"basics",de:"die Schule",en:"the school",ex:"The kids go to <b>school</b>."},
+  {lvl:"A1",cat:"basics",de:"lesen / schreiben",en:"to read / to write",ex:"I like to <b>read</b>."},
+  {lvl:"A1",cat:"basics",de:"lernen",en:"to learn",ex:"I want to <b>learn</b> English."},
+  {lvl:"A1",cat:"basics",de:"spielen",en:"to play",ex:"The children <b>play</b> outside."},
+  {lvl:"A1",cat:"basics",de:"mögen / gern haben",en:"to like",ex:"I <b>like</b> coffee."},
+  {lvl:"A1",cat:"basics",de:"lieben",en:"to love",ex:"I <b>love</b> this song."},
+  {lvl:"A1",cat:"basics",de:"wollen / möchten",en:"to want",ex:"I <b>want</b> a coffee."},
+  {lvl:"A1",cat:"basics",de:"geben",en:"to give",ex:"Can you <b>give</b> me that?"},
+  {lvl:"A1",cat:"time",de:"der Abend",en:"the evening",ex:"Good <b>evening</b>!"},
+  {lvl:"A1",cat:"feelings",de:"schön / hübsch",en:"beautiful / nice",ex:"What a <b>beautiful</b> day!"},
+
+  // ================= NEU · A2 =================
+  {lvl:"A2",cat:"basics",de:"das Wetter",en:"the weather",ex:"How's the <b>weather</b>?"},
+  {lvl:"A2",cat:"basics",de:"der Schnee / der Wind",en:"snow / wind",ex:"A lot of <b>snow</b> today."},
+  {lvl:"A2",cat:"basics",de:"heiß",en:"hot",ex:"It's very <b>hot</b>."},
+  {lvl:"A2",cat:"basics",de:"der Sommer / der Winter",en:"summer / winter",ex:"I love <b>summer</b>."},
+  {lvl:"A2",cat:"basics",de:"die Jahreszeit",en:"the season",ex:"My favourite <b>season</b>."},
+  {lvl:"A2",cat:"shopping",de:"die Kleidung",en:"clothes",ex:"I need new <b>clothes</b>.",note:"Nur Plural: „clothes“."},
+  {lvl:"A2",cat:"shopping",de:"die Schuhe",en:"shoes",ex:"Nice <b>shoes</b>!"},
+  {lvl:"A2",cat:"shopping",de:"das Hemd / die Hose",en:"shirt / trousers",ex:"A blue <b>shirt</b>.",note:"USA: „pants“ = Hose."},
+  {lvl:"A2",cat:"travel",de:"die Straßenbahn",en:"the tram",ex:"Take the <b>tram</b>."},
+  {lvl:"A2",cat:"travel",de:"das Schiff",en:"the ship",ex:"A big <b>ship</b>."},
+  {lvl:"A2",cat:"travel",de:"der Bahnsteig / das Gleis",en:"the platform",ex:"The train leaves from <b>platform</b> 4."},
+  {lvl:"A2",cat:"travel",de:"die Reise / der Ausflug",en:"the trip / journey",ex:"Have a good <b>trip</b>!"},
+  {lvl:"A2",cat:"travel",de:"der Urlaub",en:"the holiday / vacation",ex:"I'm on <b>holiday</b>.",note:"USA: „vacation“."},
+  {lvl:"A2",cat:"feelings",de:"traurig",en:"sad",ex:"Why so <b>sad</b>?"},
+  {lvl:"A2",cat:"feelings",de:"hungrig / durstig",en:"hungry / thirsty",ex:"I'm really <b>hungry</b>."},
+  {lvl:"A2",cat:"feelings",de:"freundlich",en:"friendly",ex:"The staff were very <b>friendly</b>."},
+  {lvl:"A2",cat:"smalltalk",de:"verheiratet",en:"married",ex:"Are you <b>married</b>?"},
+  {lvl:"A2",cat:"basics",de:"gefährlich / sicher",en:"dangerous / safe",ex:"It's not <b>dangerous</b>."},
+
+  // ================= NEU · B1 =================
+  {lvl:"B1",cat:"feelings",de:"das Problem",en:"the problem",ex:"No <b>problem</b> at all."},
+  {lvl:"B1",cat:"feelings",de:"die Lösung",en:"the solution",ex:"We found a <b>solution</b>."},
+  {lvl:"B1",cat:"feelings",de:"der Grund",en:"the reason",ex:"What's the <b>reason</b>?"},
+  {lvl:"B1",cat:"feelings",de:"der Vorteil / der Nachteil",en:"advantage / disadvantage",ex:"A big <b>advantage</b>."},
+  {lvl:"B1",cat:"feelings",de:"die Möglichkeit / Gelegenheit",en:"opportunity",ex:"A great <b>opportunity</b>."},
+  {lvl:"B1",cat:"work",de:"entscheiden",en:"to decide",ex:"You have to <b>decide</b>."},
+  {lvl:"B1",cat:"work",de:"verbessern",en:"to improve",ex:"I want to <b>improve</b> my English."},
+  {lvl:"B1",cat:"work",de:"entwickeln",en:"to develop",ex:"We <b>develop</b> apps."},
+  {lvl:"B1",cat:"work",de:"vergleichen",en:"to compare",ex:"Let's <b>compare</b> the prices."},
+  {lvl:"B1",cat:"work",de:"erklären",en:"to explain",ex:"Can you <b>explain</b> this?"},
+  {lvl:"B1",cat:"work",de:"beschreiben",en:"to describe",ex:"<b>Describe</b> the problem."},
+  {lvl:"B1",cat:"work",de:"vorschlagen",en:"to suggest",ex:"I <b>suggest</b> we wait."},
+  {lvl:"B1",cat:"work",de:"erlauben / verbieten",en:"to allow / to forbid",ex:"Smoking is not <b>allowed</b>."},
+  {lvl:"B1",cat:"basics",de:"die Umwelt",en:"the environment",ex:"Protect the <b>environment</b>."},
+  {lvl:"B1",cat:"basics",de:"die Gesundheit",en:"health",ex:"<b>Health</b> comes first."},
+  {lvl:"B1",cat:"basics",de:"die Bildung",en:"education",ex:"A good <b>education</b>."},
+  {lvl:"B1",cat:"basics",de:"die Technik / Technologie",en:"technology",ex:"New <b>technology</b>."},
+  {lvl:"B1",cat:"basics",de:"die Regierung",en:"the government",ex:"The <b>government</b> decided."},
+  {lvl:"B1",cat:"basics",de:"die Gesellschaft",en:"society",ex:"Modern <b>society</b>."},
+  {lvl:"B1",cat:"basics",de:"die Wirtschaft",en:"the economy",ex:"A strong <b>economy</b>."},
+  {lvl:"B1",cat:"basics",de:"die Forschung",en:"research",ex:"Medical <b>research</b>.",note:"Unzählbar."},
+
+  // ================= NEU · B2 =================
+  {lvl:"B2",cat:"work",de:"das Ziel",en:"the goal / objective",ex:"Our main <b>goal</b> this year."},
+  {lvl:"B2",cat:"work",de:"die Strategie",en:"the strategy",ex:"A clear <b>strategy</b>."},
+  {lvl:"B2",cat:"work",de:"der Zeitplan / Ablaufplan",en:"the timeline",ex:"A tight <b>timeline</b>."},
+  {lvl:"B2",cat:"work",de:"die Verzögerung",en:"the delay",ex:"A short <b>delay</b>."},
+  {lvl:"B2",cat:"work",de:"der Fortschritt",en:"progress",ex:"Good <b>progress</b>!",note:"Unzählbar."},
+  {lvl:"B2",cat:"work",de:"die Herausforderung",en:"the challenge",ex:"An exciting <b>challenge</b>."},
+  {lvl:"B2",cat:"work",de:"die Führung / Leitung",en:"leadership",ex:"Strong <b>leadership</b>."},
+  {lvl:"B2",cat:"work",de:"das Management",en:"management",ex:"Senior <b>management</b>."},
+  {lvl:"B2",cat:"work",de:"die Investition",en:"the investment",ex:"A smart <b>investment</b>."},
+  {lvl:"B2",cat:"work",de:"die Einnahmen / Ausgaben",en:"income / expenses",ex:"Monthly <b>expenses</b>."},
+  {lvl:"B2",cat:"work",de:"der Anteilseigner / Aktionär",en:"the shareholder",ex:"The <b>shareholders</b> voted."},
+  {lvl:"B2",cat:"work",de:"die Effizienz",en:"efficiency",ex:"Improve <b>efficiency</b>."},
+  {lvl:"B2",cat:"work",de:"die Produktivität",en:"productivity",ex:"Higher <b>productivity</b>."},
+  {lvl:"B2",cat:"feelings",de:"zuverlässig",en:"reliable",ex:"A <b>reliable</b> partner."},
+  {lvl:"B2",cat:"feelings",de:"effizient",en:"efficient",ex:"An <b>efficient</b> process."},
+  {lvl:"B2",cat:"feelings",de:"flexibel",en:"flexible",ex:"We're quite <b>flexible</b>."},
+  {lvl:"B2",cat:"feelings",de:"gründlich",en:"thorough",ex:"A <b>thorough</b> review."},
+  {lvl:"B2",cat:"phrasal",de:"sichern / speichern",en:"to back up",ex:"<b>Back up</b> your files."},
+  {lvl:"B2",cat:"phrasal",de:"absagen / verschieben",en:"to call off / to put off",ex:"They <b>called off</b> the trip."},
+  {lvl:"B2",cat:"phrasal",de:"sich anmelden / registrieren",en:"to sign up",ex:"<b>Sign up</b> for the newsletter."},
+
+  // ================= NEU · C1 =================
+  {lvl:"C1",cat:"work",de:"die Rahmenbedingungen / das Gerüst",en:"the framework",ex:"A clear <b>framework</b>."},
+  {lvl:"C1",cat:"work",de:"die Genauigkeit",en:"accuracy",ex:"High <b>accuracy</b>."},
+  {lvl:"C1",cat:"work",de:"die Zuverlässigkeit",en:"reliability",ex:"Proven <b>reliability</b>."},
+  {lvl:"C1",cat:"work",de:"die Transparenz",en:"transparency",ex:"Full <b>transparency</b>."},
+  {lvl:"C1",cat:"work",de:"die Vielfalt",en:"diversity",ex:"Team <b>diversity</b>."},
+  {lvl:"C1",cat:"feelings",de:"die Wahrnehmung",en:"perception",ex:"Public <b>perception</b> matters."},
+  {lvl:"C1",cat:"feelings",de:"die Annahme / Vermutung",en:"the assumption",ex:"A risky <b>assumption</b>."},
+  {lvl:"C1",cat:"feelings",de:"die Schlussfolgerung",en:"the conclusion",ex:"A fair <b>conclusion</b>."},
+  {lvl:"C1",cat:"work",de:"die Voraussetzung",en:"the prerequisite",ex:"Trust is a <b>prerequisite</b>."},
+  {lvl:"C1",cat:"feelings",de:"nachvollziehbar / verständlich",en:"comprehensible",ex:"A <b>comprehensible</b> explanation."},
+  {lvl:"C1",cat:"feelings",de:"unvoreingenommen",en:"unbiased",ex:"An <b>unbiased</b> view."},
+  {lvl:"C1",cat:"meetings",de:"zweifellos",en:"undoubtedly",ex:"<b>Undoubtedly</b> the best option."},
+  {lvl:"C1",cat:"meetings",de:"vermutlich",en:"presumably",ex:"<b>Presumably,</b> they'll agree."},
+  {lvl:"C1",cat:"meetings",de:"offensichtlich",en:"obviously / evidently",ex:"<b>Obviously,</b> that helps."},
+  {lvl:"C1",cat:"feelings",de:"bewusst / absichtlich",en:"deliberate",ex:"A <b>deliberate</b> choice."},
+
+  // ================= NEU · C2 =================
+  {lvl:"C2",cat:"feelings",de:"die Feinheit / Nuance",en:"the subtlety",ex:"A <b>subtlety</b> worth noting."},
+  {lvl:"C2",cat:"feelings",de:"die Zweideutigkeit",en:"ambiguity",ex:"Some <b>ambiguity</b> remains."},
+  {lvl:"C2",cat:"feelings",de:"die Beharrlichkeit / Ausdauer",en:"perseverance",ex:"Sheer <b>perseverance</b>."},
+  {lvl:"C2",cat:"feelings",de:"die Zurückhaltung",en:"restraint",ex:"He showed great <b>restraint</b>."},
+  {lvl:"C2",cat:"feelings",de:"die Voreingenommenheit",en:"bias",ex:"An unconscious <b>bias</b>."},
+  {lvl:"C2",cat:"work",de:"die Zwangslage / das Dilemma",en:"the predicament",ex:"A tricky <b>predicament</b>."},
+  {lvl:"C2",cat:"feelings",de:"unerschütterlich",en:"unwavering",ex:"<b>Unwavering</b> support."},
+  {lvl:"C2",cat:"work",de:"durchsetzungsstark",en:"assertive",ex:"Be <b>assertive</b>, not aggressive."},
+  {lvl:"C2",cat:"feelings",de:"scharfsinnig",en:"astute",ex:"An <b>astute</b> observation."},
+  {lvl:"C2",cat:"feelings",de:"weitschweifig / wortreich",en:"verbose",ex:"Too <b>verbose</b> — cut it down."},
+  {lvl:"C2",cat:"feelings",de:"knapp / lakonisch",en:"terse",ex:"A <b>terse</b> reply."},
+  {lvl:"C2",cat:"feelings",de:"unnachahmlich",en:"inimitable",ex:"Her <b>inimitable</b> style."},
+  {lvl:"C2",cat:"feelings",de:"allgegenwärtig",en:"ubiquitous",ex:"<b>Ubiquitous</b> smartphones."},
+  {lvl:"C2",cat:"feelings",de:"vergänglich / flüchtig",en:"transient",ex:"A <b>transient</b> trend."},
+  {lvl:"C2",cat:"work",de:"unumkehrbar",en:"irreversible",ex:"An <b>irreversible</b> step."},
+  {lvl:"C2",cat:"work",de:"vielschichtig",en:"multifaceted",ex:"A <b>multifaceted</b> problem."},
+  {lvl:"C2",cat:"work",de:"beispiellos",en:"unprecedented",ex:"An <b>unprecedented</b> move."},
+  {lvl:"C2",cat:"feelings",de:"tiefgreifend",en:"profound",ex:"A <b>profound</b> impact."},
+  {lvl:"C2",cat:"work",de:"maßgeblich / autoritativ",en:"authoritative",ex:"The <b>authoritative</b> source."},
+  {lvl:"C2",cat:"meetings",de:"unbestreitbar",en:"undeniable",ex:"An <b>undeniable</b> fact."},
+
+  // ================= ZUSATZ · A1 (Familie, Körper, Tiere, Natur, Zahlen) =================
+  {lvl:"A1",cat:"numbers",de:"vier / fünf / sechs",en:"four / five / six",ex:"<b>Four</b>, <b>five</b>, <b>six</b>."},
+  {lvl:"A1",cat:"numbers",de:"sieben / acht",en:"seven / eight",ex:"It's <b>seven</b> o'clock."},
+  {lvl:"A1",cat:"numbers",de:"neun / zehn",en:"nine / ten",ex:"<b>Ten</b> minutes, please."},
+  {lvl:"A1",cat:"numbers",de:"null",en:"zero",ex:"The score is <b>zero</b>."},
+  {lvl:"A1",cat:"numbers",de:"hundert / tausend",en:"hundred / thousand",ex:"A <b>hundred</b> euros."},
+  {lvl:"A1",cat:"numbers",de:"der erste / der zweite",en:"the first / the second",ex:"You are <b>first</b>."},
+  {lvl:"A1",cat:"family",de:"die Mutter / der Vater",en:"the mother / the father",ex:"My <b>mother</b> is a teacher."},
+  {lvl:"A1",cat:"family",de:"der Bruder / die Schwester",en:"the brother / the sister",ex:"I have one <b>brother</b>."},
+  {lvl:"A1",cat:"family",de:"der Sohn / die Tochter",en:"the son / the daughter",ex:"Their <b>daughter</b> is five."},
+  {lvl:"A1",cat:"family",de:"die Eltern",en:"the parents",ex:"My <b>parents</b> live here.",note:"Meist Plural: „parents“."},
+  {lvl:"A1",cat:"family",de:"die Großmutter / der Großvater",en:"the grandmother / the grandfather",ex:"My <b>grandmother</b> is 80."},
+  {lvl:"A1",cat:"family",de:"das Baby / das Kind",en:"the baby / the child",ex:"The <b>baby</b> is sleeping."},
+  {lvl:"A1",cat:"body",de:"das Auge / das Ohr",en:"the eye / the ear",ex:"Close your <b>eyes</b>."},
+  {lvl:"A1",cat:"body",de:"die Nase / der Mund",en:"the nose / the mouth",ex:"Open your <b>mouth</b>."},
+  {lvl:"A1",cat:"body",de:"der Arm / das Bein",en:"the arm / the leg",ex:"My <b>leg</b> hurts."},
+  {lvl:"A1",cat:"body",de:"der Fuß / die Hand",en:"the foot / the hand",ex:"Give me your <b>hand</b>.",note:"Plural: „feet“."},
+  {lvl:"A1",cat:"body",de:"das Haar / der Zahn",en:"the hair / the tooth",ex:"Brush your <b>teeth</b>.",note:"Plural: „teeth“."},
+  {lvl:"A1",cat:"animals",de:"der Vogel",en:"the bird",ex:"A little <b>bird</b>."},
+  {lvl:"A1",cat:"animals",de:"das Pferd",en:"the horse",ex:"A brown <b>horse</b>."},
+  {lvl:"A1",cat:"animals",de:"die Kuh / das Schwein",en:"the cow / the pig",ex:"The <b>cow</b> is big."},
+  {lvl:"A1",cat:"animals",de:"die Maus",en:"the mouse",ex:"A small <b>mouse</b>.",note:"Plural: „mice“."},
+  {lvl:"A1",cat:"nature",de:"der Baum / die Blume",en:"the tree / the flower",ex:"A tall <b>tree</b>."},
+  {lvl:"A1",cat:"nature",de:"der Berg / der Fluss",en:"the mountain / the river",ex:"A high <b>mountain</b>."},
+  {lvl:"A1",cat:"nature",de:"das Meer / der See",en:"the sea / the lake",ex:"We swim in the <b>sea</b>."},
+  {lvl:"A1",cat:"nature",de:"der Wald",en:"the forest / the wood",ex:"A walk in the <b>forest</b>."},
+  {lvl:"A1",cat:"nature",de:"der Mond / der Stern",en:"the moon / the star",ex:"Look at the <b>moon</b>."},
+  {lvl:"A1",cat:"food",de:"das Salz / der Zucker",en:"salt / sugar",ex:"Pass the <b>salt</b>, please."},
+  {lvl:"A1",cat:"food",de:"der Käse / die Butter",en:"cheese / butter",ex:"Bread and <b>cheese</b>."},
+  {lvl:"A1",cat:"food",de:"die Suppe",en:"the soup",ex:"Hot <b>soup</b>."},
+  {lvl:"A1",cat:"food",de:"der Kuchen",en:"the cake",ex:"A piece of <b>cake</b>."},
+  {lvl:"A1",cat:"food",de:"die Banane / die Orange",en:"the banana / the orange",ex:"I eat a <b>banana</b>."},
+  {lvl:"A1",cat:"basics",de:"schlafen",en:"to sleep",ex:"I want to <b>sleep</b>."},
+  {lvl:"A1",cat:"basics",de:"arbeiten",en:"to work",ex:"I <b>work</b> here."},
+  {lvl:"A1",cat:"basics",de:"wohnen / leben",en:"to live",ex:"I <b>live</b> in Berlin."},
+  {lvl:"A1",cat:"basics",de:"öffnen / schließen",en:"to open / to close",ex:"<b>Open</b> the door, please."},
+  {lvl:"A1",cat:"time",de:"die Woche / der Monat / das Jahr",en:"the week / the month / the year",ex:"Next <b>year</b>."},
+  {lvl:"A1",cat:"time",de:"Montag / Dienstag",en:"Monday / Tuesday",ex:"See you on <b>Monday</b>."},
+  {lvl:"A1",cat:"time",de:"Samstag / Sonntag",en:"Saturday / Sunday",ex:"On <b>Sunday</b> I relax."},
+
+  // ================= ZUSATZ · A2 (Technik, Sport, Schule, Zuhause) =================
+  {lvl:"A2",cat:"tech",de:"der Computer",en:"the computer",ex:"My <b>computer</b> is slow."},
+  {lvl:"A2",cat:"tech",de:"das Handy / das Smartphone",en:"the mobile / the smartphone",ex:"Where is my <b>phone</b>?"},
+  {lvl:"A2",cat:"tech",de:"das Internet",en:"the internet",ex:"No <b>internet</b> here."},
+  {lvl:"A2",cat:"tech",de:"die E-Mail",en:"the email",ex:"I'll send an <b>email</b>."},
+  {lvl:"A2",cat:"tech",de:"die Nachricht (SMS)",en:"the message / text",ex:"I got your <b>message</b>."},
+  {lvl:"A2",cat:"tech",de:"das Passwort",en:"the password",ex:"Enter your <b>password</b>."},
+  {lvl:"A2",cat:"tech",de:"herunterladen",en:"to download",ex:"<b>Download</b> the app."},
+  {lvl:"A2",cat:"sport",de:"der Sport",en:"sport / sports",ex:"I like <b>sport</b>."},
+  {lvl:"A2",cat:"sport",de:"schwimmen",en:"to swim",ex:"Can you <b>swim</b>?"},
+  {lvl:"A2",cat:"sport",de:"laufen / rennen",en:"to run",ex:"I <b>run</b> every morning."},
+  {lvl:"A2",cat:"sport",de:"das Spiel",en:"the game / the match",ex:"A football <b>match</b>."},
+  {lvl:"A2",cat:"sport",de:"gewinnen / verlieren",en:"to win / to lose",ex:"We want to <b>win</b>."},
+  {lvl:"A2",cat:"sport",de:"die Mannschaft / das Team",en:"the team",ex:"A strong <b>team</b>."},
+  {lvl:"A2",cat:"sport",de:"tanzen / singen",en:"to dance / to sing",ex:"Let's <b>dance</b>!"},
+  {lvl:"A2",cat:"sport",de:"das Hobby",en:"the hobby",ex:"My favourite <b>hobby</b>."},
+  {lvl:"A2",cat:"education",de:"der Lehrer / die Lehrerin",en:"the teacher",ex:"Our <b>teacher</b> is nice."},
+  {lvl:"A2",cat:"education",de:"der Schüler / der Student",en:"the pupil / the student",ex:"She is a good <b>student</b>."},
+  {lvl:"A2",cat:"education",de:"die Prüfung / der Test",en:"the exam / the test",ex:"I have an <b>exam</b> tomorrow."},
+  {lvl:"A2",cat:"education",de:"die Hausaufgaben",en:"the homework",ex:"Do your <b>homework</b>.",note:"Unzählbar: „homework“."},
+  {lvl:"A2",cat:"education",de:"das (Schul-)Fach",en:"the subject",ex:"My best <b>subject</b> is maths."},
+  {lvl:"A2",cat:"home",de:"die Küche",en:"the kitchen",ex:"She is in the <b>kitchen</b>."},
+  {lvl:"A2",cat:"home",de:"das Badezimmer",en:"the bathroom",ex:"Where is the <b>bathroom</b>?"},
+  {lvl:"A2",cat:"home",de:"das Schlafzimmer",en:"the bedroom",ex:"A big <b>bedroom</b>."},
+  {lvl:"A2",cat:"home",de:"das Wohnzimmer",en:"the living room",ex:"We sit in the <b>living room</b>."},
+  {lvl:"A2",cat:"home",de:"der Garten",en:"the garden / the yard",ex:"A nice <b>garden</b>."},
+  {lvl:"A2",cat:"home",de:"das Bett",en:"the bed",ex:"Go to <b>bed</b>!"},
+  {lvl:"A2",cat:"basics",de:"oben / unten",en:"above / below",ex:"The keys are <b>above</b> the shelf."},
+  {lvl:"A2",cat:"basics",de:"vor / hinter",en:"in front of / behind",ex:"It's <b>behind</b> you."},
+  {lvl:"A2",cat:"basics",de:"neben / zwischen",en:"next to / between",ex:"Sit <b>next to</b> me."},
+  {lvl:"A2",cat:"basics",de:"schon / noch",en:"already / still",ex:"Are you <b>still</b> here?"},
+  {lvl:"A2",cat:"basics",de:"genug",en:"enough",ex:"That's <b>enough</b>."},
+
+  // ================= ZUSATZ · B1 (Technik, Gesundheit, Beziehungen) =================
+  {lvl:"B1",cat:"feelings",de:"die Meinung",en:"the opinion",ex:"In my <b>opinion</b>, yes."},
+  {lvl:"B1",cat:"feelings",de:"die Zukunft / die Vergangenheit",en:"the future / the past",ex:"Think about the <b>future</b>."},
+  {lvl:"B1",cat:"feelings",de:"ehrlich",en:"honest",ex:"Please be <b>honest</b>."},
+  {lvl:"B1",cat:"feelings",de:"höflich",en:"polite",ex:"He is very <b>polite</b>."},
+  {lvl:"B1",cat:"feelings",de:"geduldig",en:"patient",ex:"Be <b>patient</b>, please."},
+  {lvl:"B1",cat:"feelings",de:"neugierig",en:"curious",ex:"I'm <b>curious</b> about it."},
+  {lvl:"B1",cat:"smalltalk",de:"die Beziehung",en:"the relationship",ex:"A good <b>relationship</b>."},
+  {lvl:"B1",cat:"smalltalk",de:"sich verlieben",en:"to fall in love",ex:"They <b>fell in love</b>."},
+  {lvl:"B1",cat:"smalltalk",de:"heiraten",en:"to get married",ex:"They <b>got married</b> in June."},
+  {lvl:"B1",cat:"smalltalk",de:"der Streit",en:"the argument / the quarrel",ex:"They had an <b>argument</b>."},
+  {lvl:"B1",cat:"tech",de:"speichern",en:"to save",ex:"<b>Save</b> the document."},
+  {lvl:"B1",cat:"tech",de:"löschen",en:"to delete",ex:"<b>Delete</b> that file."},
+  {lvl:"B1",cat:"tech",de:"das Gerät",en:"the device",ex:"A smart <b>device</b>."},
+  {lvl:"B1",cat:"tech",de:"die Datei",en:"the file",ex:"Attach the <b>file</b>."},
+  {lvl:"B1",cat:"tech",de:"der Bildschirm",en:"the screen",ex:"A big <b>screen</b>."},
+  {lvl:"B1",cat:"tech",de:"drucken",en:"to print",ex:"Can you <b>print</b> this?"},
+  {lvl:"B1",cat:"health",de:"das Medikament",en:"the medicine / medication",ex:"Take your <b>medicine</b>."},
+  {lvl:"B1",cat:"health",de:"die Schmerzen",en:"the pain",ex:"I have back <b>pain</b>."},
+  {lvl:"B1",cat:"health",de:"das Fieber",en:"the fever",ex:"She has a <b>fever</b>."},
+  {lvl:"B1",cat:"health",de:"der Notfall",en:"the emergency",ex:"It's an <b>emergency</b>!"},
+  {lvl:"B1",cat:"health",de:"verletzt",en:"injured / hurt",ex:"He got <b>injured</b>."},
+  {lvl:"B1",cat:"work",de:"die Wahl / die Entscheidung",en:"the choice",ex:"A hard <b>choice</b>."},
+  {lvl:"B1",cat:"work",de:"verantwortlich",en:"responsible",ex:"Who is <b>responsible</b>?",note:"„responsible for sth“."},
+  {lvl:"B1",cat:"work",de:"die Erlaubnis",en:"permission",ex:"Ask for <b>permission</b>."},
+  {lvl:"B1",cat:"basics",de:"die Zeitung",en:"the newspaper",ex:"I read the <b>newspaper</b>."},
+  {lvl:"B1",cat:"basics",de:"die Geschichte",en:"the story / the history",ex:"Tell me a <b>story</b>."},
+
+  // ================= ZUSATZ · B2 (Vertrag, Technik, Meetings) =================
+  {lvl:"B2",cat:"work",de:"der Vertrag",en:"the contract",ex:"Sign the <b>contract</b>."},
+  {lvl:"B2",cat:"work",de:"die Kündigung (Mitteilung)",en:"the notice / termination",ex:"She handed in her <b>notice</b>."},
+  {lvl:"B2",cat:"work",de:"die Genehmigung",en:"the approval",ex:"We need <b>approval</b> first."},
+  {lvl:"B2",cat:"work",de:"die Zusammenarbeit",en:"the collaboration",ex:"Thanks for the <b>collaboration</b>."},
+  {lvl:"B2",cat:"work",de:"der Einfluss",en:"the influence",ex:"A big <b>influence</b>."},
+  {lvl:"B2",cat:"work",de:"die Entwicklung",en:"the development",ex:"Recent <b>developments</b>."},
+  {lvl:"B2",cat:"work",de:"zuständig (für)",en:"in charge (of)",ex:"Who is <b>in charge</b>?"},
+  {lvl:"B2",cat:"tech",de:"die Sicherheit",en:"security / safety",ex:"Data <b>security</b> matters."},
+  {lvl:"B2",cat:"tech",de:"das Update / die Aktualisierung",en:"the update",ex:"Install the latest <b>update</b>."},
+  {lvl:"B2",cat:"tech",de:"der Fehler / der Bug",en:"the bug / the error",ex:"We found a <b>bug</b>."},
+  {lvl:"B2",cat:"tech",de:"die Software / die Anwendung",en:"the software / application",ex:"Business <b>software</b>.",note:"„software“ unzählbar."},
+  {lvl:"B2",cat:"tech",de:"der Nutzer / der Anwender",en:"the user",ex:"Every <b>user</b> has an account."},
+  {lvl:"B2",cat:"tech",de:"die Schnittstelle",en:"the interface",ex:"A clean <b>interface</b>."},
+  {lvl:"B2",cat:"feelings",de:"der Eindruck",en:"the impression",ex:"A good first <b>impression</b>."},
+  {lvl:"B2",cat:"feelings",de:"die Erwartung",en:"the expectation",ex:"High <b>expectations</b>."},
+  {lvl:"B2",cat:"feelings",de:"der Zweifel",en:"the doubt",ex:"I have my <b>doubts</b>."},
+  {lvl:"B2",cat:"meetings",de:"Lass uns abstimmen.",en:"Let's take a vote.",ex:"<b>Let's take a vote</b> on it."},
+  {lvl:"B2",cat:"meetings",de:"Da bin ich ganz bei dir.",en:"I'm totally with you on that.",ex:"<b>I'm totally with you on that.</b>"},
+  {lvl:"B2",cat:"presentation",de:"Lassen Sie mich das kurz einordnen.",en:"Let me put that in context.",ex:"<b>Let me put that in context.</b>"},
+
+  // ================= ZUSATZ · C1 (Charakter, Redewendungen) =================
+  {lvl:"C1",cat:"feelings",de:"ehrgeizig",en:"ambitious",ex:"An <b>ambitious</b> plan."},
+  {lvl:"C1",cat:"feelings",de:"rücksichtsvoll",en:"considerate",ex:"A <b>considerate</b> colleague."},
+  {lvl:"C1",cat:"feelings",de:"eigenständig / selbstständig",en:"independent",ex:"An <b>independent</b> thinker."},
+  {lvl:"C1",cat:"feelings",de:"belastbar / widerstandsfähig",en:"resilient",ex:"A <b>resilient</b> team."},
+  {lvl:"C1",cat:"feelings",de:"anpassungsfähig",en:"adaptable",ex:"Stay <b>adaptable</b>."},
+  {lvl:"C1",cat:"work",de:"der Ehrgeiz",en:"ambition",ex:"She has real <b>ambition</b>."},
+  {lvl:"C1",cat:"work",de:"die Zuversicht",en:"confidence / optimism",ex:"Quiet <b>confidence</b>."},
+  {lvl:"C1",cat:"work",de:"die Übereinstimmung / der Konsens",en:"consensus",ex:"We reached <b>consensus</b>."},
+  {lvl:"C1",cat:"work",de:"die Nachhaltigkeit",en:"sustainability",ex:"Long-term <b>sustainability</b>."},
+  {lvl:"C1",cat:"idioms",de:"das Eis brechen",en:"to break the ice",ex:"A joke to <b>break the ice</b>."},
+  {lvl:"C1",cat:"idioms",de:"reinen Tisch machen / etw. klären",en:"to clear the air",ex:"Let's <b>clear the air</b>."},
+  {lvl:"C1",cat:"idioms",de:"den Ball ins Rollen bringen",en:"to get the ball rolling",ex:"Let's <b>get the ball rolling</b>."},
+  {lvl:"C1",cat:"idioms",de:"in den sauren Apfel beißen",en:"to bite the bullet",ex:"We had to <b>bite the bullet</b>."},
+  {lvl:"C1",cat:"idioms",de:"jdn. auf dem Laufenden halten",en:"to keep sb in the loop",ex:"Please <b>keep me in the loop</b>."},
+  {lvl:"C1",cat:"meetings",de:"genauer gesagt",en:"to be more precise",ex:"<b>To be more precise,</b> by Tuesday."},
+
+  // ================= ZUSATZ · C2 (Formell, Redewendungen) =================
+  {lvl:"C2",cat:"work",de:"der Sachverhalt",en:"the matter / the facts",ex:"Let me explain the <b>matter</b>."},
+  {lvl:"C2",cat:"work",de:"die Tragweite",en:"the scope / the significance",ex:"The <b>significance</b> is huge."},
+  {lvl:"C2",cat:"work",de:"die Diskrepanz",en:"the discrepancy",ex:"A clear <b>discrepancy</b>."},
+  {lvl:"C2",cat:"work",de:"geltend machen / einfordern",en:"to assert / to claim",ex:"They <b>asserted</b> their rights."},
+  {lvl:"C2",cat:"work",de:"in Erwägung ziehen",en:"to take into consideration",ex:"We'll <b>take that into consideration</b>."},
+  {lvl:"C2",cat:"work",de:"zur Rechenschaft ziehen",en:"to hold accountable",ex:"They were <b>held accountable</b>."},
+  {lvl:"C2",cat:"feelings",de:"pedantisch / kleinlich",en:"pedantic",ex:"Don't be so <b>pedantic</b>."},
+  {lvl:"C2",cat:"feelings",de:"beiläufig / nebenbei",en:"offhand / casual",ex:"An <b>offhand</b> remark."},
+  {lvl:"C2",cat:"feelings",de:"unbeugsam / kompromisslos",en:"uncompromising",ex:"An <b>uncompromising</b> stance."},
+  {lvl:"C2",cat:"idioms",de:"auf dem Spiel stehen",en:"to be at stake",ex:"A lot is <b>at stake</b>."},
+  {lvl:"C2",cat:"idioms",de:"ins Gewicht fallen",en:"to carry weight / to matter",ex:"That really <b>carries weight</b>."},
+  {lvl:"C2",cat:"idioms",de:"den Braten riechen",en:"to smell a rat",ex:"I began to <b>smell a rat</b>."},
+  {lvl:"C2",cat:"idioms",de:"über die Bühne gehen",en:"to go off / to proceed",ex:"It all <b>went off</b> smoothly."},
+  {lvl:"C2",cat:"meetings",de:"unter dem Strich / letztlich",en:"at the end of the day",ex:"<b>At the end of the day,</b> results count."},
+  {lvl:"C2",cat:"email",de:"in Erwartung Ihrer Rückmeldung",en:"awaiting your reply",ex:"<b>Awaiting your reply,</b> best regards."},
+];
+const CAT_LABELS = {
+  all:"Alle", smalltalk:"Smalltalk", basics:"Grundwörter", work:"Arbeit", meetings:"Meetings", email:"E-Mail",
+  presentation:"Präsentation", phrasal:"Phrasal Verbs", falsefriends:"Falsche Freunde",
+  idioms:"Redewendungen", feelings:"Gefühle & Meinung", travel:"Reisen", hotel:"Hotel",
+  food:"Restaurant", shopping:"Einkaufen", directions:"Orientierung", time:"Zeit",
+  home:"Zuhause", health:"Gesundheit",
+  family:"Familie", body:"Körper", animals:"Tiere", nature:"Natur",
+  numbers:"Zahlen", sport:"Sport & Freizeit", education:"Schule", tech:"Technik & Internet",
+  custom:"Eigene",
+};
+const LEVELS = ["all","A1","A2","B1","B2","C1","C2"];
+const LEVEL_LABELS = {all:"Alle", A1:"A1", A2:"A2", B1:"B1", B2:"B2", C1:"C1", C2:"C2"};
+
+/* ============================================================ STATE + STORAGE */
+const PROFILES_KEY = "vt:profiles:v2";
+const boxesKeyFor  = u => "vt:boxes:v2:u" + u;
+const statsKeyFor  = u => "vt:stats:v2:u" + u;
+const customKeyFor = u => "vt:custom:v1:u" + u;
+
+let profiles = { names:["Nutzer 1","Nutzer 2"], active:0 };
+let boxes = {};
+let stats = { reviewed:0, correct:0, streak:0, best:0, day:"", dayCount:0, goal:20, days:{}, daysStreak:0, lastActiveDay:"" };
+let customCards = [];
+
+let filter = "all", levelFilter = "A1", direction = "de2en";
+let mode = "type", checked = false, lastCorrect = false, lastTyped = "";
+let queue = [], pos = 0, flipped = false;
+let quiz = null;   // {items, i, wrong:[], checked, correct, typed, size}
+
+function allCards(){ return CARDS.concat(customCards); }
+function keyOf(i){ return "c" + i; }
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function dayOffset(n){ const d=new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+function ensureBox(k){ if(typeof boxes[k]==="number") boxes[k]={b:boxes[k],wrong:0,seen:0}; if(!boxes[k]) boxes[k]={b:1,wrong:0,seen:0}; return boxes[k]; }
+
+/* ============================================================ PRONUNCIATION */
+let VOICES = [];
+function loadVoices(){ try{ VOICES = window.speechSynthesis ? window.speechSynthesis.getVoices() : []; }catch(e){ VOICES=[]; } }
+if(typeof window!=="undefined" && window.speechSynthesis){
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+function speak(text){
+  try{
+    if(!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const clean = text.split("/")[0].replace(/\([^)]*\)/g,"").replace(/[…]/g,"").trim();
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "en-GB"; u.rate = 0.92;
+    const v = VOICES.find(v=>/en-GB/i.test(v.lang)) || VOICES.find(v=>/^en/i.test(v.lang));
+    if(v) u.voice = v;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ============================================================ IPA (RP) */
+const IPA_DICT = {
+  // function / common words (for phrase coverage)
+  "i":"aɪ","you":"juː","we":"wiː","they":"ðeɪ","he":"hiː","she":"ʃiː","it":"ɪt","me":"miː","my":"maɪ",
+  "your":"jɔː","us":"ʌs","them":"ðem","this":"ðɪs","that":"ðæt","the":"ðə","a":"ə","an":"ən","of":"ɒv",
+  "to":"tuː","in":"ɪn","on":"ɒn","at":"æt","up":"ʌp","out":"aʊt","off":"ɒf","over":"ˈəʊvə","into":"ˈɪntuː",
+  "with":"wɪð","as":"æz","and":"ænd","but":"bʌt","or":"ɔː","not":"nɒt","all":"ɔːl","any":"ˈeni","some":"sʌm",
+  "more":"mɔː","most":"məʊst","be":"biː","is":"ɪz","are":"ɑː","am":"æm","was":"wɒz","been":"biːn",
+  "does":"dʌz","did":"dɪd","has":"hæz","had":"hæd","will":"wɪl","would":"wʊd","can":"kæn","could":"kʊd",
+  "should":"ʃʊd","let":"let","keep":"kiːp","take":"teɪk","made":"meɪd","point":"pɔɪnt","page":"peɪdʒ",
+  "same":"seɪm","side":"saɪd","time":"taɪm","way":"weɪ","other":"ˈʌðə","please":"pliːz","feel":"fiːl",
+  "well":"wel","fine":"faɪn","honest":"ˈɒnɪst","mind":"maɪnd","floor":"flɔː","scope":"skəʊp","deep":"diːp",
+  "end":"end","chase":"tʃeɪs","bottom":"ˈbɒtəm","line":"laɪn","track":"træk","gap":"ɡæp","front":"frʌnt",
+  "questions":"ˈkwestʃənz","question":"ˈkwestʃən","how":"haʊ",
+  // vocabulary head-words
+  "ability":"əˈbɪlɪti","accommodation":"əˌkɒməˈdeɪʃən","accordingly":"əˈkɔːdɪŋli","admittedly":"ədˈmɪtɪdli",
+  "advice":"ədˈvaɪs","agenda":"əˈdʒendə","airport":"ˈeəpɔːt","alone":"əˈləʊn","ambivalent":"æmˈbɪvələnt",
+  "anyway":"ˈeniweɪ","apple":"ˈæpəl","apply":"əˈplaɪ","appointment":"əˈpɔɪntmənt","approach":"əˈprəʊtʃ",
+  "arrival":"əˈraɪvəl","articulate":"ɑːˈtɪkjʊlət","attraction":"əˈtrækʃən","bad":"bæd","bag":"bæɡ","beer":"bɪə",
+  "bicycle":"ˈbaɪsɪkəl","big":"bɪɡ","bike":"baɪk","bill":"bɪl","binding":"ˈbaɪndɪŋ","black":"blæk","blue":"bluː",
+  "book":"bʊk","booking":"ˈbʊkɪŋ","boring":"ˈbɔːrɪŋ","boss":"bɒs","bottleneck":"ˈbɒtəlnek","bread":"bred",
+  "breakfast":"ˈbrekfəst","breakthrough":"ˈbreɪkθruː","budget":"ˈbʌdʒɪt","buy":"baɪ","bye":"baɪ","cancel":"ˈkænsəl",
+  "car":"kɑː","carry-on":"ˈkæri ɒn","caveat":"ˈkæviæt","change":"tʃeɪndʒ","cheap":"tʃiːp","check":"tʃek",
+  "child":"tʃaɪld","clarify":"ˈklærɪfaɪ","client":"ˈklaɪənt","close":"kləʊs","closed":"kləʊzd","coffee":"ˈkɒfi",
+  "cold":"kəʊld","colleague":"ˈkɒliːɡ","come":"kʌm","committed":"kəˈmɪtɪd","compelling":"kəmˈpelɪŋ",
+  "competition":"ˌkɒmpəˈtɪʃən","competitors":"kəmˈpetɪtəz","composed":"kəmˈpəʊzd","compromise":"ˈkɒmprəmaɪz",
+  "concerning":"kənˈsɜːnɪŋ","concise":"kənˈsaɪs","conclude":"kənˈkluːd","conclusive":"kənˈkluːsɪv",
+  "condition":"kənˈdɪʃən","confident":"ˈkɒnfɪdənt","conflicted":"kənˈflɪktɪd","coherent":"kəʊˈhɪərənt",
+  "connection":"kəˈnekʃən","conscientious":"ˌkɒnʃiˈenʃəs","consequently":"ˈkɒnsɪkwəntli","consistent":"kənˈsɪstənt",
+  "contain":"kənˈteɪn","convincing":"kənˈvɪnsɪŋ","convoluted":"ˈkɒnvəluːtɪd","cook":"kʊk","coworker":"ˈkəʊwɜːkə",
+  "crucial":"ˈkruːʃəl","cumbersome":"ˈkʌmbəsəm","curb":"kɜːb","current":"ˈkʌrənt","currently":"ˈkʌrəntli",
+  "customer":"ˈkʌstəmə","customs":"ˈkʌstəmz","cv":"ˌsiːˈviː","day":"deɪ","deadline":"ˈdedlaɪn","deal":"diːl",
+  "decisive":"dɪˈsaɪsɪv","dedicated":"ˈdedɪkeɪtɪd","delayed":"dɪˈleɪd","delicate":"ˈdelɪkət","delicious":"dɪˈlɪʃəs",
+  "deliverable":"dɪˈlɪvərəbəl","delivery":"dɪˈlɪvəri","demand":"dɪˈmɑːnd","department":"dɪˈpɑːtmənt",
+  "departure":"dɪˈpɑːtʃə","deposit":"dɪˈpɒzɪt","dessert":"dɪˈzɜːt","difficult":"ˈdɪfɪkəlt","disappointed":"ˌdɪsəˈpɔɪntɪd",
+  "discard":"dɪsˈkɑːd","dismiss":"dɪsˈmɪs","do":"duː","doctor":"ˈdɒktə","donate":"dəʊˈneɪt","downside":"ˈdaʊnsaɪd",
+  "drink":"drɪŋk","dubious":"ˈdjuːbiəs","early":"ˈɜːli","easy":"ˈiːzi","easy-going":"ˌiːziˈɡəʊɪŋ","eat":"iːt",
+  "egg":"eɡ","eloquent":"ˈeləkwənt","enclosed":"ɪnˈkləʊzd","essential":"ɪˈsenʃəl","essentially":"ɪˈsenʃəli",
+  "expensive":"ɪkˈspensɪv","experience":"ɪkˈspɪəriəns","explore":"ɪkˈsplɔː","factory":"ˈfæktəri","family":"ˈfæməli",
+  "far-reaching":"ˌfɑːˈriːtʃɪŋ","far-sighted":"ˌfɑːˈsaɪtɪd","fast":"fɑːst","feasibility":"ˌfiːzəˈbɪlɪti","find":"faɪnd",
+  "fish":"fɪʃ","flawless":"ˈflɔːləs","forget":"fəˈɡet","frankly":"ˈfræŋkli","friend":"frend","fruit":"fruːt",
+  "full-time":"ˌfʊlˈtaɪm","furniture":"ˈfɜːnɪtʃə","fyi":"ˌefwaɪˈaɪ","gauge":"ɡeɪdʒ","get":"ɡet","given":"ˈɡɪvən",
+  "go":"ɡəʊ","good":"ɡʊd","goodbye":"ˌɡʊdˈbaɪ","grade":"ɡreɪd","grave":"ɡreɪv","green":"ɡriːn",
+  "groundbreaking":"ˈɡraʊndˌbreɪkɪŋ","hand":"hænd","happy":"ˈhæpi","hasty":"ˈheɪsti","have":"hæv","head":"hed",
+  "healthy":"ˈhelθi","hello":"həˈləʊ","help":"help","here":"hɪə","hi":"haɪ","hire":"ˈhaɪə","hour":"ˈaʊə","house":"haʊs",
+  "hurt":"hɜːt","ill":"ɪl","impact":"ˈɪmpækt","impeccable":"ɪmˈpekəbəl","implementation":"ˌɪmplɪmenˈteɪʃən",
+  "important":"ɪmˈpɔːtənt","indispensable":"ˌɪndɪˈspensəbəl","inevitable":"ɪnˈevɪtəbəl","information":"ˌɪnfəˈmeɪʃən",
+  "insight":"ˈɪnsaɪt","insurance":"ɪnˈʃʊərəns","interrupt":"ˌɪntəˈrʌpt","invoice":"ˈɪnvɔɪs","job":"dʒɒb","key":"kiː",
+  "kpi":"ˌkeɪpiːˈaɪ","laid-back":"ˌleɪdˈbæk","landlord":"ˈlændlɔːd","last":"lɑːst","late":"leɪt","layover":"ˈleɪəʊvə",
+  "leeway":"ˈliːweɪ","left":"left","lenient":"ˈliːniənt","level-headed":"ˌlevəlˈhedɪd","loss":"lɒs","luggage":"ˈlʌɡɪdʒ",
+  "make":"meɪk","man":"mæn","manager":"ˈmænɪdʒə","mark":"mɑːk","maybe":"ˈmeɪbi","meat":"miːt","meet":"miːt",
+  "meeting":"ˈmiːtɪŋ","menu":"ˈmenjuː","meticulous":"məˈtɪkjʊləs","metric":"ˈmetrɪk","milestone":"ˈmaɪlstəʊn",
+  "milk":"mɪlk","minute":"ˈmɪnɪt","minutes":"ˈmɪnɪts","mobile":"ˈməʊbaɪl","money":"ˈmʌni","nearby":"ˌnɪəˈbaɪ",
+  "need":"niːd","negotiate":"nɪˈɡəʊʃieɪt","neighbor":"ˈneɪbə","neighbour":"ˈneɪbə","nervous":"ˈnɜːvəs","never":"ˈnevə",
+  "nevertheless":"ˌnevəðəˈles","new":"njuː","news":"njuːz","night":"naɪt","no":"nəʊ","nonetheless":"ˌnʌnðəˈles",
+  "notwithstanding":"ˌnɒtwɪðˈstændɪŋ","nuanced":"ˈnjuːɑːnst","office":"ˈɒfɪs","often":"ˈɒfən","old":"əʊld","one":"wʌn",
+  "open":"ˈəʊpən","order":"ˈɔːdə","overbooked":"ˌəʊvəˈbʊkt","overtime":"ˈəʊvətaɪm","overwhelmed":"ˌəʊvəˈwelmd",
+  "pardon":"ˈpɑːdən","part-time":"ˌpɑːtˈtaɪm","passport":"ˈpɑːspɔːt","pay":"peɪ","perhaps":"pəˈhæps",
+  "persistent":"pəˈsɪstənt","persuasive":"pəˈsweɪsɪv","pharmacy":"ˈfɑːməsi","pioneering":"ˌpaɪəˈnɪərɪŋ",
+  "possibly":"ˈpɒsəbli","premature":"ˈpremətʃə","prescription":"prɪˈskrɪpʃən","prioritise":"praɪˈɒrɪtaɪz",
+  "prioritize":"praɪˈɒrɪtaɪz","procedure":"prəˈsiːdʒə","proficient":"prəˈfɪʃənt","profit":"ˈprɒfɪt","promising":"ˈprɒmɪsɪŋ",
+  "promotion":"prəˈməʊʃən","proposal":"prəˈpəʊzəl","proud":"praʊd","prudent":"ˈpruːdənt","questionable":"ˈkwestʃənəbəl",
+  "quick-witted":"ˌkwɪkˈwɪtɪd","quit":"kwɪt","rain":"reɪn","raise":"reɪz","really":"ˈrɪəli","receive":"rɪˈsiːv",
+  "red":"red","regarding":"rɪˈɡɑːdɪŋ","relentless":"rɪˈlentləs","relieved":"rɪˈliːvd","reluctant":"rɪˈlʌktənt",
+  "remarkable":"rɪˈmɑːkəbəl","remember":"rɪˈmembə","remit":"ˈriːmɪt","rent":"rent","requirement":"rɪˈkwaɪəmənt",
+  "reservation":"ˌrezəˈveɪʃən","reservations":"ˌrezəˈveɪʃənz","resign":"rɪˈzaɪn","responsibility":"rɪˌspɒnsəˈbɪlɪti",
+  "rest":"rest","revenue":"ˈrevənjuː","right":"raɪt","room":"ruːm","résumé":"ˈrezjʊmeɪ","salary":"ˈsæləri","savvy":"ˈsævi",
+  "seamless":"ˈsiːmləs","see":"siː","self-employed":"ˌselfɪmˈplɔɪd","sensitive":"ˈsensɪtɪv","serious":"ˈsɪəriəs",
+  "setback":"ˈsetbæk","shipment":"ˈʃɪpmənt","short-sighted":"ˌʃɔːtˈsaɪtɪd","shrewd":"ʃruːd","sight":"saɪt","skill":"skɪl",
+  "slow":"sləʊ","small":"smɔːl","so":"səʊ","sometimes":"ˈsʌmtaɪmz","soon":"suːn","sorry":"ˈsɒri","sound":"saʊnd",
+  "speak":"spiːk","spearhead":"ˈspɪəhed","stakeholders":"ˈsteɪkˌhəʊldəz","stall":"stɔːl","starter":"ˈstɑːtə","stay":"steɪ",
+  "stop":"stɒp","stopover":"ˈstɒpəʊvə","streamline":"ˈstriːmlaɪn","stubborn":"ˈstʌbən","substantiate":"səbˈstænʃieɪt",
+  "subway":"ˈsʌbweɪ","succinct":"səkˈsɪŋkt","sugar-coat":"ˈʃʊɡəkəʊt","suggestion":"səˈdʒestʃən","sun":"sʌn",
+  "supplier":"səˈplaɪə","supply":"səˈplaɪ","survey":"ˈsɜːveɪ","sustainable":"səˈsteɪnəbəl","talk":"tɔːk","task":"tɑːsk",
+  "tasty":"ˈteɪsti","tea":"tiː","tenacious":"tɪˈneɪʃəs","term":"tɜːm","thanks":"θæŋks","there":"ðeə","therefore":"ˈðeəfɔː",
+  "three":"θriː","ticket":"ˈtɪkɪt","timeframe":"ˈtaɪmfreɪm","tired":"ˈtaɪəd","today":"təˈdeɪ","together":"təˈɡeðə",
+  "tomorrow":"təˈmɒrəʊ","trailblazing":"ˈtreɪlˌbleɪzɪŋ","train":"treɪn","transfer":"trænsˈfɜː","tricky":"ˈtrɪki",
+  "try":"traɪ","turnover":"ˈtɜːnəʊvə","two":"tuː","ultimately":"ˈʌltɪmətli","uncompromising":"ʌnˈkɒmprəmaɪzɪŋ",
+  "underground":"ˈʌndəɡraʊnd","underpin":"ˌʌndəˈpɪn","undeterred":"ˌʌndɪˈtɜːd","unequivocal":"ˌʌnɪˈkwɪvəkəl",
+  "unequivocally":"ˌʌnɪˈkwɪvəkəli","updated":"ʌpˈdeɪtɪd","usually":"ˈjuːʒuəli","valid":"ˈvælɪd","vegetables":"ˈvedʒtəbəlz",
+  "vegetarian":"ˌvedʒɪˈteəriən","vendor":"ˈvendə","viable":"ˈvaɪəbəl","visionary":"ˈvɪʒənəri","wait":"weɪt","walk":"wɔːk",
+  "warm":"wɔːm","water":"ˈwɔːtə","well-behaved":"ˌwelbɪˈheɪvd","well-founded":"ˌwelˈfaʊndɪd","well-versed":"ˌwelˈvɜːst",
+  "what":"wɒt","when":"wen","where":"weə","whereas":"weərˈæz","white":"waɪt","who":"huː","why":"waɪ","wine":"waɪn",
+  "woman":"ˈwʊmən","work":"wɜːk","workaround":"ˈwɜːkəraʊnd","worry":"ˈwʌri","wrong":"rɒŋ","yes":"jes","yesterday":"ˈjestədeɪ",
+  // NEW head-words
+  "cat":"kæt","dog":"dɒɡ","school":"skuːl","city":"ˈsɪti","country":"ˈkʌntri","table":"ˈteɪbəl","chair":"tʃeə",
+  "door":"dɔː","window":"ˈwɪndəʊ","name":"neɪm","number":"ˈnʌmbə","colour":"ˈkʌlə","read":"riːd","write":"raɪt",
+  "learn":"lɜːn","play":"pleɪ","love":"lʌv","like":"laɪk","want":"wɒnt","give":"ɡɪv","evening":"ˈiːvnɪŋ","week":"wiːk",
+  "beautiful":"ˈbjuːtɪfəl","nice":"naɪs","weather":"ˈweðə","snow":"snəʊ","wind":"wɪnd","hot":"hɒt","season":"ˈsiːzən",
+  "summer":"ˈsʌmə","winter":"ˈwɪntə","clothes":"kləʊðz","shoe":"ʃuː","trousers":"ˈtraʊzəz","shirt":"ʃɜːt","tram":"træm",
+  "ship":"ʃɪp","platform":"ˈplætfɔːm","journey":"ˈdʒɜːni","trip":"trɪp","holiday":"ˈhɒlədeɪ","dangerous":"ˈdeɪndʒərəs",
+  "safe":"seɪf","sad":"sæd","hungry":"ˈhʌŋɡri","thirsty":"ˈθɜːsti","friendly":"ˈfrendli","married":"ˈmærid",
+  "environment":"ɪnˈvaɪrənmənt","health":"helθ","government":"ˈɡʌvənmənt","society":"səˈsaɪəti","economy":"ɪˈkɒnəmi",
+  "technology":"tekˈnɒlədʒi","education":"ˌedjʊˈkeɪʃən","research":"rɪˈsɜːtʃ","decide":"dɪˈsaɪd","improve":"ɪmˈpruːv",
+  "develop":"dɪˈveləp","compare":"kəmˈpeə","explain":"ɪkˈspleɪn","describe":"dɪˈskraɪb","suggest":"səˈdʒest",
+  "allow":"əˈlaʊ","forbid":"fəˈbɪd","advantage":"ədˈvɑːntɪdʒ","disadvantage":"ˌdɪsədˈvɑːntɪdʒ","opportunity":"ˌɒpəˈtjuːnɪti",
+  "solution":"səˈluːʃən","problem":"ˈprɒbləm","reason":"ˈriːzən","management":"ˈmænɪdʒmənt",
+  "income":"ˈɪnkʌm","expenses":"ɪkˈspensɪz","investment":"ɪnˈvestmənt","shareholder":"ˈʃeəˌhəʊldə","leadership":"ˈliːdəʃɪp",
+  "efficiency":"ɪˈfɪʃənsi","productivity":"ˌprɒdʌkˈtɪvɪti","strategy":"ˈstrætədʒi","goal":"ɡəʊl","objective":"əbˈdʒektɪv",
+  "timeline":"ˈtaɪmlaɪn","delay":"dɪˈleɪ","progress":"ˈprəʊɡres","challenge":"ˈtʃælɪndʒ","reliable":"rɪˈlaɪəbəl",
+  "efficient":"ɪˈfɪʃənt","flexible":"ˈfleksəbəl","thorough":"ˈθʌrə","framework":"ˈfreɪmwɜːk","accuracy":"ˈækjʊrəsi",
+  "reliability":"rɪˌlaɪəˈbɪlɪti","transparency":"trænsˈpærənsi","diversity":"daɪˈvɜːsɪti","perception":"pəˈsepʃən",
+  "assumption":"əˈsʌmpʃən","conclusion":"kənˈkluːʒən","prerequisite":"ˌpriːˈrekwɪzɪt","comprehensible":"ˌkɒmprɪˈhensəbəl",
+  "unbiased":"ʌnˈbaɪəst","undoubtedly":"ʌnˈdaʊtɪdli","presumably":"prɪˈzjuːməbli","evidently":"ˈevɪdəntli",
+  "obviously":"ˈɒbviəsli","deliberate":"dɪˈlɪbərət","subtlety":"ˈsʌtəlti","ambiguity":"ˌæmbɪˈɡjuːɪti",
+  "perseverance":"ˌpɜːsɪˈvɪərəns","restraint":"rɪˈstreɪnt","bias":"ˈbaɪəs","predicament":"prɪˈdɪkəmənt",
+  "unwavering":"ʌnˈweɪvərɪŋ","assertive":"əˈsɜːtɪv","astute":"əˈstjuːt","verbose":"vɜːˈbəʊs","terse":"tɜːs",
+  "inimitable":"ɪˈnɪmɪtəbəl","ubiquitous":"juːˈbɪkwɪtəs","transient":"ˈtrænziənt","irreversible":"ˌɪrɪˈvɜːsɪbəl",
+  "multifaceted":"ˌmʌltiˈfæsɪtɪd","unprecedented":"ʌnˈpresɪdentɪd","profound":"prəˈfaʊnd","authoritative":"ɔːˈθɒrɪtətɪv",
+  "undeniable":"ˌʌndɪˈnaɪəbəl","shoes":"ʃuːz","definitely":"ˈdefɪnətli","pants":"pænts",
+  // NEW head-words (Zusatz)
+  "four":"fɔː","five":"faɪv","six":"sɪks","seven":"ˈsevən","eight":"eɪt","nine":"naɪn","ten":"ten","zero":"ˈzɪərəʊ",
+  "hundred":"ˈhʌndrəd","thousand":"ˈθaʊzənd","mother":"ˈmʌðə","father":"ˈfɑːðə","brother":"ˈbrʌðə","sister":"ˈsɪstə",
+  "son":"sʌn","daughter":"ˈdɔːtə","parents":"ˈpeərənts","grandmother":"ˈɡrænmʌðə","grandfather":"ˈɡrænfɑːðə","baby":"ˈbeɪbi",
+  "eye":"aɪ","ear":"ɪə","nose":"nəʊz","mouth":"maʊθ","arm":"ɑːm","leg":"leɡ","foot":"fʊt","hair":"heə","tooth":"tuːθ",
+  "bird":"bɜːd","horse":"hɔːs","cow":"kaʊ","pig":"pɪɡ","mouse":"maʊs","tree":"triː","flower":"ˈflaʊə","mountain":"ˈmaʊntɪn",
+  "river":"ˈrɪvə","sea":"siː","lake":"leɪk","forest":"ˈfɒrɪst","moon":"muːn","star":"stɑː","salt":"sɔːlt","sugar":"ˈʃʊɡə",
+  "cheese":"tʃiːz","butter":"ˈbʌtə","soup":"suːp","cake":"keɪk","banana":"bəˈnɑːnə","orange":"ˈɒrɪndʒ","sleep":"sliːp",
+  "live":"lɪv","month":"mʌnθ","year":"jɪə","monday":"ˈmʌndeɪ","tuesday":"ˈtʃuːzdeɪ","saturday":"ˈsætədeɪ","sunday":"ˈsʌndeɪ",
+  "computer":"kəmˈpjuːtə","smartphone":"ˈsmɑːtfəʊn","internet":"ˈɪntənet","email":"ˈiːmeɪl","message":"ˈmesɪdʒ",
+  "password":"ˈpɑːswɜːd","download":"ˌdaʊnˈləʊd","sport":"spɔːt","swim":"swɪm","run":"rʌn","game":"ɡeɪm","match":"mætʃ",
+  "win":"wɪn","lose":"luːz","team":"tiːm","dance":"dɑːns","sing":"sɪŋ","hobby":"ˈhɒbi","teacher":"ˈtiːtʃə","pupil":"ˈpjuːpəl",
+  "student":"ˈstjuːdənt","exam":"ɪɡˈzæm","test":"test","homework":"ˈhəʊmwɜːk","subject":"ˈsʌbdʒɪkt","kitchen":"ˈkɪtʃɪn",
+  "bathroom":"ˈbɑːθruːm","bedroom":"ˈbedruːm","garden":"ˈɡɑːdən","bed":"bed","above":"əˈbʌv","below":"bɪˈləʊ",
+  "behind":"bɪˈhaɪnd","between":"bɪˈtwiːn","already":"ɔːlˈredi","still":"stɪl","enough":"ɪˈnʌf","opinion":"əˈpɪnjən",
+  "future":"ˈfjuːtʃə","past":"pɑːst","polite":"pəˈlaɪt","patient":"ˈpeɪʃənt","curious":"ˈkjʊəriəs","relationship":"rɪˈleɪʃənʃɪp",
+  "married":"ˈmærid","argument":"ˈɑːɡjʊmənt","save":"seɪv","delete":"dɪˈliːt","device":"dɪˈvaɪs","file":"faɪl","screen":"skriːn",
+  "print":"prɪnt","medicine":"ˈmedsɪn","pain":"peɪn","fever":"ˈfiːvə","emergency":"ɪˈmɜːdʒənsi","injured":"ˈɪndʒəd",
+  "choice":"tʃɔɪs","responsible":"rɪˈspɒnsəbəl","permission":"pəˈmɪʃən","newspaper":"ˈnjuːzˌpeɪpə","story":"ˈstɔːri",
+  "contract":"ˈkɒntrækt","notice":"ˈnəʊtɪs","approval":"əˈpruːvəl","collaboration":"kəˌlæbəˈreɪʃən","influence":"ˈɪnfluəns",
+  "development":"dɪˈveləpmənt","security":"sɪˈkjʊərɪti","update":"ˈʌpdeɪt","bug":"bʌɡ","software":"ˈsɒftweə","user":"ˈjuːzə",
+  "interface":"ˈɪntəfeɪs","impression":"ɪmˈpreʃən","expectation":"ˌekspekˈteɪʃən","doubt":"daʊt","ambitious":"æmˈbɪʃəs",
+  "considerate":"kənˈsɪdərət","independent":"ˌɪndɪˈpendənt","resilient":"rɪˈzɪliənt","adaptable":"əˈdæptəbəl","ambition":"æmˈbɪʃən",
+  "confidence":"ˈkɒnfɪdəns","consensus":"kənˈsensəs","sustainability":"səˌsteɪnəˈbɪlɪti","matter":"ˈmætə","significance":"sɪɡˈnɪfɪkəns",
+  "discrepancy":"dɪsˈkrepənsi","assert":"əˈsɜːt","claim":"kleɪm","accountable":"əˈkaʊntəbəl","pedantic":"pɪˈdæntɪk",
+  "offhand":"ˌɒfˈhænd","casual":"ˈkæʒuəl",
+};
+function ipaFallbackWord(w){
+  // very rough grapheme->IPA (approximate; marked with ≈)
+  let s=w.toLowerCase().replace(/[^a-z]/g,"");
+  if(!s) return "";
+  const rules=[["tion","ʃən"],["sion","ʒən"],["ture","tʃə"],["igh","aɪ"],["ough","ʌf"],["augh","ɔː"],
+    ["ee","iː"],["ea","iː"],["oo","uː"],["ou","aʊ"],["ow","aʊ"],["oa","əʊ"],["ai","eɪ"],["ay","eɪ"],
+    ["ey","eɪ"],["oy","ɔɪ"],["oi","ɔɪ"],["au","ɔː"],["aw","ɔː"],["ck","k"],["ch","tʃ"],["sh","ʃ"],
+    ["th","θ"],["ph","f"],["qu","kw"],["ng","ŋ"],["er","ə"],["or","ɔː"],["ar","ɑː"],["ir","ɜː"],["ur","ɜː"],
+    ["a","æ"],["e","e"],["i","ɪ"],["o","ɒ"],["u","ʌ"],["c","k"],["g","ɡ"],["j","dʒ"],["y","i"],["x","ks"]];
+  let out="",i=0;
+  while(i<s.length){ let m=false; for(const[p,r]of rules){ if(s.startsWith(p,i)){ out+=r; i+=p.length; m=true; break; } } if(!m){ out+=s[i]; i++; } }
+  return out;
+}
+function ipaFor(en){
+  const primary=(en||"").split("/")[0].replace(/\([^)]*\)/g,"").replace(/^(to|the|a|an)\s+/i,"")
+    .replace(/[.,!?;:…"'’]/g,"").trim().toLowerCase();
+  if(!primary) return null;
+  const tokens=primary.split(/\s+/);
+  const parts=[]; let approx=false;
+  for(const tok of tokens){
+    if(IPA_DICT[tok]){ parts.push(IPA_DICT[tok]); continue; }
+    // single word (incl. hyphen) fallback
+    if(tokens.length===1){ parts.push(ipaFallbackWord(tok)); approx=true; }
+    else { return null; } // phrase with an unknown word -> use audio/respell instead
+  }
+  const text=parts.join(" ").trim();
+  return text ? {text, approx} : null;
+}
+function pronLine(en){
+  const ip=ipaFor(en);
+  if(ip) return `<div class="respell-back">IPA <b>${ip.approx?"≈ ":""}/${ip.text}/</b> <span style="opacity:.5">· 🔊 für Audio</span></div>`;
+  return `<div class="respell-back">🗣 <b>${respell(en)}</b> <span style="opacity:.55">· vereinfacht · 🔊 für Audio</span></div>`;
+}
+
+// simplified German-style respelling (reading aid; audio is the accurate source)
+const RESPELL_DICT = {
+  the:"the",to:"tu",a:"e",an:"en",of:"ow",one:"wan",two:"tu",do:"du",you:"ju","your":"jor",i:"ai",
+  is:"is",are:"ar",was:"wos",were:"wör",have:"häw",has:"häs",he:"hi",she:"schi",we:"wi",they:"dhej",
+  me:"mi",my:"mai",it:"it",not:"not",no:"no",yes:"jes",good:"gud",morning:"MOR-ning",thanks:"thänks",
+  thank:"thänk",water:"UO-ter",coffee:"KO-fi",people:"PII-pel",work:"wörk",world:"wörld",would:"wud",
+  could:"kud",should:"schud",know:"no",answer:"AN-ser",once:"wans",because:"bi-KOS",money:"MA-ni",
+  woman:"WU-men",women:"WI-min",said:"sed",again:"e-GEN",any:"E-ni",many:"ME-ni",friend:"frend",
+  great:"greit",break:"breik",eye:"ai",buy:"bai",sure:"schuer",sugar:"SCHU-ger",listen:"LI-sen",
+  enough:"i-NAF",tough:"taf",laugh:"laf",daughter:"DO-ter",eight:"eit",weight:"weit",though:"dho",
+  through:"thru",thought:"thot",bought:"bot",brought:"brot",beautiful:"BJU-ti-ful",business:"BIS-nes",
+  colour:"KA-ler",color:"KA-ler",picture:"PIK-tscher",future:"FJU-tscher",nature:"NEJ-tscher",
+  question:"KWES-tschen",hello:"he-LO",please:"pliis",sorry:"SO-ri",welcome:"UEL-kem",
+  meeting:"MII-ting",deadline:"DED-lain",schedule:"SCHE-djul",invoice:"IN-weus",revenue:"RE-we-nju",
+  budget:"BA-djet",customer:"KAS-te-mer",language:"LÄNG-gwidsch",
+};
+// greedy longest-match table (no output re-processing → no cascade errors)
+const RESPELL_RULES = [
+  ["igh","ai"],["ough","au"],["augh","a"],["eigh","ee"],
+  ["tch","tsch"],["sch","sch"],["sh","sch"],["ch","tsch"],["ph","f"],["th","th"],["wh","u"],
+  ["ck","k"],["ng","ng"],["qu","kw"],["kn","n"],["wr","r"],["gh",""],
+  ["ee","ii"],["ea","ii"],["oo","u"],["ou","au"],["ow","au"],["oa","o"],
+  ["ai","ee"],["ay","ee"],["ey","ee"],["oy","eu"],["oi","eu"],["au","o"],["aw","o"],["ie","ii"],["ei","ai"],
+  ["ir","ör"],["ur","ör"],["ar","ar"],["or","or"],["er","er"],
+  ["a","ä"],["e","e"],["i","i"],["o","o"],["u","a"],
+  ["b","b"],["d","d"],["f","f"],["g","g"],["h","h"],["j","dsch"],["k","k"],["l","l"],["m","m"],
+  ["n","n"],["p","p"],["q","k"],["r","r"],["s","s"],["t","t"],["v","w"],["w","u"],["x","ks"],["y","i"],["z","s"],
+];
+const RESPELL_SUFFIX = [["tion","schen"],["sion","schen"],["cious","schös"],["tious","schös"],["ious","iös"],["ture","tscher"],["cian","schen"]];
+function tokenizeRespell(w){
+  let out="", i=0;
+  while(i<w.length){
+    const ch=w[i], nx=w[i+1];
+    if(ch==="c"){ out += (nx==="e"||nx==="i"||nx==="y") ? "s" : "k"; i++; continue; }
+    if(ch==="g" && (nx==="e"||nx==="i"||nx==="y")){ out += "dsch"; i++; continue; }
+    let matched=false;
+    for(const [pat,rep] of RESPELL_RULES){
+      if(w.startsWith(pat,i)){ out+=rep; i+=pat.length; matched=true; break; }
+    }
+    if(!matched){ out+=ch; i++; }
+  }
+  return out;
+}
+function transcribeWord(w){
+  let lw = w.toLowerCase().replace(/[^a-z]/g,"");
+  if(!lw) return "";
+  if(RESPELL_DICT[lw]) return RESPELL_DICT[lw];
+  // silent final e (keep for -le, -ee handled separately)
+  if(lw.length>2 && lw.endsWith("e") && !/[aeiou]e$/.test(lw) && !lw.endsWith("le")) lw=lw.slice(0,-1);
+  for(const [suf,rep] of RESPELL_SUFFIX){
+    if(lw.length>suf.length && lw.endsWith(suf)) return tokenizeRespell(lw.slice(0,-suf.length))+rep;
+  }
+  return tokenizeRespell(lw);
+}
+function respell(phrase){
+  const first = phrase.split("/")[0].replace(/\([^)]*\)/g,"").replace(/…/g,"").trim();
+  const words = first.split(/\s+/).filter(Boolean);
+  return words.map(transcribeWord).join(" · ");
+}
+function englishText(card){ return card.en; }
+
+/* ============================================================ MATCHING (forgiving) */
+const SPELL_PAIRS = [
+  ["colour","color"],["favour","favor"],["behaviour","behavior"],["neighbour","neighbor"],["labour","labor"],
+  ["honour","honor"],["flavour","flavor"],["harbour","harbor"],["rumour","rumor"],["centre","center"],
+  ["theatre","theater"],["metre","meter"],["litre","liter"],["fibre","fiber"],["organise","organize"],
+  ["realise","realize"],["recognise","recognize"],["apologise","apologize"],["prioritise","prioritize"],
+  ["analyse","analyze"],["summarise","summarize"],["catalogue","catalog"],["dialogue","dialog"],
+  ["travelling","traveling"],["cancelled","canceled"],["labelled","labeled"],["practise","practice"],
+  ["licence","license"],["defence","defense"],["offence","offense"],["grey","gray"],["programme","program"],
+  ["cheque","check"],["aeroplane","airplane"],["tyre","tire"],["pyjamas","pajamas"],["whilst","while"],
+  ["learnt","learned"],["cosy","cozy"],["storey","story"],["sceptical","skeptical"],["jewellery","jewelry"],
+  ["enquiry","inquiry"],["cv","resume"],["underground","subway"],["mum","mom"],["holiday","vacation"],
+  ["lift","elevator"],["flat","apartment"],
+];
+const SPELL_MAP = {}; SPELL_PAIRS.forEach(([a,b])=>{ SPELL_MAP[a]=b; SPELL_MAP[b]=a; });
+const NOAPOS = {couldnt:"could not",wouldnt:"would not",shouldnt:"should not",dont:"do not",doesnt:"does not",
+  didnt:"did not",cant:"can not",cannot:"can not",wont:"will not",isnt:"is not",arent:"are not",wasnt:"was not",
+  werent:"were not",im:"i am",ive:"i have",youre:"you are",youve:"you have",lets:"let us",whats:"what is",
+  wheres:"where is",theyre:"they are"};
+
+function expandContractions(s){
+  return (" " + s.toLowerCase() + " ")
+    .replace(/\bi'm\b/g,"i am").replace(/\byou're\b/g,"you are").replace(/\bwe're\b/g,"we are").replace(/\bthey're\b/g,"they are")
+    .replace(/\bit's\b/g,"it is").replace(/\bthat's\b/g,"that is").replace(/\bwhat's\b/g,"what is").replace(/\bwhere's\b/g,"where is")
+    .replace(/\bhere's\b/g,"here is").replace(/\bhow's\b/g,"how is")
+    .replace(/\bdon't\b/g,"do not").replace(/\bdoesn't\b/g,"does not").replace(/\bdidn't\b/g,"did not")
+    .replace(/\bcan't\b/g,"cannot").replace(/\bcannot\b/g,"can not").replace(/\bwon't\b/g,"will not")
+    .replace(/\bisn't\b/g,"is not").replace(/\baren't\b/g,"are not").replace(/\bwouldn't\b/g,"would not")
+    .replace(/\bcouldn't\b/g,"could not").replace(/\bshouldn't\b/g,"should not")
+    .replace(/\blet's\b/g,"let us")
+    .replace(/\bi'd\b/g,"i would").replace(/\bi'll\b/g,"i will").replace(/\bi've\b/g,"i have")
+    .replace(/\byou'd\b/g,"you would").replace(/\byou'll\b/g,"you will").replace(/\byou've\b/g,"you have")
+    .replace(/\bwe'll\b/g,"we will").replace(/\bwe'd\b/g,"we would")
+    .replace(/\s+/g," ").trim();
+}
+function expandNoApos(s){ return s.split(" ").map(w=> NOAPOS[w] || w).join(" "); }
+function stripAll(s){
+  return expandContractions(s || "").normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .replace(/[.,!?;:"'’`´…()]/g,"").replace(/[-–—]/g," ").replace(/\s+/g," ").trim();
+}
+function spellingSwaps(form){
+  const out = new Set([form]);
+  const words = form.split(" ");
+  if(words.some(w=>SPELL_MAP[w])) out.add(words.map(w=> SPELL_MAP[w] || w).join(" "));
+  const extra = new Set();
+  out.forEach(f=>{
+    extra.add(f.replace(/ise\b/g,"ize")); extra.add(f.replace(/ize\b/g,"ise"));
+    extra.add(f.replace(/isation\b/g,"ization")); extra.add(f.replace(/ization\b/g,"isation"));
+    if(!f.includes(" ")){ if(f.endsWith("s") && f.length>3) extra.add(f.slice(0,-1)); else extra.add(f+"s"); }
+  });
+  extra.forEach(x=> x && out.add(x));
+  return out;
+}
+function coreForms(str){
+  const out = new Set();
+  const base = stripAll(str);
+  const seeds = new Set([base, expandNoApos(base)]);
+  seeds.add(base.replace(/^(to|the|a|an)\s+/,""));
+  seeds.add(base.replace(/\b(sb|sth|somebody|something|someone|one's|ones|oneself|yourself|you|your|me|us|them|him|her|it|one)\b/g," ").replace(/\s+/g," ").trim());
+  const s2 = new Set(); seeds.forEach(s=>{ if(s){ s2.add(s); s2.add(expandNoApos(s)); } });
+  s2.forEach(s=>{ if(s) spellingSwaps(s).forEach(v=> v && out.add(v)); });
+  out.delete(""); return out;
+}
+function acceptedSetEN(c){
+  const set = new Set();
+  c.en.split("/").map(x=>x.trim()).filter(Boolean).forEach(alt=>{
+    coreForms(alt.replace(/[()]/g,"")).forEach(v=>set.add(v));
+    coreForms(alt.replace(/\([^)]*\)/g," ")).forEach(v=>set.add(v));
+  });
+  return set;
+}
+// German side matching
+function deVariants(s){
+  let x = s.replace(/\([^)]*\)/g," ").toLowerCase().replace(/[.,!?;:"'’`…]/g,"").replace(/[-–—]/g," ").replace(/\s+/g," ").trim();
+  const forms = new Set([x, x.replace(/^(der|die|das|den|dem|des|ein|eine|einen|einem|einer|eines|zu|sich|im|in)\s+/,"")]);
+  const out = new Set();
+  forms.forEach(f=>{ if(!f) return; out.add(f); out.add(f.replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss")); });
+  out.delete(""); return out;
+}
+function coreFormsDE(str){
+  const out = new Set();
+  str.split("/").map(x=>x.trim()).filter(Boolean).forEach(alt=> deVariants(alt).forEach(v=>out.add(v)));
+  return out;
+}
+function isCorrect(card, input){
+  if(!input || !input.trim()) return false;
+  if(direction==="en2de"){
+    const cand = coreFormsDE(input); const set = coreFormsDE(card.de);
+    for(const x of cand){ if(set.has(x)) return true; } return false;
+  }
+  const cand = coreForms(input); const set = acceptedSetEN(card);
+  for(const x of cand){ if(set.has(x)) return true; } return false;
+}
+// quiz uses explicit direction param
+function isCorrectDir(card, input, dir){ const save=direction; direction=dir; const r=isCorrect(card,input); direction=save; return r; }
+
+/* ============================================================ PERSISTENCE */
+async function loadProfiles(){
+  try{ const r=await window.storage.get(PROFILES_KEY); if(r&&r.value){ const p=JSON.parse(r.value); if(p&&Array.isArray(p.names)){ profiles.names=[p.names[0]||"Nutzer 1",p.names[1]||"Nutzer 2"]; profiles.active=(p.active===1?1:0);} } }catch(e){}
+}
+async function saveProfiles(){ try{ await window.storage.set(PROFILES_KEY, JSON.stringify(profiles)); }catch(e){} }
+async function loadProfileData(){
+  boxes={}; stats={ reviewed:0, correct:0, streak:0, best:0, day:"", dayCount:0, goal:20, days:{}, daysStreak:0, lastActiveDay:"" }; customCards=[];
+  try{ const r=await window.storage.get(boxesKeyFor(profiles.active)); if(r&&r.value) boxes=JSON.parse(r.value); }catch(e){}
+  try{ const r=await window.storage.get(statsKeyFor(profiles.active)); if(r&&r.value) stats=Object.assign(stats,JSON.parse(r.value)); }catch(e){}
+  try{ const r=await window.storage.get(customKeyFor(profiles.active)); if(r&&r.value) customCards=JSON.parse(r.value)||[]; }catch(e){}
+  Object.keys(boxes).forEach(k=>ensureBox(k));
+  if(!stats.days) stats.days={};
+  if(stats.day!==todayStr()){ stats.day=todayStr(); stats.dayCount=0; }
+}
+async function saveBoxes(){ try{ await window.storage.set(boxesKeyFor(profiles.active), JSON.stringify(boxes)); }catch(e){} }
+async function saveStats(){ try{ await window.storage.set(statsKeyFor(profiles.active), JSON.stringify(stats)); }catch(e){} }
+async function saveCustom(){ try{ await window.storage.set(customKeyFor(profiles.active), JSON.stringify(customCards)); }catch(e){} }
+async function switchUser(u){ if(u===profiles.active) return; profiles.active=u; await saveProfiles(); await loadProfileData(); quiz=null; buildQueue(); render(); }
+
+function registerActivity(){
+  const t=todayStr(), y=dayOffset(-1);
+  if(stats.lastActiveDay!==t){
+    stats.daysStreak = (stats.lastActiveDay===y) ? (stats.daysStreak||0)+1 : 1;
+    stats.lastActiveDay=t;
+  }
+  if(stats.day!==t){ stats.day=t; stats.dayCount=0; }
+  stats.dayCount++; stats.days[t]=(stats.days[t]||0)+1;
+}
+
+/* ============================================================ DECK */
+function activeIndices(){
+  const A = allCards();
+  return A.map((c,i)=>i).filter(i=>{
+    const c=A[i];
+    if(filter==="difficult") return ensureBox(keyOf(i)).wrong>=2;
+    return (levelFilter==="all"||c.lvl===levelFilter) && (filter==="all"||c.cat===filter);
+  });
+}
+function masteredCount(){ return activeIndices().filter(i=>ensureBox(keyOf(i)).b>=3).length; }
+function masteredTotalAll(){ let n=0; allCards().forEach((_,i)=>{ if(ensureBox(keyOf(i)).b>=3) n++; }); return n; }
+function difficultCount(){ let n=0; allCards().forEach((_,i)=>{ if(ensureBox(keyOf(i)).wrong>=2) n++; }); return n; }
+function buildQueue(){
+  const idx=activeIndices();
+  idx.sort((a,b)=> (ensureBox(keyOf(a)).b-ensureBox(keyOf(b)).b) || (Math.random()-0.5));
+  queue=idx; pos=0; flipped=false; checked=false; lastTyped="";
+}
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+/* ============================================================ BADGES */
+const BADGES = [
+  {i:"🌱",name:"Erste 10",cond:s=>masteredTotalAll()>=10},
+  {i:"📚",name:"50 Wörter",cond:s=>masteredTotalAll()>=50},
+  {i:"🏆",name:"100 Wörter",cond:s=>masteredTotalAll()>=100},
+  {i:"🎯",name:"Treffsicher",cond:s=>s.reviewed>=50 && s.correct/Math.max(1,s.reviewed)>=0.9},
+  {i:"🔥",name:"3-Tage-Serie",cond:s=>(s.daysStreak||0)>=3},
+  {i:"⚡",name:"7-Tage-Serie",cond:s=>(s.daysStreak||0)>=7},
+  {i:"✅",name:"Tagesziel",cond:s=>s.dayCount>=(s.goal||20)},
+  {i:"💯",name:"100 Antworten",cond:s=>s.reviewed>=100},
+];
+
+/* ============================================================ RENDER: dashboard */
+function renderKPIs(){
+  const total=activeIndices().length, mastered=masteredCount();
+  const acc=stats.reviewed?Math.round(stats.correct/stats.reviewed*100):0;
+  const goal=stats.goal||20;
+  const tiles=[
+    {v:`${mastered}/${total}`,l:"Gemeistert",sub:"aktuelle Auswahl",c:"var(--teal)"},
+    {v:`${acc}%`,l:"Genauigkeit",sub:`${stats.reviewed} Antworten`,c:"var(--amber)"},
+    {v:`${stats.streak}`,l:"Serie 🔥",sub:`Rekord: ${stats.best}`,c:"var(--rust)"},
+    {v:`${stats.dayCount}/${goal}`,l:"Heute",sub: stats.dayCount>=goal?"Ziel erreicht ✅":"Tagesziel",c:"var(--violet)"},
+  ];
+  document.getElementById("kpis").innerHTML = tiles.map(t=>`<div class="kpi" style="--accent:${t.c}"><div class="k-val">${t.v}</div><div class="k-lbl">${t.l}</div><div class="k-sub">${t.sub}</div></div>`).join("");
+  document.getElementById("daysStreak").textContent = stats.daysStreak||0;
+}
+function renderWeek(){
+  const days=[]; let max=1, sum=0;
+  for(let k=6;k>=0;k--){ const d=dayOffset(-k); const c=stats.days[d]||0; days.push({d,c}); if(c>max)max=c; sum+=c; }
+  const names=["So","Mo","Di","Mi","Do","Fr","Sa"];
+  document.getElementById("week").innerHTML = days.map(x=>{
+    const h=Math.max(3, Math.round(x.c/max*46));
+    const today=x.d===todayStr()?" today":"";
+    const dl=names[new Date(x.d).getDay()];
+    return `<div class="day"><div class="col${today}" style="height:${h}px" title="${x.c} Karten"></div><div class="dl">${dl}</div></div>`;
+  }).join("");
+  document.getElementById("weekTotal").textContent = sum+" Karten";
+}
+function renderBadges(){
+  const earned=BADGES.filter(b=>{try{return b.cond(stats)}catch(e){return false}});
+  document.getElementById("badgeCount").textContent = earned.length+" / "+BADGES.length;
+  document.getElementById("badges").innerHTML = BADGES.map(b=>{
+    const on = earned.includes(b);
+    return `<div class="badge${on?"":" locked"}"><span class="b-i">${b.i}</span>${b.name}</div>`;
+  }).join("");
+}
+function renderUsers(){
+  const el=document.getElementById("users"); el.innerHTML="";
+  profiles.names.forEach((name,u)=>{
+    const b=document.createElement("button");
+    b.className="user"+(profiles.active===u?" on":""); b.textContent=name;
+    b.title="Klick = wechseln · Doppelklick = umbenennen";
+    b.onclick=()=>switchUser(u); b.ondblclick=(e)=>{e.stopPropagation();startRename(u,b);};
+    el.appendChild(b);
+  });
+  const edit=document.createElement("button"); edit.className="user-edit"; edit.textContent="✎ umbenennen";
+  edit.onclick=()=>{ const b=el.querySelector(".user.on"); if(b) startRename(profiles.active,b); };
+  el.appendChild(edit);
+}
+function startRename(u,btn){
+  const inp=document.createElement("input"); inp.className="user-input"; inp.value=profiles.names[u]; inp.maxLength=16;
+  btn.replaceWith(inp); inp.focus(); inp.select(); let done=false;
+  const commit=async()=>{ if(done)return; done=true; const v=inp.value.trim(); if(v)profiles.names[u]=v; await saveProfiles(); renderUsers(); };
+  inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){e.preventDefault();commit();} else if(e.key==="Escape"){done=true;renderUsers();} });
+  inp.addEventListener("blur",commit);
+}
+function renderLevels(){
+  const el=document.getElementById("levels"); el.innerHTML="";
+  LEVELS.forEach(l=>{
+    const b=document.createElement("button"); b.className=(levelFilter===l?"on":""); b.textContent=LEVEL_LABELS[l];
+    b.onclick=()=>{ levelFilter=l; if(filter!=="all"&&filter!=="difficult"){ const av=new Set(allCards().filter(c=>l==="all"||c.lvl===l).map(c=>c.cat)); if(!av.has(filter)) filter="all"; } buildQueue(); render(); };
+    el.appendChild(b);
+  });
+}
+function renderCats(){
+  const el=document.getElementById("cats"); el.innerHTML="";
+  const avail=new Set(allCards().filter(c=> levelFilter==="all"||c.lvl===levelFilter).map(c=>c.cat));
+  Object.keys(CAT_LABELS).forEach(k=>{
+    if(k==="custom" && !customCards.length) return;
+    if(k!=="all" && k!=="custom" && !avail.has(k)) return;
+    const b=document.createElement("button"); b.className="chip"+(filter===k?" on":""); b.textContent=CAT_LABELS[k];
+    b.onclick=()=>{ filter=k; buildQueue(); render(); }; el.appendChild(b);
+  });
+  const dc=difficultCount();
+  if(dc>0){
+    const b=document.createElement("button"); b.className="chip hard"+(filter==="difficult"?" on":""); b.textContent="⚠︎ Schwierige ("+dc+")";
+    b.onclick=()=>{ filter="difficult"; buildQueue(); render(); }; el.appendChild(b);
+  }
+}
+function renderDir(){
+  document.querySelectorAll("#dir button").forEach(b=>{
+    b.classList.toggle("on", b.dataset.dir===direction);
+    b.onclick=()=>{ if(direction===b.dataset.dir)return; direction=b.dataset.dir; checked=false; flipped=false; lastTyped=""; render(); };
+  });
+}
+function renderModes(){
+  document.querySelectorAll("#modes button").forEach(b=>{
+    b.classList.toggle("on", b.dataset.mode===mode);
+    b.onclick=()=>{ if(mode===b.dataset.mode)return; mode=b.dataset.mode; checked=false; flipped=false; lastTyped=""; render(); };
+  });
+}
+function renderProgress(){
+  const active=activeIndices().length; const pct=active?Math.round(masteredCount()/active*100):0;
+  document.getElementById("progressFill").style.width=pct+"%";
+}
+
+/* ============================================================ RENDER: main (study) */
+function promptSide(c){ return direction==="en2de" ? c.en : c.de; }
+function answerSide(c){ return direction==="en2de" ? c.de : c.en; }
+
+function sayBlock(text, big){
+  return `<span class="say"><button class="say-btn" data-say="${text.replace(/"/g,'&quot;')}">🔊 Anhören</button>
+    <span class="respell" title="vereinfachte Aussprache – das Audio ist maßgeblich">🗣 <b>${respell(text)}</b> <span style="opacity:.6">· vereinfacht</span></span></span>`;
+}
+
+function render(){
+  loadVoices();
+  renderKPIs(); renderWeek(); renderBadges(); renderUsers(); renderLevels(); renderCats(); renderDir(); renderModes(); renderProgress();
+  const main=document.getElementById("main");
+  if(quiz){ renderQuiz(); return; }
+
+  const total=activeIndices().length;
+  if(total===0){
+    main.innerHTML=`<div class="done"><h2>Keine Karten hier</h2><p>Für diese Auswahl gibt es keine Vokabeln. Wähle ein anderes Thema, Niveau oder „Alle“.</p></div>`;
+    return;
+  }
+  if(pos>=queue.length){
+    const m=masteredCount();
+    main.innerHTML=`<div class="done"><h2>Runde geschafft ✦</h2>
+      <p>${m} von ${total} Karten sitzen sicher. ${m<total?"Noch eine Runde für den Rest?":"Alles gemeistert — stark!"}</p>
+      <button class="btn reveal" id="restart">Nächste Runde <span style="opacity:.6">· Leertaste</span></button></div>`;
+    document.getElementById("restart").onclick=()=>{ buildQueue(); render(); };
+    return;
+  }
+
+  const c=allCards()[queue[pos]];
+  const engProm = direction==="en2de";   // English is the prompt
+  const banner=(mode==="type"&&checked)
+    ? (lastCorrect?`<div class="banner ok">✓ Richtig!</div>`
+        :`<div class="banner no">✗ Nicht ganz.${lastTyped?` <span class="typed">Du: „${lastTyped}“</span>`:` <span class="typed">(keine Eingabe)</span>`}</div>`):"";
+  const dirBadge = `<span class="dir-badge">${direction==="en2de"?"EN → DE":"DE → EN"}</span>`;
+  const tagrow=`<div class="tagrow"><span class="lvl-badge">${c.lvl}</span><span class="tag">${CAT_LABELS[c.cat]||c.cat}</span>${dirBadge}</div>`;
+
+  const frontExtra = engProm ? `<div style="margin:2px 0 6px">${sayBlock(c.en)}</div>` : "";
+  const front=(mode==="type"&&!checked)
+    ? `<div class="face front">${tagrow}<div class="prompt">${promptSide(c)}</div>${frontExtra}
+        <div class="type-wrap">
+          <input id="answerInput" class="answer-input" placeholder="${direction==="en2de"?"Deutsche":"Englische"} Antwort eintippen…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          <div class="type-hint"><kbd style="font-family:inherit;background:#fff;box-shadow:inset 0 0 0 1px var(--paper-edge);border-radius:6px;padding:3px 8px;font-weight:600">Enter</kbd> zum Prüfen · leer = „Weiß ich nicht“</div>
+        </div></div>`
+    : `<div class="face front">${tagrow}<div class="prompt">${promptSide(c)}</div>${frontExtra}
+        <div class="hint"><kbd>Leertaste</kbd> Antwort zeigen · <kbd>P</kbd> anhören</div></div>`;
+
+  const engAns = !engProm;  // English is the answer side
+  main.innerHTML=`
+    <div class="stage"><div class="card ${flipped?"flipped":""}" id="card">
+      ${front}
+      <div class="face back">
+        ${banner}
+        <div class="tagrow"><span class="tag">${direction==="en2de"?"Deutsch":"Englisch"}</span></div>
+        <div class="answer">${answerSide(c)} ${engAns?`<button class="say-btn" data-say="${c.en.replace(/"/g,'&quot;')}">🔊</button>`:""}</div>
+        ${engAns?pronLine(c.en):""}
+        <div class="example">${c.ex||""}</div>
+        ${c.note?`<div class="note">${c.note}</div>`:`<div class="note" style="opacity:.55">Beispiel oben zeigt die typische Verwendung.</div>`}
+      </div>
+    </div></div>
+    <div class="actions" id="actions"></div>
+    <div class="footline">
+      <span class="count">Karte ${pos+1} / ${queue.length}</span>
+      <span class="kb"><kbd>Leertaste</kbd> weiter · <kbd>1</kbd> nochmal · <kbd>2</kbd> kann ich · <kbd>P</kbd> Ton</span>
+      <button class="reset" id="reset">zurücksetzen</button>
+    </div>`;
+
+  document.getElementById("card").onclick=()=>{ if(mode==="type"&&!checked)return; if(!flipped) doFlip(); };
+  document.getElementById("reset").onclick=resetAll;
+  const inp=document.getElementById("answerInput");
+  if(inp){ inp.focus(); inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){e.preventDefault();submitAnswer();} }); }
+  bindSay();
+  renderActions();
+}
+function bindSay(){ document.querySelectorAll(".say-btn").forEach(b=>{ b.onclick=(e)=>{ e.stopPropagation(); speak(b.dataset.say); }; }); }
+
+function submitAnswer(){
+  const c=allCards()[queue[pos]]; const inp=document.getElementById("answerInput");
+  lastTyped=inp?inp.value.trim():""; lastCorrect=isCorrect(c,lastTyped); checked=true; flipped=true; render();
+}
+function renderActions(){
+  const a=document.getElementById("actions"); if(!a)return;
+  if(!flipped){
+    if(mode==="type"&&!checked){ a.innerHTML=`<button class="btn reveal" id="revealBtn">Prüfen</button>`; document.getElementById("revealBtn").onclick=submitAnswer; }
+    else{ a.innerHTML=`<button class="btn reveal" id="revealBtn">Antwort zeigen</button>`; document.getElementById("revealBtn").onclick=doFlip; }
+  }else{
+    const ad=(mode==="type"&&checked&&lastCorrect)?" dim":""; const kd=(mode==="type"&&checked&&!lastCorrect)?" dim":"";
+    a.innerHTML=`<button class="btn again${ad}" id="againBtn">Nochmal</button><button class="btn know${kd}" id="knowBtn">Kann ich</button>`;
+    document.getElementById("againBtn").onclick=()=>rate(false); document.getElementById("knowBtn").onclick=()=>rate(true);
+  }
+}
+function doFlip(){ flipped=!flipped; const card=document.getElementById("card"); if(card)card.classList.toggle("flipped",flipped); renderActions(); }
+async function rate(known){
+  const i=queue[pos], k=keyOf(i), box=ensureBox(k); box.seen++;
+  if(known){ box.b=Math.min(3,box.b+1); stats.correct++; stats.streak++; if(stats.streak>stats.best)stats.best=stats.streak; }
+  else{ box.b=1; box.wrong++; stats.streak=0; queue.push(i); }
+  stats.reviewed++; registerActivity();
+  await saveBoxes(); await saveStats();
+  pos++; flipped=false; checked=false; lastTyped=""; render();
+}
+async function resetAll(){ activeIndices().forEach(i=>{ boxes[keyOf(i)]={b:1,wrong:0,seen:0}; }); await saveBoxes(); buildQueue(); render(); }
+
+/* ============================================================ QUIZ */
+function startQuiz(){
+  const pool=activeIndices(); if(!pool.length) return;
+  const size=Math.min(12,pool.length);
+  quiz={ items:shuffle(pool).slice(0,size), i:0, wrong:[], checked:false, correct:0, typed:"", dir:direction };
+  render();
+}
+function renderQuiz(){
+  const main=document.getElementById("main");
+  if(quiz.i>=quiz.items.length){
+    const n=quiz.items.length, sc=Math.round(quiz.correct/n*100);
+    const missHTML = quiz.wrong.length ? `<div class="miss-list">${quiz.wrong.map(w=>`<div class="m"><span>${w.prompt}</span><span class="en">${w.answer}</span></div>`).join("")}</div>` : `<p>Perfekt — alles richtig! 🎉</p>`;
+    main.innerHTML=`<div class="done">
+      <div class="k-lbl" style="color:var(--ink-soft);letter-spacing:.1em">Prüfungsergebnis</div>
+      <div class="score-ring" style="color:${sc>=80?'var(--teal-deep)':sc>=50?'var(--amber)':'var(--rust)'}">${sc}%</div>
+      <p>${quiz.correct} von ${n} richtig.</p>
+      ${missHTML}
+      <div class="btnrow">
+        ${quiz.wrong.length?`<button class="btn again" id="qRetry">Fehler üben (${quiz.wrong.length})</button>`:""}
+        <button class="btn reveal" id="qNew">Neue Prüfung</button>
+        <button class="btn ghost" id="qEnd">Beenden</button>
+      </div></div>`;
+    document.getElementById("qNew").onclick=()=>startQuiz();
+    document.getElementById("qEnd").onclick=()=>{ quiz=null; buildQueue(); render(); };
+    const rt=document.getElementById("qRetry");
+    if(rt) rt.onclick=()=>{ quiz={items:quiz.wrong.map(w=>w.idx), i:0, wrong:[], checked:false, correct:0, typed:"", dir:quiz.dir}; render(); };
+    return;
+  }
+  const c=allCards()[quiz.items[quiz.i]];
+  const engProm = quiz.dir==="en2de";
+  const prompt = engProm ? c.en : c.de;
+  const answer = engProm ? c.de : c.en;
+  const banner = quiz.checked ? (quiz.lastOK?`<div class="banner ok">✓ Richtig!</div>`:`<div class="banner no">✗ Richtig: <b style="margin-left:4px">${answer}</b>${quiz.typed?` <span class="typed">· du: „${quiz.typed}“</span>`:""}</div>`) : "";
+  const engVisible = engProm || quiz.checked;
+  const say = engVisible ? `<div style="margin:6px 0">${sayBlock(c.en)}${pronLine(c.en)}</div>` : "";
+  main.innerHTML=`
+    <div class="stage"><div class="card" id="card"><div class="face front">
+      <div class="tagrow"><span class="lvl-badge">${c.lvl}</span><span class="tag">🎯 Prüfung</span><span class="dir-badge">${engProm?"EN → DE":"DE → EN"}</span></div>
+      ${banner}
+      <div class="prompt">${prompt}</div>
+      ${say}
+      <div class="type-wrap">
+        <input id="quizInput" class="answer-input" placeholder="${engProm?"Deutsche":"Englische"} Antwort…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${quiz.checked?"disabled":""}>
+        <div class="type-hint">${quiz.checked?"<kbd style='font-family:inherit;background:#fff;box-shadow:inset 0 0 0 1px var(--paper-edge);border-radius:6px;padding:3px 8px;font-weight:600'>Leertaste</kbd> weiter":"<kbd style='font-family:inherit;background:#fff;box-shadow:inset 0 0 0 1px var(--paper-edge);border-radius:6px;padding:3px 8px;font-weight:600'>Enter</kbd> prüfen"}</div>
+      </div></div></div></div>
+    <div class="actions">${quiz.checked?`<button class="btn reveal" id="qNext">Weiter</button>`:`<button class="btn reveal" id="qCheck">Prüfen</button>`}</div>
+    <div class="footline"><span class="count">Frage ${quiz.i+1} / ${quiz.items.length}</span><span class="kb">richtig: ${quiz.correct}</span><button class="reset" id="qAbort">abbrechen</button></div>`;
+  const inp=document.getElementById("quizInput");
+  if(inp && !quiz.checked){ inp.focus(); inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){e.preventDefault();quizCheck();} }); }
+  const cb=document.getElementById("qCheck"); if(cb) cb.onclick=quizCheck;
+  const nb=document.getElementById("qNext"); if(nb) nb.onclick=quizNext;
+  document.getElementById("qAbort").onclick=()=>{ quiz=null; buildQueue(); render(); };
+  bindSay();
+}
+async function quizCheck(){
+  const idx=quiz.items[quiz.i]; const c=allCards()[idx]; const inp=document.getElementById("quizInput");
+  quiz.typed=inp?inp.value.trim():""; quiz.lastOK=isCorrectDir(c,quiz.typed,quiz.dir); quiz.checked=true;
+  const box=ensureBox(keyOf(idx)); box.seen++;
+  if(quiz.lastOK){ quiz.correct++; box.b=Math.min(3,box.b+1); stats.correct++; stats.streak++; if(stats.streak>stats.best)stats.best=stats.streak; }
+  else{ box.b=1; box.wrong++; stats.streak=0; quiz.wrong.push({idx, prompt:(quiz.dir==="en2de"?c.en:c.de), answer:(quiz.dir==="en2de"?c.de:c.en)}); }
+  stats.reviewed++; registerActivity();
+  await saveBoxes(); await saveStats();
+  render();
+}
+function quizNext(){ quiz.i++; quiz.checked=false; quiz.typed=""; render(); }
+
+/* ============================================================ ADD OWN CARD */
+function openAddCard(){
+  const cats=Object.keys(CAT_LABELS).filter(k=>k!=="all"&&k!=="difficult");
+  const lvls=["A1","A2","B1","B2","C1","C2"];
+  document.getElementById("modalRoot").innerHTML=`
+    <div class="modal-bg" id="modalBg"><div class="modal">
+      <h3>Eigene Karte hinzufügen</h3>
+      <div class="field"><label>Deutsch</label><input id="fDe" placeholder="z.B. die Besprechung"></div>
+      <div class="field"><label>Englisch</label><input id="fEn" placeholder="z.B. the meeting  (Alternativen mit / trennen)"></div>
+      <div class="field"><label>Beispielsatz (optional, Englisch)</label><input id="fEx" placeholder="We have a meeting at 3."></div>
+      <div class="row2">
+        <div class="field"><label>Niveau</label><select id="fLvl">${lvls.map(l=>`<option ${l===levelFilter?"selected":""}>${l}</option>`).join("")}</select></div>
+        <div class="field"><label>Thema</label><select id="fCat">${cats.map(k=>`<option value="${k}" ${k==="custom"?"selected":""}>${CAT_LABELS[k]}</option>`).join("")}</select></div>
+      </div>
+      <div class="m-actions"><button class="btn ghost" id="mCancel">Abbrechen</button><button class="btn reveal" id="mSave">Speichern</button></div>
+    </div></div>`;
+  document.getElementById("modalBg").onclick=(e)=>{ if(e.target.id==="modalBg") closeModal(); };
+  document.getElementById("mCancel").onclick=closeModal;
+  document.getElementById("mSave").onclick=saveNewCard;
+  document.getElementById("fDe").focus();
+}
+function closeModal(){ document.getElementById("modalRoot").innerHTML=""; }
+async function saveNewCard(){
+  const de=document.getElementById("fDe").value.trim();
+  const en=document.getElementById("fEn").value.trim();
+  const ex=document.getElementById("fEx").value.trim();
+  const lvl=document.getElementById("fLvl").value;
+  const cat=document.getElementById("fCat").value;
+  if(!de||!en){ alert("Bitte Deutsch und Englisch ausfüllen."); return; }
+  customCards.push({lvl,cat,de,en,ex: ex||"",note:"",custom:true});
+  await saveCustom(); closeModal();
+  levelFilter=lvl; filter=cat; buildQueue(); render();
+}
+
+/* ============================================================ KEYBOARD (space = weiter) */
+document.addEventListener("keydown", e=>{
+  const tag=e.target&&e.target.tagName;
+  if(tag==="INPUT"||tag==="TEXTAREA") return;
+  if(document.getElementById("modalBg")){ if(e.key==="Escape") closeModal(); return; }
+  // quiz keys
+  if(quiz){
+    if(e.code==="Space"){ e.preventDefault(); if(quiz.i>=quiz.items.length){ return; } if(quiz.checked) quizNext(); }
+    else if(e.key==="Enter" && quiz.checked) quizNext();
+    else if((e.key==="p"||e.key==="P")){ const c=allCards()[quiz.items[quiz.i]]; if(c) speak(c.en); }
+    return;
+  }
+  if(e.key==="p"||e.key==="P"){ const c=allCards()[queue[pos]]; if(c) speak(c.en); return; }
+  if(e.code==="Space"){
+    e.preventDefault();
+    const restart=document.getElementById("restart"); if(restart){ restart.click(); return; }
+    if(flipped) advance(); else if(mode!=="type") doFlip();
+  }
+  else if(e.key==="Enter"&&flipped) advance();
+  else if(flipped&&e.key==="1") rate(false);
+  else if(flipped&&e.key==="2") rate(true);
+});
+function advance(){ if(mode==="type"&&checked) rate(lastCorrect); else rate(true); }
+
+document.getElementById("quizBtn").onclick=startQuiz;
+document.getElementById("addBtn").onclick=openAddCard;
+
+(async function init(){ await loadProfiles(); await loadProfileData(); buildQueue(); render(); })();
+</script>
+</body>
+</html>
