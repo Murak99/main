@@ -231,6 +231,11 @@
       <div class="p-head"><span>Diese Woche</span><span id="weekTotal"></span></div>
       <div class="week" id="week"></div>
     </div>
+
+    <div class="panel">
+      <div class="p-head"><span>Abzeichen</span><span id="badgeCount"></span></div>
+      <div class="badges" id="badges"></div>
+    </div>
   </div>
 </div>
 <div id="modalRoot"></div>
@@ -1447,7 +1452,17 @@ function buildQueue(){
 }
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
-
+/* ============================================================ BADGES */
+const BADGES = [
+  {i:"🌱",name:"Erste 10",cond:s=>masteredTotalAll()>=10},
+  {i:"📚",name:"50 Wörter",cond:s=>masteredTotalAll()>=50},
+  {i:"🏆",name:"100 Wörter",cond:s=>masteredTotalAll()>=100},
+  {i:"🎯",name:"Treffsicher",cond:s=>s.reviewed>=50 && s.correct/Math.max(1,s.reviewed)>=0.9},
+  {i:"🔥",name:"3-Tage-Serie",cond:s=>(s.daysStreak||0)>=3},
+  {i:"⚡",name:"7-Tage-Serie",cond:s=>(s.daysStreak||0)>=7},
+  {i:"✅",name:"Tagesziel",cond:s=>s.dayCount>=(s.goal||20)},
+  {i:"💯",name:"100 Antworten",cond:s=>s.reviewed>=100},
+];
 
 /* ============================================================ RENDER: dashboard */
 function renderKPIs(){
