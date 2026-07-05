@@ -78,6 +78,10 @@
   .seg.lv button.on{background:var(--teal)}
   .seg.md button.on{background:var(--amber)}
   .seg.dir button.on{background:var(--violet);color:#0e1524}
+  /* Niveau immer in einer Zeile (bei Bedarf horizontal scrollbar) */
+  .seg.lv{display:flex;flex-wrap:nowrap;align-items:center;min-height:44px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .seg.lv::-webkit-scrollbar{display:none}
+  .seg.lv button{flex:0 0 auto;padding:8px 13px}
 
   .cats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
   .chip{font-family:inherit;font-size:12.5px;font-weight:500;background:var(--surface);color:var(--text);border:1px solid var(--stroke);border-radius:99px;padding:8px 14px;cursor:pointer;transition:.16s}
@@ -85,6 +89,8 @@
   .chip.on{background:var(--amber);border-color:var(--amber);color:#221704;font-weight:600}
   .chip.hard{border-color:var(--rust)}
   .chip.hard.on{background:var(--rust);border-color:var(--rust);color:#2a0f06}
+  .chip.cats-toggle{border-style:dashed;color:var(--muted);font-weight:600}
+  .chip.cats-toggle:hover{border-color:var(--amber);color:var(--amber-soft)}
 
   .tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
   .tool{font-family:inherit;font-size:13.5px;font-weight:600;border-radius:12px;padding:11px 16px;cursor:pointer;transition:.15s;border:1px solid var(--stroke);background:var(--surface);color:var(--text)}
@@ -95,7 +101,7 @@
   .bar > span{display:block;height:100%;background:linear-gradient(90deg,var(--teal-deep),var(--teal));border-radius:99px;transition:width .5s cubic-bezier(.3,.1,.2,1)}
 
   /* study area: fills remaining space so the exercise sits centred on screen */
-  #main{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:44vh}
+  #main{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;min-height:44vh}
   .stats{margin-top:26px;padding-top:20px;border-top:1px solid var(--stroke)}
 
   .stage{perspective:1600px;margin-bottom:18px}
@@ -193,6 +199,18 @@
   .modal .row2{display:flex;gap:10px}
   .modal .row2 .field{flex:1}
   .modal .m-actions{display:flex;gap:10px;margin-top:8px}
+  /* Zeitformen-Referenz */
+  .modal.tense-modal{max-width:520px}
+  .tense-list{max-height:66vh;overflow-y:auto;display:flex;flex-direction:column;gap:11px;margin:4px -6px 16px;padding:2px 6px}
+  .tense{background:var(--bg-2);border:1px solid var(--stroke);border-radius:14px;padding:13px 15px}
+  .tense-h{display:flex;flex-direction:column;align-items:flex-start;gap:3px;font-weight:600;font-size:15.5px;color:var(--text);margin-bottom:9px}
+  .tense-h span{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);font-weight:600}
+  .tense-row{display:flex;gap:8px;font-size:13px;line-height:1.5;margin-top:4px;color:var(--muted)}
+  .tense-row b{color:var(--text);font-weight:600;flex-shrink:0;min-width:74px}
+  .tense-row .v{color:var(--text)}
+  .tense-form code{font-family:"Instrument Sans",sans-serif;color:var(--teal-soft);background:rgba(67,194,173,.12);border-radius:6px;padding:1px 6px}
+  .tense-ex{color:var(--text)}
+  .tense-ex em{font-style:normal;color:var(--teal-soft);font-weight:600}
 
   @media (max-width:420px){.prompt{font-size:29px}.answer{font-size:27px}.cloze-de{font-size:20px}.cloze-en{font-size:16px}}
   @media (prefers-reduced-motion:reduce){.card,.bar>span,.week .col,.btn{transition:none}}
@@ -238,7 +256,8 @@
 
   <div class="tools">
     <button class="tool primary" id="quizBtn">🎯 Prüfung starten</button>
-    <button class="tool" id="gramBtn">🧩 Grammatik & Zeiten</button>
+    <button class="tool" id="gramBtn">🧩 Grammatik-Übung</button>
+    <button class="tool" id="tenseBtn">📘 Zeitformen erklärt</button>
     <button class="tool" id="addBtn">＋ Eigene Karte</button>
   </div>
 
@@ -1428,6 +1447,7 @@ let stats = { reviewed:0, correct:0, streak:0, best:0, day:"", dayCount:0, goal:
 let customCards = [];
 
 let filter = "all", levelFilter = "A1", direction = "de2en";
+let catsOpen = false; // Themenliste standardmäßig eingeklappt (spart Platz)
 let mode = "type", checked = false, lastCorrect = false, lastTyped = "";
 let queue = [], pos = 0, flipped = false;
 let quiz = null;   // {items, i, wrong:[], checked, correct, typed, size}
@@ -1952,16 +1972,26 @@ function renderLevels(){
 function renderCats(){
   const el=document.getElementById("cats"); el.innerHTML="";
   const avail=new Set(allCards().filter(c=> levelFilter==="all"||c.lvl===levelFilter).map(c=>c.cat));
-  Object.keys(CAT_LABELS).forEach(k=>{
-    if(k==="custom" && !customCards.length) return;
-    if(k!=="all" && k!=="custom" && !avail.has(k)) return;
-    const b=document.createElement("button"); b.className="chip"+(filter===k?" on":""); b.textContent=CAT_LABELS[k];
-    b.onclick=()=>{ filter=k; buildQueue(); render(); }; el.appendChild(b);
+  const keys=Object.keys(CAT_LABELS).filter(k=>{
+    if(k==="all") return true;
+    if(k==="custom") return customCards.length>0;
+    return avail.has(k);
   });
   const dc=difficultCount();
-  if(dc>0){
-    const b=document.createElement("button"); b.className="chip hard"+(filter==="difficult"?" on":""); b.textContent="⚠︎ Schwierige ("+dc+")";
-    b.onclick=()=>{ filter="difficult"; buildQueue(); render(); }; el.appendChild(b);
+  const chip=(k,label,extra="")=>{ const b=document.createElement("button"); b.className="chip"+extra+(filter===k?" on":""); b.textContent=label; b.onclick=()=>{ filter=k; buildQueue(); render(); }; return b; };
+  if(!catsOpen){
+    // eingeklappt: „Alle" immer sichtbar, dazu die aktuelle Auswahl + Aufklapp-Button
+    el.appendChild(chip("all", CAT_LABELS.all));
+    if(filter!=="all" && filter!=="difficult" && keys.includes(filter)) el.appendChild(chip(filter, CAT_LABELS[filter]));
+    if(filter==="difficult" && dc>0) el.appendChild(chip("difficult","⚠︎ Schwierige ("+dc+")"," hard"));
+    const extra=keys.length-1 + (dc>0?1:0);
+    const t=document.createElement("button"); t.className="chip cats-toggle"; t.textContent="▾ Themen wählen ("+extra+")";
+    t.onclick=()=>{ catsOpen=true; render(); }; el.appendChild(t);
+  }else{
+    keys.forEach(k=> el.appendChild(chip(k, CAT_LABELS[k])));
+    if(dc>0) el.appendChild(chip("difficult","⚠︎ Schwierige ("+dc+")"," hard"));
+    const t=document.createElement("button"); t.className="chip cats-toggle"; t.textContent="▴ weniger";
+    t.onclick=()=>{ catsOpen=false; render(); }; el.appendChild(t);
   }
 }
 function renderDir(){
@@ -2033,15 +2063,13 @@ function baseVerb(en){ return (en||"").split("/")[0].replace(/^to\s+/i,"").trim(
 function grammarNote(c){
   const enFirst=(c.en||"").split("/")[0].trim();
   const de=(c.de||"");
-  // Verb
+  // Verb (kompakt, damit die Kartenrückseite nicht zu hoch wird)
   if(/^to\s+/i.test(c.en)){
     const v=baseVerb(c.en); const f=verbForms(v);
     const kind=f.reg?"regelmäßig (‑ed)":"unregelmäßig";
-    return `<div class="note gram" style="margin-top:14px"><strong>🔧 Verb</strong> · ${kind}
-      <div class="vforms">
-        <span><em>Infinitiv</em>to ${v}</span><span><em>3. Person</em>${f.third}</span>
-        <span><em>Simple Past</em>${f.past}</span><span><em>Past Participle</em>${f.pp}</span>
-        <span><em>‑ing-Form</em>${f.ing}</span></div></div>`;
+    return `<div class="note gram" style="margin-top:14px"><strong>🔧 Verb</strong> · ${kind}<br>
+      <b>to ${v}</b> – <b>${f.past}</b> – <b>${f.pp}</b> · 3. P.: ${f.third} · ‑ing: ${f.ing}
+      <span style="opacity:.7"> · mehr unter 🧩 Grammatik</span></div>`;
   }
   // Substantiv (mit Artikel im Deutschen)
   const art=de.match(/^\s*(der|die|das)\b/i);
@@ -2381,6 +2409,78 @@ function openAddCard(){
   document.getElementById("fDe").focus();
 }
 function closeModal(){ document.getElementById("modalRoot").innerHTML=""; }
+
+/* ============================================================ ZEITFORMEN-REFERENZ */
+const TENSES = [
+  {name:"Present Simple", de:"Einfache Gegenwart",
+   form:"Grundform (he/she/it&nbsp;+&nbsp;<code>-s</code>)",
+   use:"Fakten, Gewohnheiten, Regelmäßiges.",
+   sig:"always, usually, every day, often, never",
+   ex:"She <em>works</em> in Berlin.", exde:"Sie arbeitet in Berlin."},
+  {name:"Present Continuous", de:"Verlaufsform Gegenwart",
+   form:"<code>am/is/are</code> + Verb<code>-ing</code>",
+   use:"Was gerade jetzt oder vorübergehend passiert.",
+   sig:"now, at the moment, right now, currently",
+   ex:"She <em>is working</em> right now.", exde:"Sie arbeitet gerade."},
+  {name:"Present Perfect", de:"vollendete Gegenwart",
+   form:"<code>have/has</code> + Past Participle (3.&nbsp;Form)",
+   use:"Vergangenes mit Bezug zur Gegenwart; Erfahrungen; Ergebnis zählt, nicht der Zeitpunkt.",
+   sig:"already, yet, ever, never, just, since, for",
+   ex:"I <em>have finished</em> the report.", exde:"Ich habe den Bericht fertig."},
+  {name:"Present Perfect Continuous", de:"Verlaufsform vollendete Gegenwart",
+   form:"<code>have/has been</code> + Verb<code>-ing</code>",
+   use:"Handlung, die in der Vergangenheit begann und noch andauert (Dauer betont).",
+   sig:"for, since, how long, all day",
+   ex:"I <em>have been working</em> since 8 a.m.", exde:"Ich arbeite seit 8 Uhr."},
+  {name:"Past Simple", de:"einfache Vergangenheit",
+   form:"Verb<code>-ed</code> / unregelmäßige 2.&nbsp;Form",
+   use:"Abgeschlossene Handlung mit bekanntem Zeitpunkt in der Vergangenheit.",
+   sig:"yesterday, last week, in 2019, ago, then",
+   ex:"She <em>worked</em> late yesterday.", exde:"Sie arbeitete gestern lange."},
+  {name:"Past Continuous", de:"Verlaufsform Vergangenheit",
+   form:"<code>was/were</code> + Verb<code>-ing</code>",
+   use:"Länger andauernde Handlung in der Vergangenheit, oft unterbrochen.",
+   sig:"while, as, when, at 5 o'clock",
+   ex:"I <em>was working</em> when he called.", exde:"Ich arbeitete, als er anrief."},
+  {name:"Past Perfect", de:"Vorvergangenheit",
+   form:"<code>had</code> + Past Participle (3.&nbsp;Form)",
+   use:"Das, was <em>vor</em> einem anderen Ereignis in der Vergangenheit passierte.",
+   sig:"already, before, after, by the time, once",
+   ex:"She <em>had left</em> before I arrived.", exde:"Sie war gegangen, bevor ich ankam."},
+  {name:"Future — will", de:"Zukunft (Vorhersage/Entschluss)",
+   form:"<code>will</code> + Grundform",
+   use:"Spontane Entscheidungen, Vorhersagen, Versprechen.",
+   sig:"tomorrow, next week, soon, I think, probably",
+   ex:"I <em>will call</em> you later.", exde:"Ich rufe dich später an."},
+  {name:"Future — going to", de:"Zukunft (Absicht/Plan)",
+   form:"<code>am/is/are going to</code> + Grundform",
+   use:"Geplante Absichten und Anzeichen für die Zukunft.",
+   sig:"tonight, this weekend, planned",
+   ex:"We <em>are going to</em> move house.", exde:"Wir werden umziehen."},
+  {name:"Conditional — would", de:"Konditional / würde-Form",
+   form:"<code>would</code> + Grundform",
+   use:"Hypothetisches, höfliche Bitten, if-Sätze (Typ 2).",
+   sig:"if, I would, in that case",
+   ex:"I <em>would help</em> if I could.", exde:"Ich würde helfen, wenn ich könnte."},
+];
+function openTenses(){
+  const rows=TENSES.map(t=>`
+    <div class="tense">
+      <div class="tense-h">${t.name} <span>${t.de}</span></div>
+      <div class="tense-row tense-form"><b>Bildung</b><span class="v">${t.form}</span></div>
+      <div class="tense-row"><b>Verwendung</b><span class="v">${t.use}</span></div>
+      <div class="tense-row"><b>Signalwörter</b><span class="v">${t.sig}</span></div>
+      <div class="tense-row tense-ex"><b>Beispiel</b><span class="v">${t.ex} <span style="opacity:.6">→ ${t.exde}</span></span></div>
+    </div>`).join("");
+  document.getElementById("modalRoot").innerHTML=`
+    <div class="modal-bg" id="modalBg"><div class="modal tense-modal">
+      <h3>📘 Englische Zeitformen</h3>
+      <div class="tense-list">${rows}</div>
+      <div class="m-actions"><button class="btn reveal" id="tClose">Schließen</button></div>
+    </div></div>`;
+  document.getElementById("modalBg").onclick=(e)=>{ if(e.target.id==="modalBg") closeModal(); };
+  document.getElementById("tClose").onclick=closeModal;
+}
 async function saveNewCard(){
   const de=document.getElementById("fDe").value.trim();
   const en=document.getElementById("fEn").value.trim();
@@ -2425,6 +2525,7 @@ function advance(){ if(mode==="type"&&checked) rate(lastCorrect); else rate(true
 
 document.getElementById("quizBtn").onclick=startQuiz;
 document.getElementById("gramBtn").onclick=startGram;
+document.getElementById("tenseBtn").onclick=openTenses;
 document.getElementById("addBtn").onclick=openAddCard;
 
 (async function init(){ await loadProfiles(); await loadProfileData(); buildQueue(); render(); })();
