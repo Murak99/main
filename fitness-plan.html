@@ -136,6 +136,34 @@
 
   .swap{font-size:12.5px;color:var(--lime);font-weight:600;cursor:pointer;background:none;border:none;font-family:inherit;display:inline-flex;align-items:center;gap:5px}
   .swap:hover{text-decoration:underline}
+
+  /* Rezept- & Merken-Buttons */
+  .meal-actions{display:flex;gap:8px;margin-top:12px}
+  .mbtn{display:inline-flex;align-items:center;gap:6px;background:var(--bg-2);border:1px solid var(--stroke-2);color:var(--text);font-family:inherit;font-weight:600;font-size:12.5px;padding:8px 14px;border-radius:99px;cursor:pointer;transition:.15s}
+  .mbtn:hover{background:var(--surface-2)}
+  .mbtn.on{background:var(--lime-soft);border-color:transparent;color:#16171a}
+  .recipe{margin-top:13px;padding-top:13px;border-top:1px solid var(--stroke)}
+  .recipe[hidden]{display:none}
+  .recipe .r-lbl{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:10px}
+  .recipe ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px}
+  .recipe li{font-size:13.5px;line-height:1.45}
+  .recipe li::marker{color:var(--lime-soft);font-weight:700}
+
+  /* Einkaufsliste */
+  .shop-empty{font-size:13.5px;color:var(--muted);line-height:1.55;padding:4px 0}
+  .shop-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .shop-chip{display:inline-flex;align-items:center;gap:8px;background:var(--bg-2);border:1px solid var(--stroke);border-radius:99px;padding:6px 7px 6px 13px;font-size:12.5px;font-weight:600}
+  .shop-chip button{border:none;background:var(--surface-2);color:var(--muted);width:19px;height:19px;border-radius:50%;cursor:pointer;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;transition:.15s}
+  .shop-chip button:hover{background:var(--rust);color:#16171a}
+  ul.shop{list-style:none;display:flex;flex-direction:column;gap:0}
+  ul.shop li{border-bottom:1px solid var(--stroke)}
+  ul.shop li:last-child{border-bottom:none}
+  ul.shop label{display:flex;align-items:center;gap:13px;padding:11px 2px;cursor:pointer;font-size:14.5px}
+  ul.shop input{width:18px;height:18px;accent-color:var(--lime);flex-shrink:0;cursor:pointer}
+  ul.shop .txt{display:flex;gap:9px;align-items:baseline}
+  ul.shop .q{font-variant-numeric:tabular-nums;font-weight:600;color:var(--lime-soft);min-width:66px;font-size:13.5px}
+  ul.shop input:checked + .txt{text-decoration:line-through;text-decoration-color:var(--muted);color:var(--muted)}
+  ul.shop input:checked + .txt .q{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -190,11 +218,21 @@
         <span class="p-title">Essens<em>plan</em></span>
         <button class="swap" id="reshuffle">🔀 Neuer Tag</button>
       </div>
-      <div class="daybar" id="mealVarBar" style="margin-bottom:14px"></div>
+      <div class="note" style="margin-top:2px;margin-bottom:14px">Tippe bei einem Gericht auf <b>📖 Rezept</b> für die Zubereitung — oder auf <b>🛒 Merken</b>, wenn es dir zusagt. Gemerkte Gerichte landen automatisch in der Einkaufsliste.</div>
       <div id="meals"></div>
       <div class="divider"></div>
       <div class="macros" id="mealMacroCheck"></div>
       <div class="note">Fünf Mahlzeiten über den Tag verteilt decken dein Kalorienziel von <b id="eatKcal"></b> — genug Energie fürs Training, ganz ohne Fisch. Trinke 2,5–3,5 l Wasser pro Tag.</div>
+    </div>
+    <div class="panel">
+      <div class="p-head">
+        <span class="p-title">Einkaufs<em>liste</em></span>
+        <div style="display:flex;align-items:center;gap:14px">
+          <span class="p-eyebrow" id="shopCount"></span>
+          <button class="swap" id="clearShop">Leeren</button>
+        </div>
+      </div>
+      <div id="shopContent"></div>
     </div>
   </section>
 
@@ -361,37 +399,56 @@ const WEEK_LAYOUT = {
 };
 const WEEKDAYS = ["Mo","Di","Mi","Do","Fr","Sa","So"];
 
-// Mahlzeiten-Pool. p/c/f = grobe Makro-Ausrichtung (nur zur Info), items = Zutaten
+// Mahlzeiten-Pool. items = Zutaten (mit Menge), steps = Zubereitung
 const MEALS = {
   breakfast: [
-    { name:"Haferflocken mit Skyr, Beeren & Nüssen", items:["80g Haferflocken","200g Skyr","1 Handvoll Beeren","20g Walnüsse"], hi:"prot" },
-    { name:"Rührei mit Vollkornbrot & Avocado", items:["3 Eier","2 Scheiben Vollkornbrot","½ Avocado","Tomaten"], hi:"fat" },
-    { name:"Protein-Porridge mit Banane", items:["70g Haferflocken","30g Proteinpulver","1 Banane","250ml Milch"], hi:"prot" },
-    { name:"Quark-Bowl mit Obst & Granola", items:["250g Magerquark","40g Granola","1 Apfel","1 TL Honig"], hi:"prot" },
-    { name:"Vollkorn-Toast mit Hüttenkäse & Ei", items:["2 Scheiben Vollkorn","150g Hüttenkäse","2 Eier","Schnittlauch"], hi:"prot" },
+    { name:"Haferflocken mit Skyr, Beeren & Nüssen", items:["80g Haferflocken","200g Skyr","1 Handvoll Beeren","20g Walnüsse"], steps:["Haferflocken mit 150 ml Wasser oder Milch 3–4 Min quellen lassen (warm oder über Nacht kalt).","Skyr unterrühren.","Mit Beeren und gehackten Walnüssen toppen."] },
+    { name:"Rührei mit Vollkornbrot & Avocado", items:["3 Eier","2 Scheiben Vollkornbrot","½ Avocado","Tomaten"], steps:["Eier verquirlen, mit Salz & Pfeffer würzen.","In einer Pfanne mit wenig Öl bei mittlerer Hitze cremig stocken lassen.","Brot toasten, Avocado zerdrücken und darauf verteilen.","Mit Rührei und Tomatenscheiben servieren."] },
+    { name:"Protein-Porridge mit Banane", items:["70g Haferflocken","30g Proteinpulver","1 Banane","250ml Milch"], steps:["Haferflocken mit der Milch aufkochen und 3–5 Min köcheln.","Vom Herd nehmen und Proteinpulver einrühren (nicht mitkochen).","Mit Bananenscheiben toppen."] },
+    { name:"Quark-Bowl mit Obst & Granola", items:["250g Magerquark","40g Granola","1 Apfel","1 TL Honig"], steps:["Magerquark mit einem Schuss Milch cremig rühren.","In eine Schüssel geben und mit Honig süßen.","Mit Apfelstücken und Granola toppen."] },
+    { name:"Vollkorn-Toast mit Hüttenkäse & Ei", items:["2 Scheiben Vollkorn","150g Hüttenkäse","2 Eier","Schnittlauch"], steps:["Eier wachsweich kochen (ca. 7 Min) oder als Spiegelei braten.","Brot toasten und mit Hüttenkäse bestreichen.","Eier darauflegen, mit Schnittlauch, Salz & Pfeffer würzen."] },
   ],
   lunch: [
-    { name:"Hähnchenbrust mit Reis & Brokkoli", items:["180g Hähnchenbrust","80g Reis (roh)","200g Brokkoli","Olivenöl"], hi:"prot" },
-    { name:"Rindfleisch-Bowl mit Süßkartoffel", items:["160g mageres Rind","250g Süßkartoffel","gem. Gemüse","1 EL Olivenöl"], hi:"prot" },
-    { name:"Rinderhack-Bolognese mit Vollkornnudeln", items:["180g Rinderhack","100g Vollkornnudeln (roh)","Tomatensoße","30g Parmesan"], hi:"prot" },
-    { name:"Pute mit Vollkornnudeln & Tomatensoße", items:["180g Putenbrust","90g Vollkornnudeln (roh)","Tomatensoße","Parmesan"], hi:"prot" },
-    { name:"Linsen-Dal mit Reis & Joghurt", items:["120g Linsen (roh)","70g Reis","Gemüse","150g Joghurt"], hi:"carb" },
+    { name:"Hähnchenbrust mit Reis & Brokkoli", items:["180g Hähnchenbrust","80g Reis (roh)","200g Brokkoli","Olivenöl"], steps:["Reis nach Packungsangabe kochen.","Hähnchenbrust würzen und 5–6 Min je Seite braten, bis sie durch ist.","Brokkoli ca. 5 Min dämpfen.","Mit einem Schuss Olivenöl anrichten."] },
+    { name:"Rindfleisch-Bowl mit Süßkartoffel", items:["160g mageres Rind","250g Süßkartoffel","gem. Gemüse","1 EL Olivenöl"], steps:["Süßkartoffel würfeln, mit Öl mischen und bei 200 °C 25 Min im Ofen rösten.","Rindfleisch in Streifen scharf anbraten und würzen.","Gemüse kurz mitbraten.","Alles in einer Bowl anrichten."] },
+    { name:"Rinderhack-Bolognese mit Vollkornnudeln", items:["180g Rinderhack","100g Vollkornnudeln (roh)","Tomatensoße","30g Parmesan"], steps:["Nudeln nach Packungsangabe kochen.","Rinderhack krümelig anbraten und würzen.","Tomatensoße zugeben und 10 Min köcheln.","Mit den Nudeln mischen und Parmesan darüber."] },
+    { name:"Pute mit Vollkornnudeln & Tomatensoße", items:["180g Putenbrust","90g Vollkornnudeln (roh)","Tomatensoße","Parmesan"], steps:["Nudeln kochen.","Putenbrust in Streifen schneiden und anbraten.","Tomatensoße erwärmen und die Pute untermischen.","Mit Parmesan servieren."] },
+    { name:"Linsen-Dal mit Reis & Joghurt", items:["120g Linsen (roh)","70g Reis","Gemüse","150g Joghurt"], steps:["Linsen mit Gemüse und Gewürzen (Kurkuma, Kreuzkümmel) 20–25 Min weich kochen.","Reis separat garen.","Dal mit Reis anrichten und Joghurt dazugeben."] },
   ],
   snack: [
-    { name:"Skyr mit Nüssen & Honig", items:["200g Skyr","20g Mandeln","1 TL Honig"], hi:"prot" },
-    { name:"Proteinshake & Banane", items:["30g Proteinpulver","300ml Milch","1 Banane"], hi:"prot" },
-    { name:"Vollkornbrot mit Frischkäse & Pute", items:["2 Scheiben Vollkorn","Frischkäse","4 Scheiben Putenbrust"], hi:"prot" },
-    { name:"Hüttenkäse mit Reiswaffeln", items:["200g Hüttenkäse","3 Reiswaffeln","Gurke"], hi:"prot" },
-    { name:"Obst mit Erdnussbutter", items:["1 Apfel","1 Banane","1 EL Erdnussbutter"], hi:"carb" },
+    { name:"Skyr mit Nüssen & Honig", items:["200g Skyr","20g Mandeln","1 TL Honig"], steps:["Skyr in eine Schale geben.","Mit Honig süßen und Mandeln darüberstreuen."] },
+    { name:"Proteinshake & Banane", items:["30g Proteinpulver","300ml Milch","1 Banane"], steps:["Proteinpulver mit der Milch im Shaker kräftig schütteln.","Banane dazu essen oder direkt mitmixen."] },
+    { name:"Vollkornbrot mit Frischkäse & Pute", items:["2 Scheiben Vollkorn","Frischkäse","4 Scheiben Putenbrust"], steps:["Brot mit Frischkäse bestreichen.","Putenbrust auflegen und nach Geschmack würzen."] },
+    { name:"Hüttenkäse mit Reiswaffeln", items:["200g Hüttenkäse","3 Reiswaffeln","Gurke"], steps:["Reiswaffeln mit Hüttenkäse bestreichen.","Mit Gurkenscheiben und Pfeffer toppen."] },
+    { name:"Obst mit Erdnussbutter", items:["1 Apfel","1 Banane","1 EL Erdnussbutter"], steps:["Apfel in Scheiben schneiden.","Mit Erdnussbutter bestreichen, Banane dazu."] },
   ],
   dinner: [
-    { name:"Magerquark-Bowl mit Gemüse & Ei", items:["250g Magerquark","2 Eier","gebratenes Gemüse","Vollkornbrot"], hi:"prot" },
-    { name:"Hähnchen-Wok mit Gemüse & Reis", items:["170g Hähnchen","70g Reis (roh)","Wok-Gemüse","Sojasoße"], hi:"prot" },
-    { name:"Omelett mit Feta, Spinat & Brot", items:["4 Eier","40g Feta","Spinat","1 Scheibe Vollkorn"], hi:"fat" },
-    { name:"Hähnchen-Wrap mit Bohnen & Käse", items:["180g Hähnchenbrust","2 Vollkorn-Wraps","150g Kidneybohnen","30g Käse"], hi:"prot" },
-    { name:"Tofu-Pfanne mit Vollkornreis", items:["200g Tofu","70g Vollkornreis","Paprika & Zucchini","Sesamöl"], hi:"carb" },
+    { name:"Magerquark-Bowl mit Gemüse & Ei", items:["250g Magerquark","2 Eier","gebratenes Gemüse","Vollkornbrot"], steps:["Eier kochen oder braten.","Gemüse in etwas Öl anbraten.","Magerquark würzen und mit Gemüse und Ei anrichten, Brot dazu."] },
+    { name:"Hähnchen-Wok mit Gemüse & Reis", items:["170g Hähnchen","70g Reis (roh)","Wok-Gemüse","Sojasoße"], steps:["Reis kochen.","Hähnchen in Streifen im Wok scharf anbraten.","Wok-Gemüse zugeben und mit Sojasoße ablöschen.","Mit Reis servieren."] },
+    { name:"Omelett mit Feta, Spinat & Brot", items:["4 Eier","40g Feta","Spinat","1 Scheibe Vollkorn"], steps:["Eier verquirlen und würzen.","Spinat kurz andünsten, dann Eier zugeben.","Feta darüberbröseln, stocken lassen und zusammenklappen.","Mit Brot servieren."] },
+    { name:"Hähnchen-Wrap mit Bohnen & Käse", items:["180g Hähnchenbrust","2 Vollkorn-Wraps","150g Kidneybohnen","30g Käse"], steps:["Hähnchen in Streifen braten und würzen.","Kidneybohnen abspülen und kurz erwärmen.","Wraps mit Hähnchen, Bohnen und Käse füllen.","Einrollen und servieren."] },
+    { name:"Tofu-Pfanne mit Vollkornreis", items:["200g Tofu","70g Vollkornreis","Paprika & Zucchini","Sesamöl"], steps:["Vollkornreis kochen.","Tofu würfeln und knusprig anbraten.","Paprika und Zucchini mitbraten, mit Sesamöl und Sojasoße würzen.","Mit Reis anrichten."] },
   ],
 };
+
+// Nachschlag-Index Gericht → Objekt (Namen sind eindeutig)
+const MEAL_BY_NAME = {};
+Object.values(MEALS).forEach(arr => arr.forEach(m => MEAL_BY_NAME[m.name] = m));
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+// Zutat "180g Hähnchenbrust" → {qty:180, unit:"g", name:"Hähnchenbrust"}
+function parseItem(str){
+  const s = str.replace("½","0.5").trim();
+  const m = s.match(/^([\d.,]+)\s*(.*)$/);
+  if(!m || !/^[\d.,]+$/.test(m[1])) return { qty:null, unit:"", name:s };
+  const qty = parseFloat(m[1].replace(",","."));
+  const rest = m[2].trim();
+  const um = rest.match(/^(kg|g|ml|l|EL|TL|Scheiben?|Dosen?|Handvoll)\b\.?\s*(.*)$/i);
+  if(um && um[2].trim()) return { qty, unit:um[1], name:um[2].trim() };
+  return { qty, unit:"×", name:rest };
+}
+function fmtQty(q){ return q % 1 === 0 ? String(q) : String(Number(q.toFixed(1))); }
 
 // 5 Mahlzeiten über den Tag verteilt — genug zu essen, kleinere Portionen
 const SLOTS = [
@@ -404,15 +461,17 @@ const SLOTS = [
 
 /* ---------- State ---------- */
 
-const DEFAULTS = { age:27, sex:"m", weight:75, height:178, days:3, goal:"bulk", activity:1.375, mealSeed:0 };
+const DEFAULTS = { age:27, sex:"m", weight:75, height:178, days:3, goal:"bulk", activity:1.375, mealSeed:0, saved:[] };
 let state = load();
 
 function load(){
+  let st = Object.assign({}, DEFAULTS);
   try{
     const s = JSON.parse(localStorage.getItem("fitplan"));
-    if(s && s.age) return Object.assign({}, DEFAULTS, s);
+    if(s && s.age) st = Object.assign(st, s);
   }catch(e){}
-  return Object.assign({}, DEFAULTS);
+  st.saved = Array.isArray(st.saved) ? st.saved : [];
+  return st;
 }
 function save(){ localStorage.setItem("fitplan", JSON.stringify(state)); }
 
@@ -492,6 +551,7 @@ function render(){
 
   // Meals
   renderMeals(c);
+  renderShoppingList();
   document.getElementById("eatKcal").textContent = c.target + " kcal";
 
   // Profile TDEE note
@@ -584,12 +644,98 @@ function renderMeals(c){
       </div>
       <div class="meal-name">${meal.name}</div>
       <div class="meal-items">${meal.items.map(it=>`<span class="tag">${it}</span>`).join("")}</div>
+      <div class="meal-actions">
+        <button class="mbtn js-recipe">📖 Rezept</button>
+        <button class="mbtn js-save ${state.saved.includes(meal.name)?"on":""}" data-name="${esc(meal.name)}">${state.saved.includes(meal.name)?"✓ Gemerkt":"🛒 Merken"}</button>
+      </div>
+      <div class="recipe" hidden>
+        <div class="r-lbl">Zubereitung</div>
+        <ol>${meal.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+      </div>
     </div>`;
   });
   el.innerHTML = html;
 
+  el.querySelectorAll(".js-recipe").forEach(btn=>{
+    btn.onclick = ()=>{
+      const r = btn.closest(".meal").querySelector(".recipe");
+      r.hidden = !r.hidden;
+      btn.classList.toggle("on", !r.hidden);
+      btn.textContent = r.hidden ? "📖 Rezept" : "📖 Schließen";
+    };
+  });
+  el.querySelectorAll(".js-save").forEach(btn=>{
+    btn.onclick = ()=> toggleSave(btn.dataset.name, btn);
+  });
+
   // Makro-Check (nutzt die Tagesziel-Makros)
   renderMacroBars("mealMacroCheck", c);
+}
+
+function toggleSave(name, btn){
+  const i = state.saved.indexOf(name);
+  if(i>=0){ state.saved.splice(i,1); btn.classList.remove("on"); btn.textContent="🛒 Merken"; }
+  else { state.saved.push(name); btn.classList.add("on"); btn.textContent="✓ Gemerkt"; }
+  save();
+  renderShoppingList();
+}
+
+function syncMealButtons(){
+  document.querySelectorAll("#meals .js-save").forEach(btn=>{
+    const on = state.saved.includes(btn.dataset.name);
+    btn.classList.toggle("on", on);
+    btn.textContent = on ? "✓ Gemerkt" : "🛒 Merken";
+  });
+}
+
+function renderShoppingList(){
+  const el = document.getElementById("shopContent");
+  const cnt = document.getElementById("shopCount");
+  const meals = state.saved.map(n=>MEAL_BY_NAME[n]).filter(Boolean);
+  if(!meals.length){
+    el.innerHTML = `<div class="shop-empty">Noch nichts gemerkt. Tippe bei einem Gericht, das dir zusagt, auf <b>🛒 Merken</b> — die Zutaten sammeln sich automatisch hier, gleiche Zutaten werden zusammengezählt.</div>`;
+    cnt.textContent = "";
+    return;
+  }
+  // Zutaten smart zusammenführen
+  const agg = new Map();    // mit Menge → summieren
+  const free = new Map();   // ohne Menge → einmalig
+  meals.forEach(m=> m.items.forEach(it=>{
+    const p = parseItem(it);
+    if(p.qty != null){
+      const k = p.name.toLowerCase() + "|" + p.unit.toLowerCase();
+      const cur = agg.get(k) || { qty:0, unit:p.unit, name:p.name };
+      cur.qty += p.qty;
+      agg.set(k, cur);
+    } else {
+      free.set(p.name.toLowerCase(), p.name);
+    }
+  }));
+  const qItems = [...agg.values()].sort((a,b)=>a.name.localeCompare(b.name,"de"));
+  const fItems = [...free.values()].sort((a,b)=>a.localeCompare(b,"de"));
+
+  const chips = meals.map(m=>
+    `<span class="shop-chip">${m.name}<button class="js-remove" data-name="${esc(m.name)}" aria-label="Entfernen">✕</button></span>`
+  ).join("");
+
+  let list = "";
+  qItems.forEach(i=>{
+    list += `<li><label><input type="checkbox"><span class="txt"><b class="q">${fmtQty(i.qty)} ${i.unit}</b> ${i.name}</span></label></li>`;
+  });
+  fItems.forEach(n=>{
+    list += `<li><label><input type="checkbox"><span class="txt"><b class="q">n. Bedarf</b> ${n}</span></label></li>`;
+  });
+
+  el.innerHTML = `<div class="shop-chips">${chips}</div><ul class="shop">${list}</ul>`;
+  cnt.textContent = meals.length + (meals.length===1 ? " Gericht" : " Gerichte");
+
+  el.querySelectorAll(".js-remove").forEach(b=>{
+    b.onclick = ()=>{
+      const i = state.saved.indexOf(b.dataset.name);
+      if(i>=0) state.saved.splice(i,1);
+      save(); renderShoppingList(); syncMealButtons();
+    };
+  });
 }
 
 /* ---------- Formular ---------- */
@@ -629,6 +775,7 @@ document.getElementById("save").onclick = ()=>{
 function clamp(v,min,max,def){ if(isNaN(v)) return def; return Math.min(max, Math.max(min, v)); }
 
 document.getElementById("reshuffle").onclick = ()=>{ state.mealSeed = (state.mealSeed+1) % 35; render(); };
+document.getElementById("clearShop").onclick = ()=>{ state.saved = []; save(); renderShoppingList(); syncMealButtons(); };
 
 /* ---------- Tabs ---------- */
 
