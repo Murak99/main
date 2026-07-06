@@ -13,7 +13,7 @@
     --bg:#181a1f; --bg-2:#1f2228;
     --surface:#24272f; --surface-2:#2c303a;
     --stroke:rgba(255,255,255,.09); --stroke-2:rgba(255,255,255,.15);
-    --paper:#f7f3ea; --paper-edge:#e7dfcf;
+    --paper:#e7e1d3; --paper-edge:#d3ccb9;
     --ink:#20242e; --ink-soft:#5d6472;
     --text:#eef0f4; --muted:#9aa0ab;
     --amber:#f0a83c; --amber-soft:#f7cd86;
@@ -21,14 +21,17 @@
     --violet:#8f8cf0; --rust:#e08363;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
+  html,body{min-height:100%}
+  /* Basisfarbe auf html: verhindert weiße Ränder beim Overscroll (iOS) */
+  html{background:var(--bg)}
   body{
     background:
       radial-gradient(125% 80% at 88% -10%, rgba(139,136,240,.32) 0%, transparent 55%),
       radial-gradient(115% 78% at -8% 106%, rgba(67,194,173,.26) 0%, transparent 55%),
       radial-gradient(95% 70% at 50% 120%, rgba(240,168,60,.12) 0%, transparent 62%),
-      linear-gradient(180deg, #1c1e24 0%, var(--bg) 60%);
-    background-attachment:fixed;
+      linear-gradient(180deg, #1c1e24 0%, var(--bg) 55%);
+    background-repeat:no-repeat;
+    background-color:var(--bg); /* deckt den gesamten scrollbaren Bereich ab (kein background-attachment:fixed – auf iOS fehlerhaft) */
     color:var(--text);font-family:"Instrument Sans",system-ui,sans-serif;
     min-height:100%;display:flex;flex-direction:column;align-items:center;padding:26px 16px 52px;
     -webkit-font-smoothing:antialiased;
@@ -113,7 +116,7 @@
   .card.flat{min-height:0}
   .card.flat .face{position:relative;inset:auto;overflow:visible}
   .face{position:absolute;inset:0;backface-visibility:hidden;background:var(--paper);color:var(--ink);border-radius:22px;padding:28px 26px;display:flex;flex-direction:column;overflow-y:auto;box-shadow:0 26px 60px -26px rgba(0,0,0,.75), inset 0 0 0 1px var(--paper-edge)}
-  .face.back{transform:rotateY(180deg);background:linear-gradient(180deg,#fbf8f1 0%,#f2ece0 100%)}
+  .face.back{transform:rotateY(180deg);background:linear-gradient(180deg,#ece6d8 0%,#e1daca 100%)}
   .tagrow{display:flex;gap:8px;align-items:center;margin-bottom:auto;flex-wrap:wrap}
   .tag{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--amber);background:rgba(240,168,60,.13);padding:5px 10px;border-radius:7px}
   .lvl-badge{font-size:10.5px;letter-spacing:.08em;font-weight:700;color:#0e5147;background:rgba(67,194,173,.18);padding:5px 9px;border-radius:7px}
@@ -128,7 +131,7 @@
   .hint kbd{font-family:inherit;font-size:11px;background:#fff;box-shadow:inset 0 0 0 1px var(--paper-edge);border-radius:6px;padding:3px 8px;color:var(--ink);font-weight:600}
 
   .type-wrap{margin-top:8px}
-  .answer-input{width:100%;font-family:"Fraunces",serif;font-size:24px;font-weight:500;color:var(--ink);background:#fffdf8;border:none;border-bottom:2px solid var(--amber);padding:10px 4px;outline:none}
+  .answer-input{width:100%;font-family:"Fraunces",serif;font-size:24px;font-weight:500;color:var(--ink);background:#f0ebde;border:none;border-bottom:2px solid var(--amber);padding:10px 4px;outline:none}
   .answer-input::placeholder{font-family:"Instrument Sans",sans-serif;font-size:16px;font-weight:400;color:var(--ink-soft)}
   .answer-input:focus{border-bottom-color:var(--teal-deep)}
   .type-hint{font-size:12px;color:var(--ink-soft);margin-top:10px}
@@ -181,7 +184,7 @@
   .reset{background:none;border:none;color:var(--muted);font-family:inherit;font-size:12.5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
   .reset:hover{color:var(--amber-soft)}
 
-  .done{background:linear-gradient(180deg,var(--paper) 0%,#efe8da 100%);color:var(--ink);border-radius:22px;padding:40px 28px;text-align:center;box-shadow:0 26px 60px -26px rgba(0,0,0,.7)}
+  .done{background:linear-gradient(180deg,var(--paper) 0%,#ddd5c3 100%);color:var(--ink);border-radius:22px;padding:40px 28px;text-align:center;box-shadow:0 26px 60px -26px rgba(0,0,0,.7)}
   .done h2{font-family:"Fraunces",serif;font-weight:500;font-size:27px;margin-bottom:10px}
   .done p{color:var(--ink-soft);font-size:15px;line-height:1.55;margin-bottom:20px}
   .score-ring{font-family:"Fraunces",serif;font-size:44px;font-weight:600;margin:6px 0 4px}
