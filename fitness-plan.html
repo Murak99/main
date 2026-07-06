@@ -23,10 +23,13 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
+    /* modernes Grau mit farbigem Verlauf */
     background:
-      radial-gradient(130% 80% at 88% -8%, #2b2f37 0%, transparent 52%),
-      radial-gradient(110% 70% at -5% 108%, #232830 0%, transparent 55%),
-      var(--bg);
+      radial-gradient(115% 65% at 84% -12%, rgba(122,150,214,.24) 0%, transparent 56%),
+      radial-gradient(105% 60% at -10% 4%, rgba(158,120,206,.20) 0%, transparent 52%),
+      radial-gradient(120% 75% at 50% 118%, rgba(78,182,170,.18) 0%, transparent 56%),
+      linear-gradient(158deg, #1d2027 0%, #16171a 52%, #1a1c21 100%);
+    background-attachment:fixed;
     color:var(--text);font-family:"Instrument Sans",system-ui,sans-serif;
     min-height:100%;display:flex;flex-direction:column;align-items:center;padding:24px 16px 96px;
     -webkit-font-smoothing:antialiased;
@@ -164,6 +167,19 @@
   ul.shop .q{font-variant-numeric:tabular-nums;font-weight:600;color:var(--lime-soft);min-width:66px;font-size:13.5px}
   ul.shop input:checked + .txt{text-decoration:line-through;text-decoration-color:var(--muted);color:var(--muted)}
   ul.shop input:checked + .txt .q{color:var(--muted)}
+
+  /* Ausweich-Übung */
+  .ex .ex-alt{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.4}
+  .ex .ex-alt .alt-lbl{display:inline-block;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--lime-soft);background:var(--bg-2);border:1px solid var(--stroke);border-radius:5px;padding:1px 6px;margin-right:6px}
+
+  /* Coach-Tipps */
+  .tip{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid var(--stroke)}
+  .tip:first-child{padding-top:2px}
+  .tip:last-child{border-bottom:none;padding-bottom:2px}
+  .tip .tip-ic{flex-shrink:0;width:38px;height:38px;border-radius:11px;background:linear-gradient(180deg,var(--surface-2),var(--bg-2));border:1px solid var(--stroke);display:flex;align-items:center;justify-content:center;font-size:19px}
+  .tip .tip-body{flex:1;min-width:0}
+  .tip .tip-t{font-size:14.5px;font-weight:600;line-height:1.25;margin-bottom:4px}
+  .tip .tip-d{font-size:13px;color:var(--muted);line-height:1.55}
 </style>
 </head>
 <body>
@@ -196,6 +212,10 @@
       <div class="p-head"><span class="p-title">Deine <em>Woche</em></span></div>
       <div class="daybar" id="weekOverview"></div>
       <div class="note">Dein Split ist auf <b id="daysNote"></b> Trainingstage ausgelegt — mit genug Erholung dazwischen. Tippe im Reiter <b>Training</b> auf einen Tag für die Übungen.</div>
+    </div>
+    <div class="panel">
+      <div class="p-head"><span class="p-title">Coach-<em>Tipps</em></span><button class="swap" id="nextTip">Weiter ↻</button></div>
+      <div id="tips"></div>
     </div>
   </section>
 
@@ -399,6 +419,46 @@ const WEEK_LAYOUT = {
 };
 const WEEKDAYS = ["Mo","Di","Mi","Do","Fr","Sa","So"];
 
+// Ausweich-Übung je Übung (falls ein Gerät belegt ist oder du variieren willst)
+const EX_ALT = {
+  "Kniebeuge (Langhantel)":"Beinpresse oder Goblet-Kniebeuge mit Kurzhantel",
+  "Frontkniebeuge":"Beinpresse oder Goblet-Kniebeuge",
+  "Bankdrücken":"Kurzhantel-Bankdrücken oder Brustpresse-Maschine",
+  "Bankdrücken (Wdh-Fokus)":"Kurzhantel-Bankdrücken oder Liegestütze",
+  "Schrägbankdrücken (Kurzhantel)":"Schrägbank-Maschine oder normales Bankdrücken",
+  "Rudern vorgebeugt":"Kabelrudern oder T-Bar-Rudern",
+  "Kabelrudern eng":"Rudermaschine oder Kurzhantel-Rudern einarmig",
+  "Latzug zur Brust":"Unterstützte Klimmzüge oder enger Latzug",
+  "Klimmzüge / Latzug":"Latzug an der Maschine oder unterstützte Klimmzüge",
+  "Schulterdrücken (Kurzhantel)":"Schulterpresse-Maschine oder Langhantel-Drücken",
+  "Schulterdrücken (Langhantel)":"Kurzhantel-Schulterdrücken oder Maschine",
+  "Seitheben":"Seitheben am Kabel oder Reverse-Fly-Maschine",
+  "Face Pulls":"Reverse-Fly oder vorgebeugtes Seitheben",
+  "Bizeps-Curls":"Kurzhantel-Curls oder SZ-Stangen-Curls",
+  "Hammer-Curls":"Bizeps-Curls oder Kabel-Curls",
+  "Trizeps am Kabel":"Dips oder enges Bankdrücken",
+  "Kreuzheben (rumänisch)":"Beinbeuger oder Hip Thrust",
+  "Beinbeuger (Maschine)":"Rumänisches Kreuzheben oder Nordic Curls",
+  "Beinpresse":"Kniebeuge oder Ausfallschritte",
+  "Ausfallschritte (Kurzhantel)":"Bulgarian Split Squats oder Beinpresse",
+  "Hip Thrust":"Glute Bridge oder rumänisches Kreuzheben",
+  "Wadenheben":"Wadenheben sitzend oder an der Beinpresse",
+  "Plank":"Unterarmstütz-Varianten oder Dead Bug",
+  "Hängendes Beinheben":"Beinheben liegend oder Crunches",
+};
+
+// Coach-Tipps — werden rotierend angezeigt
+const TIPS = [
+  { icon:"📈", t:"Steigere dich Schritt für Schritt", d:"Das wichtigste Prinzip beim Muskelaufbau heißt progressive Overload: Versuche, von Woche zu Woche entweder ein kleines bisschen mehr Gewicht zu bewegen, eine Wiederholung mehr zu schaffen oder die Technik sauberer auszuführen. Notiere dir deine Sätze, damit du siehst, wo du stehst — kontinuierliche kleine Fortschritte summieren sich über Monate zu großen Ergebnissen." },
+  { icon:"🍗", t:"Protein ist dein Baustoff", d:"Verteile dein Eiweiß über den ganzen Tag statt alles auf einmal — etwa 25–40 g pro Mahlzeit werden am besten verwertet. Gute Quellen sind Hähnchen, Pute, mageres Rind, Eier, Magerquark, Skyr, Hüttenkäse, Linsen und Tofu. So gibst du deinen Muskeln durchgehend Material zum Wachsen und Reparieren." },
+  { icon:"😴", t:"Muskeln wachsen in der Pause", d:"Nicht das Training selbst macht dich stärker, sondern die Erholung danach. Ziel sind 7–9 Stunden Schlaf pro Nacht und mindestens ein Ruhetag zwischen den Einheiten für dieselbe Muskelgruppe. Zu wenig Schlaf bremst den Muskelaufbau spürbar und macht Heißhunger wahrscheinlicher." },
+  { icon:"🔥", t:"Warm-up spart Verletzungen", d:"Nimm dir 5–10 Minuten zum Aufwärmen: leichtes Cardio, um in Schwung zu kommen, plus ein bis zwei lockere Aufwärmsätze mit weniger Gewicht vor deiner ersten schweren Übung. Gut durchblutete Muskeln und Gelenke arbeiten sicherer und leistungsfähiger." },
+  { icon:"🔄", t:"Tausch, wenn ein Gerät belegt ist", d:"Kein Grund zu warten oder das Training abzubrechen: Fast jede Übung hat eine gleichwertige Alternative. Tippe im Trainingsplan auf eine Übung — unter jedem Namen steht eine Ausweich-Variante, mit der du dieselbe Muskelgruppe triffst." },
+  { icon:"🥗", t:"Lebensmittel flexibel austauschen", d:"Der Plan ist ein Vorschlag, kein Gesetz. Tausche innerhalb einer Kategorie, wie es dir schmeckt: Reis ↔ Kartoffeln ↔ Nudeln, Hähnchen ↔ Pute ↔ Tofu, Skyr ↔ Magerquark. Solange Kalorien und Eiweiß ungefähr passen, bleibt dein Plan auf Kurs." },
+  { icon:"💧", t:"Trinken nicht vergessen", d:"Schon leichte Dehydrierung kostet dich Kraft und Konzentration im Training. Peile 2,5–3,5 Liter Wasser über den Tag an, an Trainingstagen eher mehr. Ein großes Glas vor jeder Mahlzeit ist ein einfacher Trick, um dranzubleiben." },
+  { icon:"🎯", t:"Dranbleiben schlägt Perfektion", d:"Ein solider Plan, den du monatelang durchziehst, bringt mehr als der perfekte Plan, den du nach zwei Wochen aufgibst. Auch ein kürzeres Training zählt — Hauptsache, du bist regelmäßig da. Baue dir feste Trainingstage in die Woche ein und behandle sie wie einen wichtigen Termin." },
+];
+
 // Mahlzeiten-Pool. items = Zutaten (mit Menge), steps = Zubereitung
 const MEALS = {
   breakfast: [
@@ -515,6 +575,7 @@ const GOAL_META = {
 /* ---------- Render ---------- */
 
 let activeTrainDay = 0;
+let tipIndex = 0;
 
 function render(){
   const c = calc();
@@ -543,6 +604,9 @@ function render(){
   // Week overview
   renderWeekOverview();
   document.getElementById("daysNote").textContent = state.days;
+
+  // Coach-Tipps
+  renderTips();
 
   // Training
   document.getElementById("splitName").textContent = SPLITS[state.days].name;
@@ -587,6 +651,20 @@ function macroBar(cls, name, grams, pct){
   </div>`;
 }
 
+function renderTips(){
+  const N = 3; // wie viele Tipps gleichzeitig
+  const shown = [];
+  for(let k=0; k<N; k++) shown.push(TIPS[(tipIndex + k) % TIPS.length]);
+  document.getElementById("tips").innerHTML = shown.map(tp=>`
+    <div class="tip">
+      <div class="tip-ic">${tp.icon}</div>
+      <div class="tip-body">
+        <div class="tip-t">${tp.t}</div>
+        <div class="tip-d">${tp.d}</div>
+      </div>
+    </div>`).join("");
+}
+
 function renderWeekOverview(){
   const layout = WEEK_LAYOUT[state.days];
   const split = SPLITS[state.days];
@@ -619,6 +697,7 @@ function renderWorkout(){
       <div class="ex-body">
         <div class="ex-name">${e[0]}</div>
         <div class="ex-meta">${e[1]} · Pause 90–120 Sek</div>
+        ${EX_ALT[e[0]] ? `<div class="ex-alt"><span class="alt-lbl">Alternative</span> ${EX_ALT[e[0]]}</div>` : ""}
       </div>
       <div class="ex-sr">
         <div class="sr-sets">${e[2]}×${e[3]}</div>
@@ -776,6 +855,7 @@ function clamp(v,min,max,def){ if(isNaN(v)) return def; return Math.min(max, Mat
 
 document.getElementById("reshuffle").onclick = ()=>{ state.mealSeed = (state.mealSeed+1) % 35; render(); };
 document.getElementById("clearShop").onclick = ()=>{ state.saved = []; save(); renderShoppingList(); syncMealButtons(); };
+document.getElementById("nextTip").onclick = ()=>{ tipIndex = (tipIndex + 3) % TIPS.length; renderTips(); };
 
 /* ---------- Tabs ---------- */
 
