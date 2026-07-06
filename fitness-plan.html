@@ -3,28 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0d1411">
+<meta name="theme-color" content="#16171a">
 <title>FitPlan · Training & Ernährung</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0d1411; --bg-2:#111b16;
-    --surface:#16221c; --surface-2:#1d2c24;
-    --stroke:rgba(255,255,255,.09); --stroke-2:rgba(255,255,255,.15);
-    --text:#e9f2ec; --muted:#8ea79a;
-    --lime:#8fe388; --lime-deep:#43a047; --lime-soft:#c6f3c0;
-    --amber:#f0b23c; --amber-soft:#f7d386;
-    --blue:#6db7e8; --violet:#9a95f0; --rust:#e28363;
-    --ok:#43c26f;
+    /* modernes Graphit-Grau mit dezentem Stahl-Akzent */
+    --bg:#16171a; --bg-2:#1b1d21;
+    --surface:#212429; --surface-2:#292d33;
+    --stroke:rgba(255,255,255,.08); --stroke-2:rgba(255,255,255,.15);
+    --text:#e9ebee; --muted:#9aa1aa;
+    --lime:#b4bdca; --lime-deep:#79838f; --lime-soft:#d6dce4;   /* Stahl-Akzent */
+    --amber:#c2b393; --amber-soft:#d8cdb4;                       /* gedämpftes Sand */
+    --blue:#8fb0d4; --violet:#9aa8bc; --rust:#b58fa6;            /* gedämpfte Datenfarben */
+    --ok:#8aa196;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
     background:
-      radial-gradient(130% 80% at 88% -8%, #1b3a2a 0%, transparent 52%),
-      radial-gradient(110% 70% at -5% 108%, #16303a 0%, transparent 55%),
+      radial-gradient(130% 80% at 88% -8%, #2b2f37 0%, transparent 52%),
+      radial-gradient(110% 70% at -5% 108%, #232830 0%, transparent 55%),
       var(--bg);
     color:var(--text);font-family:"Instrument Sans",system-ui,sans-serif;
     min-height:100%;display:flex;flex-direction:column;align-items:center;padding:24px 16px 96px;
@@ -71,9 +72,9 @@
   .macro .m-track{height:9px;border-radius:99px;background:var(--bg-2);overflow:hidden;border:1px solid var(--stroke)}
   .macro .m-fill{height:100%;border-radius:99px;transition:width .5s}
   .macro .m-val{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:70px;text-align:right}
-  .macro.prot .m-fill{background:linear-gradient(90deg,var(--lime),var(--lime-deep))}
+  .macro.prot .m-fill{background:linear-gradient(90deg,var(--blue),#5f82ab)}
   .macro.carb .m-fill{background:linear-gradient(90deg,var(--amber-soft),var(--amber))}
-  .macro.fat  .m-fill{background:linear-gradient(90deg,#f0a8c0,var(--rust))}
+  .macro.fat  .m-fill{background:linear-gradient(90deg,#cfa9c1,var(--rust))}
 
   /* Training day cards */
   .daybar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
@@ -121,7 +122,7 @@
   .seg button.active{background:var(--surface-2);color:var(--text)}
   .seg.lime button.active{color:var(--lime)}
 
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--lime),var(--lime-deep));color:#0b1a0e;border:none;border-radius:12px;padding:14px 20px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;width:100%;transition:.15s;box-shadow:0 6px 18px -8px rgba(67,160,71,.7)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--lime-soft),var(--lime-deep));color:#16171a;border:none;border-radius:12px;padding:14px 20px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;width:100%;transition:.15s;box-shadow:0 6px 18px -8px rgba(140,150,165,.55)}
   .btn:hover{filter:brightness(1.06)}
   .btn:active{transform:translateY(1px)}
   .btn.ghost{background:none;color:var(--text);border:1px solid var(--stroke-2);box-shadow:none}
@@ -193,7 +194,7 @@
       <div id="meals"></div>
       <div class="divider"></div>
       <div class="macros" id="mealMacroCheck"></div>
-      <div class="note">Portionen sind Richtwerte für dein Kalorienziel von <b id="eatKcal"></b>. Trinke 2,5–3,5 l Wasser pro Tag. Proteinquellen bewusst über den Tag verteilen.</div>
+      <div class="note">Fünf Mahlzeiten über den Tag verteilt decken dein Kalorienziel von <b id="eatKcal"></b> — genug Energie fürs Training, ganz ohne Fisch. Trinke 2,5–3,5 l Wasser pro Tag.</div>
     </div>
   </section>
 
@@ -264,14 +265,35 @@
 // Trainingssplits je nach Tagen/Woche
 const SPLITS = {
   2: {
-    name: "Ganzkörper A/B",
+    name: "Ganzkörper",
     days: [
       { focus:"Ganzkörper A", ex:[
         ["Kniebeuge (Langhantel)","Beine · Quadrizeps",4,"6–8"],
         ["Bankdrücken","Brust · Trizeps",4,"6–10"],
-        ["Latzug zur Brust","Rücken · Bizeps",3,"8–12"],
+        ["Rudern vorgebeugt","Rücken · Mitte",4,"8–10"],
         ["Schulterdrücken (Kurzhantel)","Schultern",3,"8–12"],
         ["Beinbeuger (Maschine)","Beine · Hamstrings",3,"10–12"],
+        ["Plank","Core",3,"40 Sek"],
+      ]},
+      { focus:"Ganzkörper B", ex:[
+        ["Kreuzheben (rumänisch)","Rücken · Hamstrings",4,"6–8"],
+        ["Schrägbankdrücken (Kurzhantel)","Brust oben",4,"8–10"],
+        ["Latzug zur Brust","Rücken · breit",4,"8–12"],
+        ["Beinpresse","Beine",3,"10–12"],
+        ["Seitheben","Schultern · seitlich",3,"12–15"],
+        ["Bizeps-Curls","Arme",3,"10–12"],
+      ]},
+    ]
+  },
+  3: {
+    name: "Ganzkörper",
+    days: [
+      { focus:"Ganzkörper A", ex:[
+        ["Kniebeuge (Langhantel)","Beine · Quadrizeps",4,"6–8"],
+        ["Bankdrücken","Brust · Trizeps",4,"6–10"],
+        ["Latzug zur Brust","Rücken · breit",4,"8–12"],
+        ["Schulterdrücken (Kurzhantel)","Schultern",3,"8–12"],
+        ["Beinbeuger (Maschine)","Hamstrings",3,"10–12"],
         ["Plank","Core",3,"40 Sek"],
       ]},
       { focus:"Ganzkörper B", ex:[
@@ -280,69 +302,52 @@ const SPLITS = {
         ["Rudern vorgebeugt","Rücken · Mitte",4,"8–10"],
         ["Beinpresse","Beine",3,"10–12"],
         ["Seitheben","Schultern · seitlich",3,"12–15"],
-        ["Bizeps-Curls","Arme",3,"10–12"],
-      ]},
-    ]
-  },
-  3: {
-    name: "Push / Pull / Legs",
-    days: [
-      { focus:"Push (Drücken)", ex:[
-        ["Bankdrücken","Brust · Trizeps",4,"6–10"],
-        ["Schulterdrücken (Langhantel)","Schultern",4,"8–10"],
-        ["Schrägbankdrücken (Kurzhantel)","Brust oben",3,"8–12"],
-        ["Seitheben","Schultern · seitlich",3,"12–15"],
-        ["Trizeps am Kabel","Arme · Trizeps",3,"10–12"],
-      ]},
-      { focus:"Pull (Ziehen)", ex:[
-        ["Klimmzüge / Latzug","Rücken · breit",4,"6–10"],
-        ["Rudern vorgebeugt","Rücken · Mitte",4,"8–10"],
-        ["Kabelrudern eng","Rücken · unten",3,"10–12"],
-        ["Face Pulls","Schultern · hinten",3,"12–15"],
         ["Bizeps-Curls","Arme · Bizeps",3,"10–12"],
       ]},
-      { focus:"Legs (Beine)", ex:[
-        ["Kniebeuge (Langhantel)","Beine · Quadrizeps",4,"6–8"],
-        ["Kreuzheben (rumänisch)","Hamstrings · Po",4,"6–8"],
-        ["Beinpresse","Beine",3,"10–12"],
-        ["Beinbeuger (Maschine)","Hamstrings",3,"10–12"],
-        ["Wadenheben","Waden",4,"12–15"],
+      { focus:"Ganzkörper C", ex:[
+        ["Frontkniebeuge","Beine · Quadrizeps",4,"6–8"],
+        ["Schulterdrücken (Langhantel)","Schultern",4,"6–10"],
+        ["Klimmzüge / Latzug","Rücken · breit",4,"6–10"],
+        ["Ausfallschritte (Kurzhantel)","Beine · einseitig",3,"10 je Seite"],
+        ["Trizeps am Kabel","Arme · Trizeps",3,"10–12"],
         ["Hängendes Beinheben","Core",3,"12–15"],
       ]},
     ]
   },
   4: {
-    name: "Oberkörper / Unterkörper",
+    name: "Ganzkörper",
     days: [
-      { focus:"Oberkörper A", ex:[
-        ["Bankdrücken","Brust · Trizeps",4,"6–8"],
-        ["Rudern vorgebeugt","Rücken · Mitte",4,"8–10"],
-        ["Schulterdrücken (Kurzhantel)","Schultern",3,"8–12"],
-        ["Latzug zur Brust","Rücken · breit",3,"10–12"],
-        ["Bizeps-Curls","Arme · Bizeps",3,"10–12"],
-        ["Trizeps am Kabel","Arme · Trizeps",3,"10–12"],
-      ]},
-      { focus:"Unterkörper A", ex:[
+      { focus:"Ganzkörper A", ex:[
         ["Kniebeuge (Langhantel)","Beine · Quadrizeps",4,"6–8"],
-        ["Kreuzheben (rumänisch)","Hamstrings · Po",4,"6–8"],
-        ["Beinpresse","Beine",3,"10–12"],
-        ["Wadenheben","Waden",4,"12–15"],
+        ["Bankdrücken","Brust · Trizeps",4,"6–10"],
+        ["Rudern vorgebeugt","Rücken · Mitte",4,"8–10"],
+        ["Seitheben","Schultern · seitlich",3,"12–15"],
+        ["Beinbeuger (Maschine)","Hamstrings",3,"10–12"],
         ["Plank","Core",3,"45 Sek"],
       ]},
-      { focus:"Oberkörper B", ex:[
+      { focus:"Ganzkörper B", ex:[
+        ["Kreuzheben (rumänisch)","Rücken · Hamstrings",4,"6–8"],
         ["Schrägbankdrücken (Kurzhantel)","Brust oben",4,"8–10"],
-        ["Klimmzüge / Latzug","Rücken · breit",4,"6–10"],
-        ["Schulterdrücken (Langhantel)","Schultern",3,"8–10"],
-        ["Kabelrudern eng","Rücken · unten",3,"10–12"],
-        ["Seitheben","Schultern · seitlich",3,"12–15"],
-        ["Hammer-Curls","Arme",3,"10–12"],
+        ["Latzug zur Brust","Rücken · breit",4,"8–12"],
+        ["Schulterdrücken (Kurzhantel)","Schultern",3,"8–12"],
+        ["Bizeps-Curls","Arme · Bizeps",3,"10–12"],
+        ["Wadenheben","Waden",4,"12–15"],
       ]},
-      { focus:"Unterkörper B", ex:[
+      { focus:"Ganzkörper C", ex:[
         ["Frontkniebeuge","Beine · Quadrizeps",4,"6–8"],
-        ["Hip Thrust","Po · Hamstrings",4,"8–10"],
-        ["Ausfallschritte (Kurzhantel)","Beine · einseitig",3,"10 je Seite"],
-        ["Beinbeuger (Maschine)","Hamstrings",3,"10–12"],
+        ["Schulterdrücken (Langhantel)","Schultern",4,"6–10"],
+        ["Klimmzüge / Latzug","Rücken · breit",4,"6–10"],
+        ["Kabelrudern eng","Rücken · unten",3,"10–12"],
+        ["Trizeps am Kabel","Arme · Trizeps",3,"10–12"],
         ["Hängendes Beinheben","Core",3,"12–15"],
+      ]},
+      { focus:"Ganzkörper D", ex:[
+        ["Hip Thrust","Po · Hamstrings",4,"8–10"],
+        ["Beinpresse","Beine",4,"10–12"],
+        ["Bankdrücken (Wdh-Fokus)","Brust · Trizeps",3,"10–12"],
+        ["Face Pulls","Schultern · hinten",3,"12–15"],
+        ["Hammer-Curls","Arme",3,"10–12"],
+        ["Ausfallschritte (Kurzhantel)","Beine · einseitig",3,"10 je Seite"],
       ]},
     ]
   }
@@ -368,7 +373,7 @@ const MEALS = {
   lunch: [
     { name:"Hähnchenbrust mit Reis & Brokkoli", items:["180g Hähnchenbrust","80g Reis (roh)","200g Brokkoli","Olivenöl"], hi:"prot" },
     { name:"Rindfleisch-Bowl mit Süßkartoffel", items:["160g mageres Rind","250g Süßkartoffel","gem. Gemüse","1 EL Olivenöl"], hi:"prot" },
-    { name:"Lachsfilet mit Kartoffeln & Salat", items:["170g Lachs","300g Kartoffeln","großer Salat","Dressing"], hi:"fat" },
+    { name:"Rinderhack-Bolognese mit Vollkornnudeln", items:["180g Rinderhack","100g Vollkornnudeln (roh)","Tomatensoße","30g Parmesan"], hi:"prot" },
     { name:"Pute mit Vollkornnudeln & Tomatensoße", items:["180g Putenbrust","90g Vollkornnudeln (roh)","Tomatensoße","Parmesan"], hi:"prot" },
     { name:"Linsen-Dal mit Reis & Joghurt", items:["120g Linsen (roh)","70g Reis","Gemüse","150g Joghurt"], hi:"carb" },
   ],
@@ -383,13 +388,19 @@ const MEALS = {
     { name:"Magerquark-Bowl mit Gemüse & Ei", items:["250g Magerquark","2 Eier","gebratenes Gemüse","Vollkornbrot"], hi:"prot" },
     { name:"Hähnchen-Wok mit Gemüse & Reis", items:["170g Hähnchen","70g Reis (roh)","Wok-Gemüse","Sojasoße"], hi:"prot" },
     { name:"Omelett mit Feta, Spinat & Brot", items:["4 Eier","40g Feta","Spinat","1 Scheibe Vollkorn"], hi:"fat" },
-    { name:"Thunfisch-Salat mit Kichererbsen", items:["2 Dosen Thunfisch","150g Kichererbsen","Blattsalat","Olivenöl"], hi:"prot" },
+    { name:"Hähnchen-Wrap mit Bohnen & Käse", items:["180g Hähnchenbrust","2 Vollkorn-Wraps","150g Kidneybohnen","30g Käse"], hi:"prot" },
     { name:"Tofu-Pfanne mit Vollkornreis", items:["200g Tofu","70g Vollkornreis","Paprika & Zucchini","Sesamöl"], hi:"carb" },
   ],
 };
 
-const SLOT_LABEL = { breakfast:"Frühstück", lunch:"Mittagessen", snack:"Snack", dinner:"Abendessen" };
-const SLOT_SHARE = { breakfast:0.25, lunch:0.35, snack:0.15, dinner:0.25 };
+// 5 Mahlzeiten über den Tag verteilt — genug zu essen, kleinere Portionen
+const SLOTS = [
+  { label:"Frühstück",         share:0.22, pool:MEALS.breakfast },
+  { label:"Vormittags-Snack",  share:0.12, pool:MEALS.snack },
+  { label:"Mittagessen",       share:0.30, pool:MEALS.lunch },
+  { label:"Nachmittags-Snack", share:0.12, pool:MEALS.snack },
+  { label:"Abendessen",        share:0.24, pool:MEALS.dinner },
+];
 
 /* ---------- State ---------- */
 
@@ -522,7 +533,7 @@ function renderWeekOverview(){
   document.getElementById("weekOverview").innerHTML = WEEKDAYS.map((d,i)=>{
     const wi = layout[i];
     if(wi===-1) return `<div class="daychip rest"><div class="d-day">${d}</div><div class="d-focus">Ruhe</div></div>`;
-    return `<div class="daychip"><div class="d-day">${d}</div><div class="d-focus">${split.days[wi].focus.replace(/ \(.*\)/,"")}</div></div>`;
+    return `<div class="daychip"><div class="d-day">${d}</div><div class="d-focus">${split.days[wi].focus.replace("Ganzkörper","GK").replace(/ \(.*\)/,"")}</div></div>`;
   }).join("");
 }
 
@@ -563,19 +574,17 @@ function renderMeals(c){
   const seed = state.mealSeed;
   const el = document.getElementById("meals");
   let html = "";
-  let totals = { kcal:0 };
-  Object.keys(MEALS).forEach((slot, si)=>{
-    const meal = pick(MEALS[slot], seed + si*7);
-    const kcal = Math.round(c.target * SLOT_SHARE[slot] / 10) * 10;
+  SLOTS.forEach((slot, si)=>{
+    const meal = pick(slot.pool, seed + si*7 + 1);
+    const kcal = Math.round(c.target * slot.share / 10) * 10;
     html += `<div class="meal">
       <div class="meal-head">
-        <span class="meal-slot">${SLOT_LABEL[slot]}</span>
+        <span class="meal-slot">${slot.label}</span>
         <span class="meal-kcal">~${kcal} kcal</span>
       </div>
       <div class="meal-name">${meal.name}</div>
       <div class="meal-items">${meal.items.map(it=>`<span class="tag">${it}</span>`).join("")}</div>
     </div>`;
-    totals.kcal += kcal;
   });
   el.innerHTML = html;
 
