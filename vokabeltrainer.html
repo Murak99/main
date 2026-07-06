@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0e1524">
+<meta name="theme-color" content="#181a1f">
 <title>Englisch-Vokabeltrainer · A1–C2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0e1524; --bg-2:#141d31;
-    --surface:#1a2438; --surface-2:#212d45;
-    --stroke:rgba(255,255,255,.09); --stroke-2:rgba(255,255,255,.14);
+    --bg:#181a1f; --bg-2:#1f2228;
+    --surface:#24272f; --surface-2:#2c303a;
+    --stroke:rgba(255,255,255,.09); --stroke-2:rgba(255,255,255,.15);
     --paper:#f7f3ea; --paper-edge:#e7dfcf;
     --ink:#20242e; --ink-soft:#5d6472;
-    --text:#eaf0f7; --muted:#93a0b5;
+    --text:#eef0f4; --muted:#9aa0ab;
     --amber:#f0a83c; --amber-soft:#f7cd86;
     --teal:#43c2ad; --teal-deep:#2b8f80; --teal-soft:#cfeee7;
     --violet:#8f8cf0; --rust:#e08363;
@@ -24,9 +24,11 @@
   html,body{height:100%}
   body{
     background:
-      radial-gradient(130% 80% at 88% -8%, #21335c 0%, transparent 52%),
-      radial-gradient(110% 70% at -5% 108%, #163a44 0%, transparent 55%),
-      var(--bg);
+      radial-gradient(125% 80% at 88% -10%, rgba(139,136,240,.32) 0%, transparent 55%),
+      radial-gradient(115% 78% at -8% 106%, rgba(67,194,173,.26) 0%, transparent 55%),
+      radial-gradient(95% 70% at 50% 120%, rgba(240,168,60,.12) 0%, transparent 62%),
+      linear-gradient(180deg, #1c1e24 0%, var(--bg) 60%);
+    background-attachment:fixed;
     color:var(--text);font-family:"Instrument Sans",system-ui,sans-serif;
     min-height:100%;display:flex;flex-direction:column;align-items:center;padding:26px 16px 52px;
     -webkit-font-smoothing:antialiased;
@@ -149,6 +151,8 @@
   /* grammar note + verb-form tables */
   .note.gram{background:#eef4f1;border:1px solid #dbe7e2;color:var(--ink)}
   .note.gram strong{color:var(--teal-deep)}
+  .note.syn{background:#eef1fb;border:1px solid #dce0f4;color:var(--ink);line-height:1.5}
+  .note.syn strong{color:#4b47b8}
   .vforms{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
   .vforms span{display:flex;flex-direction:column;gap:2px;background:#fff;border:1px solid var(--paper-edge);border-radius:9px;padding:7px 10px;font-size:14px;font-weight:600;color:var(--ink)}
   .vforms span em{font-style:normal;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
@@ -1420,6 +1424,87 @@ const CARDS = [
   {lvl:"C1",cat:"cloze",cloze:true,en:"actuated",hint:"betätigt / ausgelöst",de:"Die Maschine wird mit einem Fußpedal betätigt.",sentence:"The machine is actuated by a foot pedal."},
   {lvl:"B1",cat:"cloze",cloze:true,en:"handy",hint:"praktisch",de:"Dieses Werkzeug ist sehr praktisch für schnelle Reparaturen.",sentence:"This tool is very handy for quick fixes."},
   {lvl:"B2",cat:"cloze",cloze:true,en:"janitorial",hint:"Reinigungs- / Hausmeister-",de:"Das Hausmeisterpersonal reinigte den Flur.",sentence:"Janitorial staff cleaned the hallway."},
+
+  // ================= NEU · Wortschatz (Runde 2) =================
+  // --- Alltag & Grundverben ---
+  {lvl:"A2",cat:"basics",de:"antworten",en:"to answer",ex:"Please <b>answer</b> the question."},
+  {lvl:"A2",cat:"basics",de:"fragen",en:"to ask",ex:"May I <b>ask</b> you something?"},
+  {lvl:"A2",cat:"basics",de:"anrufen",en:"to call",ex:"I'll <b>call</b> you tonight."},
+  {lvl:"A2",cat:"basics",de:"passieren / geschehen",en:"to happen",ex:"What <b>happened</b> here?"},
+  {lvl:"A2",cat:"feelings",de:"hoffen",en:"to hope",ex:"I <b>hope</b> so."},
+  {lvl:"A2",cat:"basics",de:"bauen",en:"to build",ex:"They <b>build</b> houses."},
+  {lvl:"A2",cat:"shopping",de:"verkaufen",en:"to sell",ex:"They <b>sell</b> fruit here."},
+  {lvl:"B1",cat:"basics",de:"werfen",en:"to throw",ex:"Don't <b>throw</b> stones."},
+  {lvl:"A2",cat:"basics",de:"drücken / schieben",en:"to push",ex:"<b>Push</b> the door."},
+  {lvl:"A2",cat:"basics",de:"ziehen",en:"to pull",ex:"<b>Pull</b> the rope."},
+  {lvl:"B1",cat:"basics",de:"reparieren / beheben",en:"to fix",ex:"Can you <b>fix</b> it?"},
+  {lvl:"B1",cat:"basics",de:"(sich) ausleihen",en:"to borrow",ex:"Can I <b>borrow</b> your pen?",note:"<strong>Merke:</strong> <b>borrow</b> = sich leihen, <b>lend</b> = verleihen."},
+  {lvl:"B1",cat:"basics",de:"(ver)leihen",en:"to lend",ex:"I'll <b>lend</b> you the book."},
+  {lvl:"B1",cat:"work",de:"sparen; retten",en:"to save",ex:"We must <b>save</b> money."},
+  {lvl:"B1",cat:"work",de:"verdienen",en:"to earn",ex:"She <b>earns</b> a good salary."},
+  {lvl:"A2",cat:"basics",de:"sich beeilen",en:"to hurry",ex:"<b>Hurry</b> up!"},
+  {lvl:"A2",cat:"feelings",de:"sich entspannen",en:"to relax",ex:"Sit down and <b>relax</b>."},
+
+  // --- Meinung, Arbeit & Kommunikation ---
+  {lvl:"B1",cat:"feelings",de:"zugeben",en:"to admit",ex:"He <b>admitted</b> his mistake."},
+  {lvl:"B1",cat:"work",de:"vermeiden",en:"to avoid",ex:"We should <b>avoid</b> delays."},
+  {lvl:"B1",cat:"work",de:"verhindern",en:"to prevent",ex:"This <b>prevents</b> errors."},
+  {lvl:"B1",cat:"work",de:"steigen / erhöhen",en:"to increase",ex:"Prices <b>increase</b> every year."},
+  {lvl:"B1",cat:"work",de:"sinken / verringern",en:"to decrease",ex:"Sales <b>decreased</b> sharply."},
+  {lvl:"B1",cat:"work",de:"reduzieren / verringern",en:"to reduce",ex:"We aim to <b>reduce</b> costs."},
+  {lvl:"B1",cat:"work",de:"beeinflussen / betreffen",en:"to affect",ex:"This <b>affects</b> everyone.",note:"<strong>Nicht verwechseln:</strong> <b>affect</b> (Verb) vs. <b>effect</b> (Substantiv)."},
+  {lvl:"B1",cat:"work",de:"erfordern / benötigen",en:"to require",ex:"This <b>requires</b> patience."},
+  {lvl:"B1",cat:"work",de:"erwarten",en:"to expect",ex:"We <b>expect</b> good results."},
+  {lvl:"B1",cat:"basics",de:"bevorzugen",en:"to prefer",ex:"I <b>prefer</b> tea."},
+  {lvl:"B1",cat:"feelings",de:"sich beschweren",en:"to complain",ex:"Don't <b>complain</b> so much."},
+  {lvl:"B1",cat:"smalltalk",de:"sich entschuldigen",en:"to apologize",ex:"I <b>apologize</b> for the delay."},
+  {lvl:"B1",cat:"feelings",de:"beschuldigen / die Schuld geben",en:"to blame",ex:"Don't <b>blame</b> me."},
+  {lvl:"B1",cat:"basics",de:"warnen",en:"to warn",ex:"I <b>warned</b> you."},
+  {lvl:"B1",cat:"work",de:"empfehlen",en:"to recommend",ex:"I <b>recommend</b> this book."},
+  {lvl:"B2",cat:"work",de:"beweisen",en:"to prove",ex:"Can you <b>prove</b> it?"},
+  {lvl:"B1",cat:"work",de:"erwähnen",en:"to mention",ex:"He <b>mentioned</b> it briefly."},
+  {lvl:"B1",cat:"work",de:"bestätigen",en:"to confirm",ex:"Please <b>confirm</b> the date."},
+  {lvl:"B2",cat:"work",de:"annehmen / vermuten",en:"to assume",ex:"I <b>assume</b> you agree."},
+  {lvl:"B2",cat:"meetings",de:"andeuten / implizieren",en:"to imply",ex:"Are you <b>implying</b> I'm wrong?"},
+  {lvl:"B2",cat:"work",de:"hinweisen / anzeigen",en:"to indicate",ex:"The data <b>indicates</b> growth."},
+  {lvl:"B2",cat:"work",de:"enthüllen / offenbaren",en:"to reveal",ex:"The report <b>reveals</b> problems."},
+  {lvl:"B2",cat:"meetings",de:"betonen / hervorheben",en:"to emphasize",ex:"I must <b>emphasize</b> this point."},
+  {lvl:"B2",cat:"work",de:"sicherstellen / gewährleisten",en:"to ensure",ex:"Please <b>ensure</b> it's correct."},
+  {lvl:"B2",cat:"work",de:"rechtfertigen",en:"to justify",ex:"How do you <b>justify</b> that?"},
+  {lvl:"C1",cat:"work",de:"erwerben / erlangen",en:"to acquire",ex:"They <b>acquired</b> a rival firm."},
+  {lvl:"B2",cat:"feelings",de:"überwinden / bewältigen",en:"to overcome",ex:"She <b>overcame</b> her fear."},
+  {lvl:"C1",cat:"law",de:"durchsetzen / vollstrecken",en:"to enforce",ex:"They <b>enforce</b> the rules strictly."},
+  {lvl:"C1",cat:"work",de:"untergraben / unterminieren",en:"to undermine",ex:"This <b>undermines</b> trust."},
+  {lvl:"C1",cat:"work",de:"fördern / begünstigen",en:"to foster",ex:"We <b>foster</b> collaboration."},
+  {lvl:"C1",cat:"work",de:"einhalten / befolgen",en:"to comply with",ex:"You must <b>comply with</b> the law."},
+  {lvl:"C1",cat:"work",de:"gefährden / aufs Spiel setzen",en:"to jeopardize",ex:"This could <b>jeopardize</b> the deal."},
+  {lvl:"C1",cat:"work",de:"genau prüfen / unter die Lupe nehmen",en:"to scrutinize",ex:"Auditors <b>scrutinize</b> the accounts."},
+  {lvl:"C1",cat:"meetings",de:"befürworten / eintreten für",en:"to advocate",ex:"She <b>advocates</b> for change."},
+
+  // --- Substantive ---
+  {lvl:"B2",cat:"work",de:"das Ergebnis / der Ausgang",en:"the outcome",ex:"A positive <b>outcome</b>."},
+  {lvl:"B2",cat:"feelings",de:"die Folge / Konsequenz",en:"the consequence",ex:"Face the <b>consequences</b>."},
+  {lvl:"B2",cat:"feelings",de:"der Umstand / die Umstände",en:"the circumstance",ex:"Under these <b>circumstances</b>."},
+  {lvl:"B2",cat:"work",de:"die Schätzung / der Kostenvoranschlag",en:"the estimate",ex:"A rough <b>estimate</b>."},
+  {lvl:"C1",cat:"work",de:"die Einschränkung / der Zwang",en:"the constraint",ex:"Tight budget <b>constraints</b>."},
+  {lvl:"C1",cat:"work",de:"die Schwelle / der Schwellenwert",en:"the threshold",ex:"Below the pain <b>threshold</b>."},
+  {lvl:"B2",cat:"work",de:"der Umfang / die Reichweite",en:"the scope",ex:"The <b>scope</b> of the project."},
+
+  // --- Adjektive & Konnektoren ---
+  {lvl:"C1",cat:"work",de:"machbar / durchführbar",en:"feasible",ex:"Is that <b>feasible</b>?"},
+  {lvl:"C1",cat:"work",de:"überflüssig; (Stelle) gestrichen",en:"redundant",ex:"This step is <b>redundant</b>."},
+  {lvl:"C1",cat:"feelings",de:"subtil / fein / raffiniert",en:"subtle",ex:"A <b>subtle</b> difference."},
+  {lvl:"C1",cat:"feelings",de:"offensichtlich / eklatant / dreist",en:"blatant",ex:"A <b>blatant</b> lie."},
+  {lvl:"C1",cat:"work",de:"innewohnend / inhärent",en:"inherent",ex:"An <b>inherent</b> risk."},
+  {lvl:"C1",cat:"work",de:"weit verbreitet / vorherrschend",en:"prevalent",ex:"A <b>prevalent</b> belief."},
+  {lvl:"B2",cat:"meetings",de:"außerdem / überdies",en:"moreover",ex:"<b>Moreover,</b> it's cheaper."},
+  {lvl:"B2",cat:"email",de:"des Weiteren / darüber hinaus",en:"furthermore",ex:"<b>Furthermore,</b> we saved time."},
+  {lvl:"C1",cat:"meetings",de:"daher / folglich",en:"hence",ex:"<b>Hence,</b> we cancelled the plan."},
+  {lvl:"C2",cat:"meetings",de:"wenn auch / obgleich",en:"albeit",ex:"A good, <b>albeit</b> risky, plan."},
+  {lvl:"B1",cat:"meetings",de:"obwohl / obgleich",en:"although",ex:"<b>Although</b> it's late, let's start."},
+  {lvl:"B1",cat:"meetings",de:"es sei denn / außer wenn",en:"unless",ex:"I won't go <b>unless</b> you come."},
+  {lvl:"B1",cat:"meetings",de:"sonst / andernfalls",en:"otherwise",ex:"Hurry, <b>otherwise</b> we'll be late."},
+  {lvl:"B2",cat:"time",de:"währenddessen / inzwischen",en:"meanwhile",ex:"<b>Meanwhile,</b> I'll wait here."},
 ];
 const CAT_LABELS = {
   all:"Alle", smalltalk:"Smalltalk", basics:"Grundwörter", work:"Arbeit", meetings:"Meetings", email:"E-Mail",
@@ -1670,6 +1755,21 @@ const IPA_DICT = {
   "ancient":"ˈeɪnʃənt","mesmerizing":"ˈmezməraɪzɪŋ","reinvigorated":"ˌriːɪnˈvɪɡəreɪtɪd","reinstated":"ˌriːɪnˈsteɪtɪd",
   "prerequisite":"ˌpriːˈrekwɪzɪt","prospective":"prəˈspektɪv","refrained":"rɪˈfreɪnd","amenities":"əˈmiːnɪtiz","reign":"reɪn",
   "supreme":"suːˈpriːm","apprentice":"əˈprentɪs","pressing":"ˈpresɪŋ","conscious":"ˈkɒnʃəs","no-frills":"ˌnəʊˈfrɪlz",
+  // NEU · Runde 2
+  "answer":"ˈɑːnsə","ask":"ɑːsk","call":"kɔːl","happen":"ˈhæpən","hope":"həʊp","build":"bɪld","sell":"sel",
+  "throw":"θrəʊ","push":"pʊʃ","pull":"pʊl","fix":"fɪks","borrow":"ˈbɒrəʊ","lend":"lend","earn":"ɜːn",
+  "hurry":"ˈhʌri","relax":"rɪˈlæks","admit":"ədˈmɪt","avoid":"əˈvɔɪd","prevent":"prɪˈvent","increase":"ɪnˈkriːs",
+  "decrease":"dɪˈkriːs","reduce":"rɪˈdjuːs","affect":"əˈfekt","require":"rɪˈkwaɪə","expect":"ɪkˈspekt",
+  "prefer":"prɪˈfɜː","complain":"kəmˈpleɪn","apologize":"əˈpɒlədʒaɪz","blame":"bleɪm","warn":"wɔːn",
+  "recommend":"ˌrekəˈmend","prove":"pruːv","mention":"ˈmenʃən","confirm":"kənˈfɜːm","assume":"əˈsjuːm",
+  "imply":"ɪmˈplaɪ","indicate":"ˈɪndɪkeɪt","reveal":"rɪˈviːl","emphasize":"ˈemfəsaɪz","ensure":"ɪnˈʃɔː",
+  "justify":"ˈdʒʌstɪfaɪ","acquire":"əˈkwaɪə","overcome":"ˌəʊvəˈkʌm","enforce":"ɪnˈfɔːs","undermine":"ˌʌndəˈmaɪn",
+  "foster":"ˈfɒstə","comply":"kəmˈplaɪ","jeopardize":"ˈdʒepədaɪz","scrutinize":"ˈskruːtɪnaɪz","advocate":"ˈædvəkeɪt",
+  "outcome":"ˈaʊtkʌm","consequence":"ˈkɒnsɪkwəns","circumstance":"ˈsɜːkəmstæns","estimate":"ˈestɪmət",
+  "constraint":"kənˈstreɪnt","threshold":"ˈθreʃhəʊld","feasible":"ˈfiːzəbəl","redundant":"rɪˈdʌndənt",
+  "subtle":"ˈsʌtəl","blatant":"ˈbleɪtənt","inherent":"ɪnˈhɪərənt","prevalent":"ˈprevələnt","moreover":"mɔːrˈəʊvə",
+  "furthermore":"ˌfɜːðəˈmɔː","hence":"hens","albeit":"ɔːlˈbiːɪt","although":"ɔːlˈðəʊ","unless":"ənˈles",
+  "otherwise":"ˈʌðəwaɪz","meanwhile":"ˈmiːnwaɪl",
 };
 function ipaFallbackWord(w){
   // very rough grapheme->IPA (approximate; marked with ≈)
@@ -2091,6 +2191,145 @@ function grammarNote(c){
   return `<div class="note gram" style="margin-top:14px"><strong>🏷 Adjektiv</strong> · steht vor dem Substantiv („a <b>${enFirst}</b> …“) oder nach <em>to be</em> („it is <b>${enFirst}</b>“). Steigerung: <b>‑er/‑est</b> oder <b>more/most</b>.</div>`;
 }
 
+/* ============================================================ SYNONYME (statt/zusätzlich zum Tipp) */
+const SYNONYMS = {
+  // Adjektive
+  happy:"glad, cheerful, content, pleased", sad:"unhappy, sorrowful, down, gloomy",
+  big:"large, huge, enormous, sizable", small:"little, tiny, compact, minor",
+  good:"fine, great, decent, solid", bad:"poor, awful, terrible, lousy",
+  important:"crucial, essential, significant, key", difficult:"hard, tough, challenging, tricky",
+  easy:"simple, straightforward, effortless", beautiful:"lovely, gorgeous, stunning, pretty",
+  tired:"exhausted, weary, worn out", boring:"dull, tedious, monotonous",
+  angry:"furious, mad, annoyed, irritated", nervous:"anxious, uneasy, on edge",
+  fast:"quick, rapid, swift, speedy", slow:"sluggish, unhurried, leisurely",
+  smart:"clever, intelligent, bright, sharp", funny:"amusing, hilarious, comical",
+  strange:"odd, weird, peculiar, unusual", famous:"well-known, renowned, celebrated",
+  brave:"courageous, fearless, bold, daring", calm:"relaxed, composed, serene, cool",
+  honest:"truthful, sincere, frank, candid", polite:"courteous, respectful, well-mannered",
+  careful:"cautious, attentive, prudent", dangerous:"risky, hazardous, unsafe, perilous",
+  expensive:"costly, pricey, dear", cheap:"inexpensive, affordable, low-cost",
+  clean:"tidy, spotless, neat", dirty:"filthy, grimy, unclean, messy",
+  huge:"enormous, vast, immense, gigantic", tiny:"minuscule, minute, miniature",
+  rich:"wealthy, affluent, well-off", proud:"pleased, satisfied; arrogant",
+  quiet:"silent, still, hushed", loud:"noisy, deafening, booming",
+  proper:"correct, appropriate, suitable, right", ordinary:"usual, normal, common, everyday",
+  common:"widespread, frequent, ordinary; shared", vast:"huge, immense, enormous, extensive",
+  narrow:"thin, tight, slim, restricted", shallow:"superficial; not deep",
+  hefty:"heavy, substantial, sizable, weighty", modest:"humble, unassuming, moderate",
+  exceptional:"outstanding, remarkable, extraordinary", admirable:"praiseworthy, commendable, laudable",
+  reluctant:"unwilling, hesitant, disinclined", hesitant:"unsure, tentative, wavering",
+  ambiguous:"unclear, vague, equivocal", peculiar:"strange, odd, unusual, curious",
+  tangible:"concrete, palpable, real, solid", meticulous:"thorough, precise, painstaking",
+  conscientious:"diligent, dutiful, careful", stubborn:"obstinate, headstrong, inflexible",
+  complacent:"smug, self-satisfied, unconcerned", mindful:"aware, attentive, conscious",
+  despicable:"contemptible, detestable, vile", gullible:"naive, credulous, trusting",
+  vigilant:"watchful, alert, attentive", protracted:"prolonged, lengthy, drawn-out",
+  pertinent:"relevant, applicable, apt", extensive:"broad, wide-ranging, comprehensive",
+  pressing:"urgent, critical, crucial", transient:"temporary, fleeting, brief",
+  transitory:"temporary, fleeting, short-lived", inevitable:"unavoidable, inescapable, certain",
+  prone:"liable, inclined, susceptible", illicit:"illegal, unlawful, prohibited",
+  reliable:"dependable, trustworthy, steady", dependable:"reliable, trustworthy, steadfast",
+  trustworthy:"reliable, dependable, honest", genuine:"real, authentic, sincere",
+  generous:"giving, magnanimous, liberal", precious:"valuable, treasured, priceless",
+  intimidating:"daunting, threatening, imposing", exquisite:"elegant, refined, delicate, superb",
+  sober:"clear-headed, serious, sensible", terrified:"petrified, horrified, scared stiff",
+  immersed:"absorbed, engrossed, deep in", staggering:"astonishing, astounding, shocking",
+  resentful:"bitter, aggrieved, indignant", inescapable:"unavoidable, inevitable",
+  dire:"dreadful, grave, terrible, urgent", eligible:"qualified, entitled, suitable",
+  exposed:"vulnerable, unprotected, open", crucial:"vital, critical, decisive, key",
+  decisive:"conclusive, definitive; resolute", remarkable:"notable, extraordinary, striking",
+  questionable:"doubtful, dubious, suspect", persuasive:"convincing, compelling, cogent",
+  ambitious:"driven, aspiring, determined", considerate:"thoughtful, caring, kind",
+  resilient:"tough, hardy, adaptable", adaptable:"flexible, versatile, adjustable",
+  // Verben
+  enhance:"improve, boost, augment, elevate", establish:"found, set up, create, form",
+  acknowledge:"admit, recognize, concede, accept", accomplish:"achieve, attain, complete, fulfil",
+  determine:"establish, ascertain, work out; decide", preserve:"protect, maintain, conserve, keep",
+  rectify:"correct, fix, remedy, put right", mitigate:"lessen, reduce, ease, soften",
+  alleviate:"ease, relieve, lessen, soothe", pursue:"chase, follow, seek, go after",
+  comprehend:"understand, grasp, fathom, get", convince:"persuade, assure, satisfy",
+  persuade:"convince, coax, urge, win over", obey:"follow, comply with, heed, observe",
+  possess:"own, have, hold", omit:"leave out, skip, exclude, drop",
+  dismantle:"take apart, disassemble, strip down", deteriorate:"worsen, decline, degrade, crumble",
+  reconcile:"settle, resolve, patch up; harmonize", testify:"attest, give evidence, swear",
+  detain:"hold, confine, keep, arrest", apprehend:"arrest, capture, seize, catch",
+  confess:"admit, own up, disclose, reveal", surrender:"give up, yield, capitulate, submit",
+  conquer:"defeat, overcome, vanquish, beat", ignite:"light, kindle, set alight, spark",
+  resonate:"strike a chord, connect, ring true", grasp:"understand; grip, seize, clutch",
+  exploit:"take advantage of, use, abuse; harness", supervise:"oversee, manage, monitor, direct",
+  assign:"allocate, delegate, designate, give", provide:"supply, give, furnish, offer",
+  cease:"stop, halt, end, discontinue", disregard:"ignore, overlook, dismiss, brush aside",
+  obscure:"hide, conceal, blur, mask", accommodate:"house, hold; adapt to, oblige",
+  incorporate:"include, integrate, absorb, build in", compile:"gather, collect, assemble, put together",
+  herald:"announce, signal, usher in, proclaim", betray:"double-cross, sell out; reveal",
+  suffer:"endure, undergo, bear, hurt", regret:"be sorry for, lament, rue",
+  encourage:"motivate, inspire, urge, spur on", insult:"offend, affront, slight",
+  hesitate:"pause, waver, falter, dither", exaggerate:"overstate, overdo, inflate, embellish",
+  curse:"swear, blaspheme; a hex", pacify:"calm, soothe, placate, appease",
+  probe:"investigate, examine, explore, scrutinize", confide:"trust, open up, unburden",
+  reassess:"re-evaluate, review, rethink", designate:"appoint, name, assign, earmark",
+  align:"line up, coordinate, bring into line", compose:"write, create, draft; calm",
+  engage:"involve, occupy; hire; interlock", contradict:"deny, oppose, refute, dispute",
+  // Substantive
+  fortune:"wealth, riches; luck, fate", turmoil:"chaos, upheaval, unrest, disorder",
+  composure:"calm, poise, self-control, equanimity", adversity:"hardship, misfortune, difficulty",
+  tension:"strain, stress, unease; friction", venue:"location, site, place, spot",
+  reputation:"standing, name, image, prestige", legacy:"heritage, inheritance, bequest",
+  incentive:"motivation, inducement, spur, reward", proposition:"proposal, offer, suggestion, deal",
+  venture:"enterprise, undertaking; risk, gamble", decency:"propriety, respectability, honour",
+  indulgence:"leniency, tolerance, forbearance", contempt:"scorn, disdain, disrespect",
+  deception:"deceit, trickery, fraud, dishonesty", allegation:"claim, accusation, assertion, charge",
+  accusation:"charge, allegation, indictment", omission:"exclusion, oversight, gap, lapse",
+  occasion:"event, moment, time, instance", prejudice:"bias, preconception, intolerance",
+  conviction:"belief, certainty; guilty verdict", endurance:"stamina, perseverance, staying power",
+  amenities:"facilities, comforts, conveniences", prerequisite:"requirement, precondition, necessity",
+  setback:"obstacle, hitch, reversal, blow", breakthrough:"advance, leap, discovery",
+  downside:"drawback, disadvantage, snag", caveat:"warning, proviso, qualification",
+  workaround:"fix, solution, makeshift", milestone:"landmark, turning point, marker",
+  bottleneck:"constraint, choke point, hold-up", framework:"structure, system, skeleton",
+  approach:"method, technique, way, tactic", insight:"understanding, perception, awareness",
+  impact:"effect, influence, consequence", challenge:"difficulty, test, hurdle",
+  goal:"aim, objective, target, purpose", strategy:"plan, approach, game plan",
+  truce:"ceasefire, armistice, peace", legislation:"law, statute, act",
+  attorney:"lawyer, solicitor, counsel", homicide:"murder, killing, manslaughter",
+  odor:"smell, scent, stench, aroma",
+  // Runde 2
+  answer:"reply, respond, retort", ask:"inquire, question, request", build:"construct, erect, assemble",
+  sell:"trade, market, vend", throw:"toss, hurl, fling, cast", fix:"repair, mend, sort out",
+  save:"conserve, set aside; rescue", earn:"make, gain, bring in", hurry:"rush, hasten, dash",
+  relax:"unwind, chill, loosen up", admit:"confess, acknowledge, concede", avoid:"evade, dodge, steer clear of",
+  prevent:"stop, avert, hinder, block", increase:"rise, grow, climb, boost", decrease:"fall, drop, decline, diminish",
+  reduce:"cut, lower, lessen, shrink", affect:"influence, impact, shape", require:"need, demand, call for",
+  expect:"anticipate, foresee, await", prefer:"favour, opt for, lean towards", complain:"protest, grumble, gripe",
+  blame:"fault, accuse, hold responsible", warn:"caution, alert, forewarn", recommend:"advise, suggest, endorse",
+  prove:"demonstrate, establish, verify", mention:"refer to, cite, bring up", confirm:"verify, corroborate, validate",
+  assume:"suppose, presume, take for granted", imply:"suggest, hint, insinuate", indicate:"show, signal, point to",
+  reveal:"disclose, uncover, expose", emphasize:"stress, highlight, underline", ensure:"guarantee, make sure, secure",
+  justify:"defend, warrant, vindicate", acquire:"obtain, gain, procure", overcome:"conquer, surmount, beat",
+  enforce:"impose, apply, uphold", undermine:"weaken, erode, sabotage", foster:"promote, encourage, nurture",
+  jeopardize:"endanger, threaten, risk", scrutinize:"examine, inspect, study closely", advocate:"support, champion, back",
+  outcome:"result, upshot, consequence", consequence:"result, effect, outcome, repercussion",
+  circumstance:"situation, condition, factor", estimate:"approximation, guess, projection",
+  constraint:"limitation, restriction, restraint", threshold:"limit, cut-off, starting point",
+  feasible:"viable, workable, achievable", redundant:"superfluous, unnecessary, excess",
+  subtle:"understated, delicate, nuanced", blatant:"obvious, flagrant, glaring", inherent:"intrinsic, built-in, innate",
+  prevalent:"widespread, common, rife", moreover:"furthermore, besides, in addition", furthermore:"moreover, additionally, besides",
+  hence:"therefore, thus, consequently", although:"though, even though, while", otherwise:"or else, if not, alternatively",
+  meanwhile:"in the meantime, meantime, concurrently",
+};
+function synKey(en){ return (en||"").split("/")[0].replace(/\([^)]*\)/g,"").replace(/^(to|the|a|an)\s+/i,"").trim().toLowerCase().replace(/[^a-z\- ]/g,"").trim(); }
+function synonymsHTML(en){
+  const s=SYNONYMS[synKey(en)];
+  return s ? `<div class="note syn" style="margin-top:14px">🔁 <strong>Synonyme:</strong> ${s}</div>` : "";
+}
+// Rückseiten-Tipp: Synonyme bevorzugt, sonst automatische Erklärung
+function backTip(c){
+  const s=synonymsHTML(c.en);
+  if(s) return s;
+  if(c.note) return "";        // kuratierter Hinweis wird schon separat gezeigt
+  return grammarNote(c);
+}
+
 function promptSide(c){ return direction==="en2de" ? c.en : c.de; }
 function answerSide(c){ return direction==="en2de" ? c.de : c.en; }
 
@@ -2173,8 +2412,8 @@ function render(){
         ${engAns?pronLine(c.en):""}
         <div class="example">${exampleHTML}</div>
         ${isCloze
-          ? `${grammarNote(c)}<div class="note" style="opacity:.6;margin-top:8px">🇩🇪 ${c.de}</div>`
-          : (c.note?`<div class="note">${c.note}</div>`:grammarNote(c))}
+          ? `${synonymsHTML(c.en)||grammarNote(c)}<div class="note" style="opacity:.6;margin-top:8px">🇩🇪 ${c.de}</div>`
+          : `${c.note?`<div class="note">${c.note}</div>`:""}${backTip(c)}`}
       </div>
     </div></div>
     <div class="actions" id="actions"></div>
