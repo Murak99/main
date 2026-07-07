@@ -72,7 +72,7 @@
   .users{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
   .user{font-family:inherit;font-size:13px;font-weight:600;color:var(--text);background:var(--surface);border:1px solid var(--stroke);border-radius:99px;padding:9px 17px;cursor:pointer;transition:.15s}
   .user:hover{border-color:var(--stroke-2)}
-  .user.on{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+  .user.on{background:rgba(67,194,173,.16);color:var(--text);border-color:var(--teal);box-shadow:0 0 0 1.5px var(--teal)}
   .user-edit{font-family:inherit;font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
   .user-edit:hover{color:var(--amber-soft)}
   .user-input{font-family:inherit;font-size:13px;font-weight:600;color:var(--ink);background:var(--paper);border:none;border-radius:99px;padding:9px 15px;outline:2px solid var(--amber);width:135px}
@@ -192,7 +192,12 @@
   .miss-list{text-align:left;background:rgba(255,255,255,.04);border:1px solid var(--paper-edge);border-radius:14px;padding:14px 16px;margin:8px 0 20px;max-height:230px;overflow:auto}
   .miss-list .m{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}
   .miss-list .m:last-child{border-bottom:none}
-  .miss-list .m .en{font-weight:700;color:var(--teal-lite)}
+  .miss-list .m .en{font-weight:700;color:var(--teal-lite);text-align:right}
+  .miss-list.review .m{align-items:flex-start}
+  .miss-list.review .m .q{color:var(--ink)}
+  .miss-list.review .m.no .q{color:#f0a98c}
+  .miss-list.review .m.ok .q{color:#86e5d1}
+  .miss-list.review .m .you{display:block;font-weight:400;font-size:12px;color:var(--ink-soft)}
   .done .btnrow{display:flex;gap:11px;flex-wrap:wrap}
   .done .btnrow .btn{min-width:130px}
 
@@ -1509,6 +1514,123 @@ const CARDS = [
   {lvl:"B1",cat:"meetings",de:"es sei denn / außer wenn",en:"unless",ex:"I won't go <b>unless</b> you come."},
   {lvl:"B1",cat:"meetings",de:"sonst / andernfalls",en:"otherwise",ex:"Hurry, <b>otherwise</b> we'll be late."},
   {lvl:"B2",cat:"time",de:"währenddessen / inzwischen",en:"meanwhile",ex:"<b>Meanwhile,</b> I'll wait here."},
+
+  // ================= NEU · Anspruchsvoller Wortschatz (C1/C2) =================
+  // --- Adjektive ---
+  {lvl:"C2",cat:"feelings",de:"schlüssig / überzeugend",en:"cogent",ex:"A <b>cogent</b> argument."},
+  {lvl:"C2",cat:"feelings",de:"angeblich / vorgeblich",en:"ostensible",ex:"The <b>ostensible</b> reason."},
+  {lvl:"C2",cat:"feelings",de:"ungeheuerlich / eklatant",en:"egregious",ex:"An <b>egregious</b> error."},
+  {lvl:"C1",cat:"feelings",de:"harmlos / unbedenklich",en:"innocuous",ex:"An <b>innocuous</b> remark."},
+  {lvl:"C2",cat:"feelings",de:"kurzlebig / flüchtig",en:"ephemeral",ex:"<b>Ephemeral</b> fame."},
+  {lvl:"C1",cat:"work",de:"durchdringend / allgegenwärtig",en:"pervasive",ex:"A <b>pervasive</b> influence."},
+  {lvl:"C2",cat:"feelings",de:"dürftig / schwach (Verbindung)",en:"tenuous",ex:"A <b>tenuous</b> link."},
+  {lvl:"C2",cat:"work",de:"falsch / unecht / fadenscheinig",en:"spurious",ex:"A <b>spurious</b> claim."},
+  {lvl:"C1",cat:"feelings",de:"versehentlich / unbeabsichtigt",en:"inadvertent",ex:"An <b>inadvertent</b> mistake."},
+  {lvl:"C1",cat:"feelings",de:"vorbildlich / beispielhaft",en:"exemplary",ex:"<b>Exemplary</b> behaviour."},
+  {lvl:"C2",cat:"feelings",de:"mühsam / beschwerlich",en:"arduous",ex:"An <b>arduous</b> journey."},
+  {lvl:"C1",cat:"feelings",de:"entmutigend / einschüchternd",en:"daunting",ex:"A <b>daunting</b> task."},
+  {lvl:"C2",cat:"feelings",de:"wortkarg / lakonisch",en:"laconic",ex:"A <b>laconic</b> reply."},
+  {lvl:"C2",cat:"work",de:"überflüssig",en:"superfluous",ex:"<b>Superfluous</b> detail."},
+  {lvl:"C2",cat:"feelings",de:"gewissenhaft / peinlich genau",en:"scrupulous",ex:"<b>Scrupulous</b> honesty."},
+  {lvl:"C2",cat:"feelings",de:"skrupellos / gewissenlos",en:"unscrupulous",ex:"An <b>unscrupulous</b> dealer."},
+  {lvl:"C1",cat:"feelings",de:"offen / freimütig",en:"candid",ex:"A <b>candid</b> opinion."},
+  {lvl:"C1",cat:"feelings",de:"diskret / verschwiegen",en:"discreet",ex:"Be <b>discreet</b> about it.",note:"<strong>Nicht:</strong> „discrete“ = getrennt/einzeln."},
+  {lvl:"C2",cat:"work",de:"wesenseigen / innewohnend",en:"intrinsic",ex:"<b>Intrinsic</b> value."},
+  {lvl:"C2",cat:"work",de:"hervorstechend / wesentlich",en:"salient",ex:"The <b>salient</b> points."},
+  {lvl:"C2",cat:"work",de:"förderlich / dienlich",en:"conducive",ex:"An atmosphere <b>conducive</b> to learning."},
+  {lvl:"C1",cat:"work",de:"schädlich / nachteilig",en:"detrimental",ex:"<b>Detrimental</b> to health."},
+  {lvl:"C2",cat:"feelings",de:"überzeugt / standhaft",en:"staunch",ex:"A <b>staunch</b> supporter."},
+  {lvl:"C1",cat:"feelings",de:"geschickt / versiert",en:"adept",ex:"<b>Adept</b> at negotiation."},
+  {lvl:"C2",cat:"feelings",de:"unfähig / ungeschickt",en:"inept",ex:"<b>Inept</b> handling of the crisis."},
+  {lvl:"C2",cat:"feelings",de:"umsichtig / besonnen",en:"circumspect",ex:"A <b>circumspect</b> approach."},
+  {lvl:"C2",cat:"feelings",de:"fleißig / emsig",en:"assiduous",ex:"<b>Assiduous</b> effort paid off."},
+  {lvl:"C2",cat:"feelings",de:"weit verbreitet / grassierend",en:"rife",ex:"Rumours were <b>rife</b>."},
+
+  // --- Substantive ---
+  {lvl:"C1",cat:"feelings",de:"die Widerstandsfähigkeit / Belastbarkeit",en:"resilience",ex:"Emotional <b>resilience</b>."},
+  {lvl:"C2",cat:"feelings",de:"die innere Stärke / Standhaftigkeit",en:"fortitude",ex:"She showed great <b>fortitude</b>."},
+  {lvl:"C2",cat:"work",de:"der Scharfsinn / das Urteilsvermögen",en:"acumen",ex:"Sharp business <b>acumen</b>."},
+  {lvl:"C2",cat:"meetings",de:"der Kernpunkt / springende Punkt",en:"crux",ex:"The <b>crux</b> of the matter."},
+  {lvl:"C1",cat:"meetings",de:"die Kernaussage / das Wesentliche",en:"gist",ex:"I got the <b>gist</b> of it."},
+  {lvl:"C1",cat:"work",de:"die Begründung / der Grundgedanke",en:"rationale",ex:"The <b>rationale</b> behind the decision."},
+  {lvl:"C1",cat:"meetings",de:"die Prämisse / Voraussetzung",en:"premise",ex:"A false <b>premise</b>."},
+  {lvl:"C2",cat:"work",de:"das Paradigma / Denkmuster",en:"paradigm",ex:"A <b>paradigm</b> shift."},
+  {lvl:"C1",cat:"work",de:"die Ungleichheit / Diskrepanz",en:"disparity",ex:"Income <b>disparity</b>."},
+  {lvl:"C1",cat:"work",de:"die Anomalie / Abweichung",en:"anomaly",ex:"A statistical <b>anomaly</b>."},
+  {lvl:"C2",cat:"work",de:"die Fülle / der Überfluss",en:"plethora",ex:"A <b>plethora</b> of options."},
+  {lvl:"C1",cat:"law",de:"das Schlupfloch",en:"loophole",ex:"A legal <b>loophole</b>."},
+  {lvl:"C1",cat:"feelings",de:"der Sündenbock",en:"scapegoat",ex:"A convenient <b>scapegoat</b>."},
+  {lvl:"C1",cat:"work",de:"das Bestreben / Unterfangen",en:"endeavor",ex:"A worthwhile <b>endeavor</b>."},
+  {lvl:"C1",cat:"work",de:"der Fallstrick / die Tücke",en:"pitfall",ex:"Avoid the common <b>pitfalls</b>."},
+  {lvl:"C1",cat:"meetings",de:"der Befürworter / Verfechter",en:"proponent",ex:"A <b>proponent</b> of reform."},
+  {lvl:"C2",cat:"feelings",de:"der Widersacher / Gegner",en:"adversary",ex:"A formidable <b>adversary</b>."},
+  {lvl:"C2",cat:"work",de:"der unerwartete Gewinn / Glücksfall",en:"windfall",ex:"A tax <b>windfall</b>."},
+
+  // --- Verben ---
+  {lvl:"C2",cat:"work",de:"einschränken / kürzen",en:"to curtail",ex:"<b>Curtail</b> spending."},
+  {lvl:"C1",cat:"feelings",de:"verschärfen / verschlimmern",en:"to exacerbate",ex:"This only <b>exacerbates</b> the issue."},
+  {lvl:"C2",cat:"work",de:"stärken / untermauern",en:"to bolster",ex:"Measures to <b>bolster</b> confidence."},
+  {lvl:"C1",cat:"work",de:"behindern / beeinträchtigen",en:"to hamper",ex:"Rain <b>hampered</b> the search."},
+  {lvl:"C2",cat:"work",de:"behindern / erschweren",en:"to impede",ex:"Bureaucracy <b>impedes</b> progress."},
+  {lvl:"C2",cat:"feelings",de:"vereiteln / durchkreuzen",en:"to thwart",ex:"They <b>thwarted</b> the plan."},
+  {lvl:"C1",cat:"feelings",de:"abschrecken / abhalten",en:"to deter",ex:"Cameras <b>deter</b> crime."},
+  {lvl:"C1",cat:"work",de:"mit sich bringen / beinhalten",en:"to entail",ex:"What does the job <b>entail</b>?"},
+  {lvl:"C1",cat:"work",de:"rechtfertigen / erfordern",en:"to warrant",ex:"It doesn't <b>warrant</b> concern."},
+  {lvl:"C1",cat:"meetings",de:"zugestehen / einräumen",en:"to concede",ex:"I <b>concede</b> that point."},
+  {lvl:"C1",cat:"meetings",de:"wiederholen / bekräftigen",en:"to reiterate",ex:"Let me <b>reiterate</b> the key point."},
+  {lvl:"C2",cat:"meetings",de:"widerlegen",en:"to refute",ex:"He <b>refuted</b> the claim."},
+  {lvl:"C2",cat:"law",de:"bestätigen / erhärten",en:"to corroborate",ex:"Evidence to <b>corroborate</b> the story."},
+  {lvl:"C1",cat:"feelings",de:"nachdenken über / erwägen",en:"to contemplate",ex:"She <b>contemplated</b> her options."},
+  {lvl:"C1",cat:"feelings",de:"aufschieben / zaudern",en:"to procrastinate",ex:"Stop <b>procrastinating</b>."},
+  {lvl:"C2",cat:"work",de:"aufgeben / abtreten",en:"to relinquish",ex:"He <b>relinquished</b> control."},
+  {lvl:"C2",cat:"feelings",de:"gutheißen / dulden",en:"to condone",ex:"I don't <b>condone</b> violence."},
+  {lvl:"C2",cat:"work",de:"tadeln / rügen",en:"to reprimand",ex:"He was <b>reprimanded</b> by his boss."},
+  {lvl:"C2",cat:"law",de:"anstiften / auslösen",en:"to instigate",ex:"They <b>instigated</b> a riot."},
+  {lvl:"C2",cat:"work",de:"aufrechterhalten / verewigen",en:"to perpetuate",ex:"This <b>perpetuates</b> a myth."},
+
+  // ================= NEU · Büro & Arbeitsalltag =================
+  {lvl:"B2",cat:"tech",de:"die Tabellenkalkulation / Tabelle",en:"spreadsheet",ex:"Update the <b>spreadsheet</b>."},
+  {lvl:"B2",cat:"work",de:"die Folie (Präsentation)",en:"slide",ex:"The next <b>slide</b> shows the figures."},
+  {lvl:"B2",cat:"email",de:"der Anhang / die Anlage",en:"attachment",ex:"Please see the <b>attachment</b>."},
+  {lvl:"B2",cat:"work",de:"der Entwurf",en:"draft",ex:"Here's a first <b>draft</b> of the report."},
+  {lvl:"B2",cat:"work",de:"die Gliederung / der Überblick",en:"outline",ex:"Send me an <b>outline</b> first."},
+  {lvl:"B2",cat:"work",de:"die Checkliste",en:"checklist",ex:"Go through the <b>checklist</b>."},
+  {lvl:"B2",cat:"work",de:"die Arbeitslast / das Pensum",en:"workload",ex:"A heavy <b>workload</b> this week."},
+  {lvl:"B2",cat:"work",de:"der Arbeitsablauf",en:"workflow",ex:"Let's streamline the <b>workflow</b>."},
+  {lvl:"B2",cat:"work",de:"die Einarbeitung / das Onboarding",en:"onboarding",ex:"The <b>onboarding</b> takes a week."},
+  {lvl:"B2",cat:"work",de:"die Schicht",en:"shift",ex:"I work the early <b>shift</b>."},
+  {lvl:"C1",cat:"work",de:"die Gehaltsabrechnung / Lohnbuchhaltung",en:"payroll",ex:"She runs the <b>payroll</b>."},
+  {lvl:"C1",cat:"work",de:"die Erstattung / Rückerstattung",en:"reimbursement",ex:"Travel <b>reimbursement</b> takes two weeks."},
+  {lvl:"B1",cat:"work",de:"die Quittung / der Beleg",en:"receipt",ex:"Keep the <b>receipt</b>."},
+  {lvl:"B2",cat:"work",de:"das Angebot / der Kostenvoranschlag",en:"quote",ex:"Can you send a <b>quote</b>?"},
+  {lvl:"B2",cat:"work",de:"die (kurze) Zusammenfassung",en:"recap",ex:"A quick <b>recap</b> before we start."},
+  {lvl:"C1",cat:"work",de:"die Kernbotschaft / das Fazit",en:"takeaway",ex:"The key <b>takeaway</b> is trust."},
+  {lvl:"C1",cat:"work",de:"die Kapazität (Zeit/Ressourcen)",en:"bandwidth",ex:"I don't have the <b>bandwidth</b> today."},
+  {lvl:"B2",cat:"work",de:"der Rückstand / die offene Aufgabenliste",en:"backlog",ex:"Let's clear the <b>backlog</b>."},
+  {lvl:"B2",cat:"work",de:"der Projektauftakt / das Kick-off",en:"kickoff",ex:"The project <b>kickoff</b> is on Monday."},
+  {lvl:"C1",cat:"work",de:"der Personalbestand / die Mitarbeiterzahl",en:"headcount",ex:"We plan to grow the <b>headcount</b>."},
+  {lvl:"B2",cat:"work",de:"die Zusatzleistung / das Extra",en:"perk",ex:"Free lunch is a nice <b>perk</b>."},
+  {lvl:"B2",cat:"work",de:"die (Sozial-)Leistungen",en:"benefits",ex:"The job has great <b>benefits</b>."},
+  {lvl:"B2",cat:"work",de:"der Bewerber / die Bewerberin",en:"applicant",ex:"A strong <b>applicant</b> for the role."},
+  {lvl:"B2",cat:"work",de:"das Anschreiben (Bewerbung)",en:"cover letter",ex:"Attach a short <b>cover letter</b>."},
+  {lvl:"C1",cat:"work",de:"die Kündigungsfrist",en:"notice period",ex:"A three-month <b>notice period</b>."},
+  {lvl:"B2",cat:"work",de:"der Krankenstand / die Krankmeldung",en:"sick leave",ex:"He's on <b>sick leave</b> this week."},
+  {lvl:"B2",cat:"work",de:"der Jahresurlaub / Urlaubsanspruch",en:"annual leave",ex:"I'm on <b>annual leave</b> next week."},
+  {lvl:"B2",cat:"work",de:"abwesend / nicht im Büro",en:"out of office",ex:"I'm <b>out of office</b> until Monday."},
+  {lvl:"B1",cat:"work",de:"so schnell wie möglich",en:"ASAP",ex:"I need this <b>ASAP</b>."},
+  {lvl:"B2",cat:"work",de:"delegieren / übertragen",en:"to delegate",ex:"<b>Delegate</b> the routine tasks."},
+  {lvl:"B2",cat:"work",de:"eskalieren / weiterleiten (an Vorgesetzte)",en:"to escalate",ex:"Let's <b>escalate</b> this to management."},
+  {lvl:"B2",cat:"work",de:"verschieben / umplanen",en:"to reschedule",ex:"Can we <b>reschedule</b> the call?"},
+  {lvl:"B2",cat:"work",de:"verschieben / aufschieben",en:"to postpone",ex:"They <b>postponed</b> the launch."},
+  {lvl:"B2",cat:"work",de:"teilnehmen (an)",en:"to attend",ex:"I can't <b>attend</b> the meeting."},
+  {lvl:"B2",cat:"work",de:"informieren / einweisen",en:"to brief",ex:"<b>Brief</b> the team before we start."},
+  {lvl:"B2",cat:"work",de:"umsetzen / implementieren",en:"to implement",ex:"We'll <b>implement</b> the changes next sprint."},
+  {lvl:"B2",cat:"work",de:"einführen / ausrollen",en:"to roll out",ex:"We <b>roll out</b> the update on Friday."},
+  {lvl:"C1",cat:"work",de:"freigeben / genehmigen",en:"to sign off",ex:"The manager has to <b>sign off</b> on it."},
+  {lvl:"B2",cat:"work",de:"auslagern / outsourcen",en:"to outsource",ex:"They <b>outsource</b> customer support."},
+  {lvl:"B2",cat:"work",de:"sich abstimmen / kurz austauschen",en:"to sync up",ex:"Let's <b>sync up</b> tomorrow morning."},
+  {lvl:"C1",cat:"work",de:"einbeziehen / mit ins Boot holen",en:"to loop in",ex:"Please <b>loop</b> me <b>in</b> on that thread."},
+  {lvl:"C1",cat:"work",de:"(eine Sitzung) leiten",en:"to chair",ex:"She'll <b>chair</b> the meeting."},
 ];
 const CAT_LABELS = {
   all:"Alle", smalltalk:"Smalltalk", basics:"Grundwörter", work:"Arbeit", meetings:"Meetings", email:"E-Mail",
@@ -1774,6 +1896,28 @@ const IPA_DICT = {
   "subtle":"ˈsʌtəl","blatant":"ˈbleɪtənt","inherent":"ɪnˈhɪərənt","prevalent":"ˈprevələnt","moreover":"mɔːrˈəʊvə",
   "furthermore":"ˌfɜːðəˈmɔː","hence":"hens","albeit":"ɔːlˈbiːɪt","although":"ɔːlˈðəʊ","unless":"ənˈles",
   "otherwise":"ˈʌðəwaɪz","meanwhile":"ˈmiːnwaɪl",
+  // NEU · anspruchsvoller Wortschatz
+  "cogent":"ˈkəʊdʒənt","ostensible":"ɒsˈtensɪbəl","egregious":"ɪˈɡriːdʒəs","innocuous":"ɪˈnɒkjuəs","ephemeral":"ɪˈfemərəl",
+  "pervasive":"pəˈveɪsɪv","tenuous":"ˈtenjuəs","spurious":"ˈspjʊəriəs","inadvertent":"ˌɪnədˈvɜːtənt","exemplary":"ɪɡˈzempləri",
+  "arduous":"ˈɑːdjuəs","daunting":"ˈdɔːntɪŋ","laconic":"ləˈkɒnɪk","superfluous":"suːˈpɜːfluəs","scrupulous":"ˈskruːpjʊləs",
+  "unscrupulous":"ʌnˈskruːpjʊləs","candid":"ˈkændɪd","discreet":"dɪˈskriːt","intrinsic":"ɪnˈtrɪnsɪk","salient":"ˈseɪliənt",
+  "conducive":"kənˈdjuːsɪv","detrimental":"ˌdetrɪˈmentəl","staunch":"stɔːntʃ","adept":"əˈdept","inept":"ɪˈnept",
+  "circumspect":"ˈsɜːkəmspekt","assiduous":"əˈsɪdjuəs","rife":"raɪf","resilience":"rɪˈzɪliəns","fortitude":"ˈfɔːtɪtjuːd",
+  "acumen":"ˈækjʊmən","crux":"krʌks","gist":"dʒɪst","rationale":"ˌræʃəˈnɑːl","premise":"ˈpremɪs","paradigm":"ˈpærədaɪm",
+  "disparity":"dɪˈspærəti","anomaly":"əˈnɒməli","plethora":"ˈpleθərə","loophole":"ˈluːphəʊl","scapegoat":"ˈskeɪpɡəʊt",
+  "endeavor":"ɪnˈdevə","pitfall":"ˈpɪtfɔːl","proponent":"prəˈpəʊnənt","adversary":"ˈædvəsəri","windfall":"ˈwɪndfɔːl",
+  "curtail":"kɜːˈteɪl","exacerbate":"ɪɡˈzæsəbeɪt","bolster":"ˈbəʊlstə","hamper":"ˈhæmpə","impede":"ɪmˈpiːd",
+  "thwart":"θwɔːt","deter":"dɪˈtɜː","entail":"ɪnˈteɪl","warrant":"ˈwɒrənt","concede":"kənˈsiːd","reiterate":"riˈɪtəreɪt",
+  "refute":"rɪˈfjuːt","corroborate":"kəˈrɒbəreɪt","contemplate":"ˈkɒntəmpleɪt","procrastinate":"prəˈkræstɪneɪt",
+  "relinquish":"rɪˈlɪŋkwɪʃ","condone":"kənˈdəʊn","reprimand":"ˈreprɪmɑːnd","instigate":"ˈɪnstɪɡeɪt","perpetuate":"pəˈpetʃueɪt",
+  // NEU · Büro & Arbeitsalltag
+  "spreadsheet":"ˈspredʃiːt","slide":"slaɪd","attachment":"əˈtætʃmənt","draft":"drɑːft","outline":"ˈaʊtlaɪn",
+  "checklist":"ˈtʃeklɪst","workload":"ˈwɜːkləʊd","workflow":"ˈwɜːkfləʊ","onboarding":"ˈɒnbɔːdɪŋ","shift":"ʃɪft",
+  "payroll":"ˈpeɪrəʊl","reimbursement":"ˌriːɪmˈbɜːsmənt","receipt":"rɪˈsiːt","quote":"kwəʊt","recap":"ˈriːkæp",
+  "takeaway":"ˈteɪkəweɪ","bandwidth":"ˈbændwɪdθ","backlog":"ˈbæklɒɡ","kickoff":"ˈkɪkɒf","headcount":"ˈhedkaʊnt",
+  "perk":"pɜːk","benefits":"ˈbenɪfɪts","applicant":"ˈæplɪkənt","annual":"ˈænjuəl","leave":"liːv","delegate":"ˈdelɪɡeɪt",
+  "escalate":"ˈeskəleɪt","reschedule":"ˌriːˈʃedjuːl","postpone":"pəˈspəʊn","attend":"əˈtend","brief":"briːf",
+  "implement":"ˈɪmplɪment","outsource":"ˈaʊtsɔːs",
 };
 function ipaFallbackWord(w){
   // very rough grapheme->IPA (approximate; marked with ≈)
@@ -1806,8 +1950,8 @@ function ipaFor(en){
 // nur IPA-Lautschrift (keine vereinfachte Umschrift)
 function pronLine(en){
   const ip=ipaFor(en);
-  if(!ip) return "";
-  return `<div class="respell-back">IPA <b>${ip.approx?"≈ ":""}/${ip.text}/</b> <span style="opacity:.5">· 🔊 Audio</span></div>`;
+  if(!ip || ip.approx) return ""; // nur gesicherte IPA anzeigen (kein ≈)
+  return `<div class="respell-back">IPA <b>/${ip.text}/</b> <span style="opacity:.5">· 🔊 Audio</span></div>`;
 }
 
 // simplified German-style respelling (reading aid; audio is the accurate source)
@@ -2320,6 +2464,48 @@ const SYNONYMS = {
   prevalent:"widespread, common, rife", moreover:"furthermore, besides, in addition", furthermore:"moreover, additionally, besides",
   hence:"therefore, thus, consequently", although:"though, even though, while", otherwise:"or else, if not, alternatively",
   meanwhile:"in the meantime, meantime, concurrently",
+  // Anspruchsvoller Wortschatz
+  cogent:"convincing, compelling, persuasive", ostensible:"apparent, supposed, purported",
+  egregious:"flagrant, blatant, shocking", innocuous:"harmless, inoffensive, benign",
+  ephemeral:"fleeting, transient, short-lived", pervasive:"widespread, prevalent, ubiquitous",
+  tenuous:"weak, flimsy, slight", spurious:"false, bogus, fake", inadvertent:"unintentional, accidental, unwitting",
+  exemplary:"outstanding, model, commendable", arduous:"gruelling, strenuous, taxing",
+  daunting:"intimidating, formidable, overwhelming", laconic:"terse, curt, succinct",
+  superfluous:"unnecessary, redundant, excess", scrupulous:"meticulous, conscientious, thorough",
+  unscrupulous:"unprincipled, ruthless, dishonest", candid:"frank, honest, forthright",
+  discreet:"tactful, prudent, careful", intrinsic:"inherent, innate, fundamental",
+  salient:"key, prominent, notable", conducive:"favourable, helpful, beneficial",
+  detrimental:"harmful, damaging, adverse", staunch:"loyal, steadfast, firm",
+  adept:"skilled, proficient, expert", inept:"incompetent, clumsy, bungling",
+  circumspect:"cautious, wary, prudent", assiduous:"diligent, hardworking, industrious",
+  rife:"widespread, rampant, prevalent", resilience:"toughness, adaptability, grit",
+  fortitude:"courage, resolve, grit", acumen:"insight, shrewdness, judgment",
+  crux:"heart, core, essence", gist:"essence, main point, substance", rationale:"reasoning, justification, basis",
+  premise:"assumption, proposition, basis", paradigm:"model, framework, pattern",
+  disparity:"gap, inequality, imbalance", anomaly:"irregularity, aberration, deviation",
+  plethora:"abundance, excess, surplus", loophole:"gap, ambiguity, escape",
+  scapegoat:"fall guy, whipping boy", endeavor:"effort, undertaking, venture",
+  pitfall:"trap, hazard, snag", proponent:"advocate, supporter, champion",
+  adversary:"opponent, rival, foe", windfall:"bonanza, jackpot, bonus",
+  curtail:"cut, reduce, restrict", exacerbate:"worsen, aggravate, intensify",
+  bolster:"strengthen, reinforce, boost", hamper:"hinder, impede, obstruct",
+  impede:"hinder, obstruct, block", thwart:"foil, frustrate, block",
+  deter:"discourage, dissuade, put off", entail:"involve, require, necessitate",
+  warrant:"justify, merit, call for", concede:"admit, acknowledge, grant",
+  reiterate:"repeat, restate, stress", refute:"disprove, rebut, debunk",
+  corroborate:"confirm, verify, back up", contemplate:"consider, ponder, mull over",
+  procrastinate:"delay, dawdle, put off", relinquish:"surrender, give up, cede",
+  condone:"overlook, excuse, sanction", reprimand:"rebuke, admonish, scold",
+  instigate:"provoke, incite, trigger", perpetuate:"sustain, maintain, prolong",
+  // Büro & Arbeitsalltag
+  draft:"rough version, sketch, outline", outline:"summary, framework, overview",
+  workload:"burden, tasks, load", recap:"summary, rundown, review", takeaway:"lesson, conclusion, key point",
+  backlog:"pileup, queue, arrears", perk:"benefit, bonus, extra", benefits:"perks, package, entitlements",
+  applicant:"candidate, prospect, contender", delegate:"assign, entrust, hand over",
+  escalate:"intensify, step up, refer up", postpone:"delay, put off, defer",
+  reschedule:"rearrange, move, postpone", attend:"go to, be present at, take part in",
+  brief:"inform, update, fill in", implement:"carry out, execute, put in place",
+  outsource:"contract out, subcontract, farm out", quote:"estimate, quotation, price",
 };
 function synKey(en){ return (en||"").split("/")[0].replace(/\([^)]*\)/g,"").replace(/^(to|the|a|an)\s+/i,"").trim().toLowerCase().replace(/[^a-z\- ]/g,"").trim(); }
 function synonymsHTML(en){
@@ -2467,19 +2653,24 @@ function startQuiz(){
   const pool=activeIndices(); if(!pool.length) return;
   const size=Math.min(12,pool.length);
   gram=null;
-  quiz={ items:shuffle(pool).slice(0,size), i:0, wrong:[], checked:false, correct:0, typed:"", dir:direction };
+  quiz={ items:shuffle(pool).slice(0,size), i:0, wrong:[], log:[], checked:false, correct:0, typed:"", dir:direction };
   render();
+}
+// Ergebnis-Übersicht: zeigt jede Frage nochmal mit richtiger Antwort + ✓/✗
+function reviewList(log){
+  if(!log || !log.length) return "";
+  return `<div class="miss-list review">${log.map(w=>`<div class="m ${w.ok?'ok':'no'}"><span class="q">${w.ok?'✓':'✗'} ${w.prompt}</span><span class="en">${w.answer}${(!w.ok&&w.typed)?` <span class="you">du: „${w.typed}"</span>`:''}</span></div>`).join("")}</div>`;
 }
 function renderQuiz(){
   const main=document.getElementById("main");
   if(quiz.i>=quiz.items.length){
     const n=quiz.items.length, sc=Math.round(quiz.correct/n*100);
-    const missHTML = quiz.wrong.length ? `<div class="miss-list">${quiz.wrong.map(w=>`<div class="m"><span>${w.prompt}</span><span class="en">${w.answer}</span></div>`).join("")}</div>` : `<p>Perfekt — alles richtig! 🎉</p>`;
+    const reviewHTML = reviewList(quiz.log);
     main.innerHTML=`<div class="done">
       <div class="k-lbl" style="color:var(--ink-soft);letter-spacing:.1em">Prüfungsergebnis</div>
-      <div class="score-ring" style="color:${sc>=80?'var(--teal-deep)':sc>=50?'var(--amber)':'var(--rust)'}">${sc}%</div>
-      <p>${quiz.correct} von ${n} richtig.</p>
-      ${missHTML}
+      <div class="score-ring" style="color:${sc>=80?'var(--teal-lite)':sc>=50?'var(--amber)':'var(--rust)'}">${sc}%</div>
+      <p>${quiz.correct} von ${n} richtig.${quiz.correct===n?' 🎉':''}</p>
+      ${reviewHTML}
       <div class="btnrow">
         ${quiz.wrong.length?`<button class="btn again" id="qRetry">Fehler üben (${quiz.wrong.length})</button>`:""}
         <button class="btn reveal" id="qNew">Neue Prüfung</button>
@@ -2488,7 +2679,7 @@ function renderQuiz(){
     document.getElementById("qNew").onclick=()=>startQuiz();
     document.getElementById("qEnd").onclick=()=>{ quiz=null; buildQueue(); render(); };
     const rt=document.getElementById("qRetry");
-    if(rt) rt.onclick=()=>{ quiz={items:quiz.wrong.map(w=>w.idx), i:0, wrong:[], checked:false, correct:0, typed:"", dir:quiz.dir}; render(); };
+    if(rt) rt.onclick=()=>{ quiz={items:quiz.wrong.map(w=>w.idx), i:0, wrong:[], log:[], checked:false, correct:0, typed:"", dir:quiz.dir}; render(); };
     return;
   }
   const c=allCards()[quiz.items[quiz.i]];
@@ -2524,8 +2715,11 @@ async function quizCheck(){
   const idx=quiz.items[quiz.i]; const c=allCards()[idx]; const inp=document.getElementById("quizInput");
   quiz.typed=inp?inp.value.trim():""; quiz.lastOK=isCorrectDir(c,quiz.typed,quiz.dir); quiz.checked=true;
   const box=ensureBox(keyOf(idx)); box.seen++;
+  const qPrompt = c.cloze ? c.de : (quiz.dir==="en2de"?c.en:c.de);
+  const qAnswer = c.cloze ? c.en : (quiz.dir==="en2de"?c.de:c.en);
+  quiz.log.push({prompt:qPrompt, answer:qAnswer, ok:quiz.lastOK, typed:quiz.typed}); // für die Ergebnis-Übersicht
   if(quiz.lastOK){ quiz.correct++; box.b=Math.min(3,box.b+1); stats.correct++; stats.streak++; if(stats.streak>stats.best)stats.best=stats.streak; }
-  else{ box.b=1; box.wrong++; stats.streak=0; quiz.wrong.push(c.cloze?{idx, prompt:c.de, answer:c.en}:{idx, prompt:(quiz.dir==="en2de"?c.en:c.de), answer:(quiz.dir==="en2de"?c.de:c.en)}); }
+  else{ box.b=1; box.wrong++; stats.streak=0; quiz.wrong.push({idx, prompt:qPrompt, answer:qAnswer}); }
   stats.reviewed++; registerActivity();
   await saveBoxes(); await saveStats();
   render();
@@ -2564,7 +2758,7 @@ function startGram(){
     const form=GRAM_FORMS[Math.floor(Math.random()*GRAM_FORMS.length)];
     items.push({gv, form, answer:f[form.key], forms:f});
   }
-  gram={items, i:0, checked:false, correct:0, wrong:[], typed:"", lastOK:false};
+  gram={items, i:0, checked:false, correct:0, wrong:[], log:[], typed:"", lastOK:false};
   render();
 }
 function verbTable(f, highlight){
@@ -2580,12 +2774,12 @@ function renderGram(){
   const main=document.getElementById("main");
   if(gram.i>=gram.items.length){
     const n=gram.items.length, sc=Math.round(gram.correct/n*100);
-    const missHTML = gram.wrong.length ? `<div class="miss-list">${gram.wrong.map(w=>`<div class="m"><span>to ${w.base} · ${w.q}</span><span class="en">${w.answer}</span></div>`).join("")}</div>` : `<p>Perfekt — alle Formen richtig! 🎉</p>`;
+    const reviewHTML = reviewList(gram.log);
     main.innerHTML=`<div class="done">
       <div class="k-lbl" style="color:var(--ink-soft);letter-spacing:.1em">Grammatik-Ergebnis</div>
-      <div class="score-ring" style="color:${sc>=80?'var(--teal-deep)':sc>=50?'var(--amber)':'var(--rust)'}">${sc}%</div>
-      <p>${gram.correct} von ${n} richtig.</p>
-      ${missHTML}
+      <div class="score-ring" style="color:${sc>=80?'var(--teal-lite)':sc>=50?'var(--amber)':'var(--rust)'}">${sc}%</div>
+      <p>${gram.correct} von ${n} richtig.${gram.correct===n?' 🎉':''}</p>
+      ${reviewHTML}
       <div class="btnrow">
         ${gram.wrong.length?`<button class="btn again" id="gRetry">Fehler üben (${gram.wrong.length})</button>`:""}
         <button class="btn reveal" id="gNew">Neue Runde</button>
@@ -2594,7 +2788,7 @@ function renderGram(){
     document.getElementById("gNew").onclick=()=>startGram();
     document.getElementById("gEnd").onclick=()=>{ gram=null; buildQueue(); render(); };
     const rt=document.getElementById("gRetry");
-    if(rt) rt.onclick=()=>{ const items=gram.wrong.map(w=>({gv:{v:w.base,de:w.de}, form:{key:w.key,q:w.q,tip:w.tip}, answer:w.answer, forms:w.forms})); gram={items, i:0, checked:false, correct:0, wrong:[], typed:"", lastOK:false}; render(); };
+    if(rt) rt.onclick=()=>{ const items=gram.wrong.map(w=>({gv:{v:w.base,de:w.de}, form:{key:w.key,q:w.q,tip:w.tip}, answer:w.answer, forms:w.forms})); gram={items, i:0, checked:false, correct:0, wrong:[], log:[], typed:"", lastOK:false}; render(); };
     return;
   }
   const it=gram.items[gram.i]; const f=it.forms;
@@ -2622,6 +2816,7 @@ function renderGram(){
 async function gramCheck(){
   const it=gram.items[gram.i]; const inp=document.getElementById("gramInput");
   gram.typed=inp?inp.value.trim():""; gram.lastOK=gramMatch(it.answer, gram.typed); gram.checked=true;
+  gram.log.push({prompt:`to ${it.gv.v} · ${it.form.q}`, answer:it.answer, ok:gram.lastOK, typed:gram.typed});
   if(gram.lastOK){ gram.correct++; stats.correct++; stats.streak++; if(stats.streak>stats.best)stats.best=stats.streak; }
   else{ stats.streak=0; gram.wrong.push({base:it.gv.v, de:it.gv.de, q:it.form.q, key:it.form.key, tip:it.form.tip, answer:it.answer, forms:it.forms}); }
   stats.reviewed++; registerActivity();
