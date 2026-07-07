@@ -48,7 +48,18 @@
   .info-btn svg{width:17px;height:17px}
   .info-btn:hover{border-color:var(--teal);box-shadow:0 0 0 1.5px var(--teal);color:var(--teal-lite)}
   .streak-pill{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--stroke);border-radius:99px;padding:9px 15px;font-weight:600;font-size:14px;flex-shrink:0}
-  .streak-pill .fire{font-size:16px}
+  .streak-pill .fire{width:15px;height:15px;color:var(--amber);flex-shrink:0}
+  /* Inline-Icon-Größen (Stroke-Icons statt Emojis) */
+  .tool{display:inline-flex;align-items:center;gap:8px}
+  .tool svg{width:15px;height:15px;flex-shrink:0}
+  .tag svg,.dir-badge svg{width:11px;height:11px;vertical-align:-1.5px;margin-right:3px}
+  .say-btn{display:inline-flex;align-items:center;gap:6px}
+  .say-btn svg{width:13px;height:13px;flex-shrink:0}
+  .note svg{width:12px;height:12px;vertical-align:-2px;margin-right:2px}
+  .respell-back svg{width:11px;height:11px;vertical-align:-1.5px}
+  .chip svg{width:12px;height:12px;vertical-align:-2px;margin-right:3px}
+  .user-edit svg{width:11px;height:11px;vertical-align:-1.5px;margin-right:3px}
+  .kpi .k-lbl svg{width:10px;height:10px;vertical-align:-1px;color:var(--rust)}
   /* Info-Modal */
   .info-title{display:flex;align-items:center;gap:11px}
   .info-list{max-height:66vh;overflow-y:auto;margin:2px -4px 16px;padding:2px 4px}
@@ -259,7 +270,7 @@
     </div>
     <div class="head-right">
       <button class="info-btn" id="infoBtn" title="Was ist das? / Erklärung" aria-label="Info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>
-      <div class="streak-pill"><span class="fire">🔥</span><span id="daysStreak">0</span>&nbsp;<span style="color:var(--muted);font-weight:500">Tage</span></div>
+      <div class="streak-pill"><svg class="fire" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg><span id="daysStreak">0</span>&nbsp;<span style="color:var(--muted);font-weight:500">Tage</span></div>
     </div>
   </header>
 
@@ -292,10 +303,10 @@
   </div>
 
   <div class="tools">
-    <button class="tool primary" id="quizBtn">🎯 Prüfung starten</button>
-    <button class="tool" id="gramBtn">🧩 Grammatik-Übung</button>
-    <button class="tool" id="tenseBtn">📘 Zeitformen erklärt</button>
-    <button class="tool" id="addBtn">＋ Eigene Karte</button>
+    <button class="tool primary" id="quizBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Prüfung starten</button>
+    <button class="tool" id="gramBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.214 3.214c.446.166.855.497.925.968a.979.979 0 0 1-.276.837l-1.61 1.61a2.404 2.404 0 0 1-1.705.707 2.402 2.402 0 0 1-1.704-.706l-1.568-1.568a1.026 1.026 0 0 0-.877-.29c-.493.074-.84.504-1.02.968a2.5 2.5 0 1 1-3.237-3.237c.464-.18.894-.527.967-1.02a1.026 1.026 0 0 0-.289-.877l-1.568-1.568A2.402 2.402 0 0 1 1.998 12c0-.617.236-1.234.706-1.704L4.23 8.77c.24-.24.581-.353.917-.303.515.077.877.528 1.073 1.01a2.5 2.5 0 1 0 3.259-3.259c-.482-.196-.933-.558-1.01-1.073-.05-.336.062-.676.303-.917l1.525-1.525A2.402 2.402 0 0 1 12 1.998c.617 0 1.234.236 1.704.706l1.568 1.568c.23.23.556.338.877.29.493-.074.84-.504 1.02-.968a2.5 2.5 0 1 1 3.237 3.237c-.464.18-.894.527-.967 1.02Z"/></svg>Grammatik-Übung</button>
+    <button class="tool" id="tenseBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Zeitformen erklärt</button>
+    <button class="tool" id="addBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Eigene Karte</button>
   </div>
 
   <div class="bar"><span id="progressFill" style="width:0%"></span></div>
@@ -2016,7 +2027,7 @@ function ipaFor(en){
 function pronLine(en){
   const ip=ipaFor(en);
   if(!ip || ip.approx) return ""; // nur gesicherte IPA anzeigen (kein ≈)
-  return `<div class="respell-back">IPA <b>/${ip.text}/</b> <span style="opacity:.5">· 🔊 Audio</span></div>`;
+  return `<div class="respell-back">IPA <b>/${ip.text}/</b> <span style="opacity:.5">· ${ICONS.volume} Audio</span></div>`;
 }
 
 // simplified German-style respelling (reading aid; audio is the accurate source)
@@ -2251,8 +2262,8 @@ function renderKPIs(){
   const tiles=[
     {v:`${mastered}/${total}`,l:"Gemeistert",sub:"aktuelle Auswahl",c:"var(--teal)"},
     {v:`${acc}%`,l:"Genauigkeit",sub:`${stats.reviewed} Antworten`,c:"var(--amber)"},
-    {v:`${stats.streak}`,l:"Serie 🔥",sub:`Rekord: ${stats.best}`,c:"var(--rust)"},
-    {v:`${stats.dayCount}/${goal}`,l:"Heute",sub: stats.dayCount>=goal?"Ziel erreicht ✅":"Tagesziel",c:"var(--violet)"},
+    {v:`${stats.streak}`,l:`Serie ${ICONS.flame}`,sub:`Rekord: ${stats.best}`,c:"var(--rust)"},
+    {v:`${stats.dayCount}/${goal}`,l:"Heute",sub: stats.dayCount>=goal?"Ziel erreicht ✓":"Tagesziel",c:"var(--violet)"},
   ];
   document.getElementById("kpis").innerHTML = tiles.map(t=>`<div class="kpi" style="--accent:${t.c}"><div class="k-val">${t.v}</div><div class="k-lbl">${t.l}</div><div class="k-sub">${t.sub}</div></div>`).join("");
   document.getElementById("daysStreak").textContent = stats.daysStreak||0;
@@ -2278,7 +2289,7 @@ function renderUsers(){
     b.onclick=()=>switchUser(u); b.ondblclick=(e)=>{e.stopPropagation();startRename(u,b);};
     el.appendChild(b);
   });
-  const edit=document.createElement("button"); edit.className="user-edit"; edit.textContent="✎ umbenennen";
+  const edit=document.createElement("button"); edit.className="user-edit"; edit.innerHTML=ICONS.pen+" umbenennen";
   edit.onclick=()=>{ const b=el.querySelector(".user.on"); if(b) startRename(profiles.active,b); };
   el.appendChild(edit);
 }
@@ -2306,18 +2317,18 @@ function renderCats(){
     return avail.has(k);
   });
   const dc=difficultCount();
-  const chip=(k,label,extra="")=>{ const b=document.createElement("button"); b.className="chip"+extra+(filter===k?" on":""); b.textContent=label; b.onclick=()=>{ filter=k; buildQueue(); render(); }; return b; };
+  const chip=(k,label,extra="")=>{ const b=document.createElement("button"); b.className="chip"+extra+(filter===k?" on":""); b.innerHTML=label; b.onclick=()=>{ filter=k; buildQueue(); render(); }; return b; };
   if(!catsOpen){
     // eingeklappt: „Alle" immer sichtbar, dazu die aktuelle Auswahl + Aufklapp-Button
     el.appendChild(chip("all", CAT_LABELS.all));
     if(filter!=="all" && filter!=="difficult" && keys.includes(filter)) el.appendChild(chip(filter, CAT_LABELS[filter]));
-    if(filter==="difficult" && dc>0) el.appendChild(chip("difficult","⚠︎ Schwierige ("+dc+")"," hard"));
+    if(filter==="difficult" && dc>0) el.appendChild(chip("difficult",ICONS.alert+" Schwierige ("+dc+")"," hard"));
     const extra=keys.length-1 + (dc>0?1:0);
     const t=document.createElement("button"); t.className="chip cats-toggle"; t.textContent="▾ Themen wählen ("+extra+")";
     t.onclick=()=>{ catsOpen=true; render(); }; el.appendChild(t);
   }else{
     keys.forEach(k=> el.appendChild(chip(k, CAT_LABELS[k])));
-    if(dc>0) el.appendChild(chip("difficult","⚠︎ Schwierige ("+dc+")"," hard"));
+    if(dc>0) el.appendChild(chip("difficult",ICONS.alert+" Schwierige ("+dc+")"," hard"));
     const t=document.createElement("button"); t.className="chip cats-toggle"; t.textContent="▴ weniger";
     t.onclick=()=>{ catsOpen=false; render(); }; el.appendChild(t);
   }
@@ -2395,28 +2406,28 @@ function grammarNote(c){
   if(/^to\s+/i.test(c.en)){
     const v=baseVerb(c.en); const f=verbForms(v);
     const kind=f.reg?"regelmäßig (‑ed)":"unregelmäßig";
-    return `<div class="note gram" style="margin-top:14px"><strong>🔧 Verb</strong> · ${kind}<br>
+    return `<div class="note gram" style="margin-top:14px"><strong>${ICONS.wrench} Verb</strong> · ${kind}<br>
       <b>to ${v}</b> – <b>${f.past}</b> – <b>${f.pp}</b> · 3. P.: ${f.third} · ‑ing: ${f.ing}
-      <span style="opacity:.7"> · mehr unter 🧩 Grammatik</span></div>`;
+      <span style="opacity:.7"> · mehr unter „Grammatik-Übung“</span></div>`;
   }
   // Substantiv (mit Artikel im Deutschen)
   const art=de.match(/^\s*(der|die|das)\b/i);
   if(art){
     const g={der:"maskulin",die:"feminin",das:"neutrum"}[art[1].toLowerCase()];
     const uncount=/unz(ä|ae)hlbar/i.test(c.note||"")||/unz(ä|ae)hlbar/i.test(de);
-    return `<div class="note gram" style="margin-top:14px"><strong>📦 Substantiv</strong> · dt. <b>${art[1].toLowerCase()}</b> (${g}).
+    return `<div class="note gram" style="margin-top:14px"><strong>${ICONS.box} Substantiv</strong> · dt. <b>${art[1].toLowerCase()}</b> (${g}).
       Im Englischen kein Genus – Artikel ist immer <b>the</b>/<b>a</b>. ${uncount?"Unzählbar – kein Plural, kein „a“.":"Plural meist mit <b>‑s</b>."}</div>`;
   }
   // Adverb
   if(/ly$/i.test(enFirst) && !/\s/.test(enFirst)){
-    return `<div class="note gram" style="margin-top:14px"><strong>⚡ Adverb</strong> · beschreibt ein Verb/Adjektiv (oft auf <b>‑ly</b>): „She works <b>${enFirst}</b>.“ Steht meist nach dem Verb oder am Satzanfang.</div>`;
+    return `<div class="note gram" style="margin-top:14px"><strong>${ICONS.zap} Adverb</strong> · beschreibt ein Verb/Adjektiv (oft auf <b>‑ly</b>): „She works <b>${enFirst}</b>.“ Steht meist nach dem Verb oder am Satzanfang.</div>`;
   }
   // Redewendung / Mehrwortausdruck
   if(/\s/.test(enFirst)){
-    return `<div class="note gram" style="margin-top:14px"><strong>💬 Feste Wendung</strong> · als Ganzes lernen, nicht Wort für Wort übersetzen: „<b>${enFirst}</b>“.</div>`;
+    return `<div class="note gram" style="margin-top:14px"><strong>${ICONS.chat} Feste Wendung</strong> · als Ganzes lernen, nicht Wort für Wort übersetzen: „<b>${enFirst}</b>“.</div>`;
   }
   // sonst: Adjektiv
-  return `<div class="note gram" style="margin-top:14px"><strong>🏷 Adjektiv</strong> · steht vor dem Substantiv („a <b>${enFirst}</b> …“) oder nach <em>to be</em> („it is <b>${enFirst}</b>“). Steigerung: <b>‑er/‑est</b> oder <b>more/most</b>.</div>`;
+  return `<div class="note gram" style="margin-top:14px"><strong>${ICONS.tagIc} Adjektiv</strong> · steht vor dem Substantiv („a <b>${enFirst}</b> …“) oder nach <em>to be</em> („it is <b>${enFirst}</b>“). Steigerung: <b>‑er/‑est</b> oder <b>more/most</b>.</div>`;
 }
 
 /* ============================================================ SYNONYME (statt/zusätzlich zum Tipp) */
@@ -2601,7 +2612,7 @@ const SYNONYMS = {
 function synKey(en){ return (en||"").split("/")[0].replace(/\([^)]*\)/g,"").replace(/^(to|the|a|an)\s+/i,"").trim().toLowerCase().replace(/[^a-z\- ]/g,"").trim(); }
 function synonymsHTML(en){
   const s=SYNONYMS[synKey(en)];
-  return s ? `<div class="note syn" style="margin-top:14px">🔁 <strong>Synonyme:</strong> ${s}</div>` : "";
+  return s ? `<div class="note syn" style="margin-top:14px">${ICONS.repeat} <strong>Synonyme:</strong> ${s}</div>` : "";
 }
 // Rückseiten-Tipp: Synonyme bevorzugt, sonst automatische Erklärung
 function backTip(c){
@@ -2615,7 +2626,7 @@ function promptSide(c){ return direction==="en2de" ? c.en : c.de; }
 function answerSide(c){ return direction==="en2de" ? c.de : c.en; }
 
 function sayBlock(text, big){
-  return `<span class="say"><button class="say-btn" data-say="${text.replace(/"/g,'&quot;')}">🔊 Anhören</button></span>`;
+  return `<span class="say"><button class="say-btn" data-say="${text.replace(/"/g,'&quot;')}">${ICONS.volume} Anhören</button></span>`;
 }
 /* ---- Cloze (Lückentext) helpers: ganze Sätze, nur ein Wort wird ausgefüllt ---- */
 function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); }
@@ -2663,7 +2674,7 @@ function render(){
     ? (lastCorrect?`<div class="banner ok">✓ Richtig!${lastSyn?` <span class="typed">· Synonym – gesucht war „${c.en}"</span>`:""}</div>`
         :`<div class="banner no">✗ Nicht ganz.${lastTyped?` <span class="typed">Du: „${lastTyped}“</span>`:` <span class="typed">(keine Eingabe)</span>`}</div>`):"";
   const dirBadge = isCloze ? "" : `<span class="dir-badge">${direction==="en2de"?"EN → DE":"DE → EN"}</span>`;
-  const tagLabel = isCloze ? "✍︎ Lückentext" : (CAT_LABELS[c.cat]||c.cat);
+  const tagLabel = isCloze ? `${ICONS.pen} Lückentext` : (CAT_LABELS[c.cat]||c.cat);
   const tagrow=`<div class="tagrow"><span class="lvl-badge">${c.lvl}</span><span class="tag">${tagLabel}</span>${dirBadge}</div>`;
 
   const promptBlock = isCloze
@@ -2689,11 +2700,11 @@ function render(){
       <div class="face back">
         ${banner}
         <div class="tagrow"><span class="tag">${backTag}</span></div>
-        <div class="answer">${answerText} ${engAns?`<button class="say-btn" data-say="${c.en.replace(/"/g,'&quot;')}">🔊</button>`:""}</div>
+        <div class="answer">${answerText} ${engAns?`<button class="say-btn" data-say="${c.en.replace(/"/g,'&quot;')}">${ICONS.volume}</button>`:""}</div>
         ${engAns?pronLine(c.en):""}
         <div class="example">${exampleHTML}</div>
         ${isCloze
-          ? `${synonymsHTML(c.en)||grammarNote(c)}<div class="note" style="opacity:.6;margin-top:8px">🇩🇪 ${c.de}</div>`
+          ? `${synonymsHTML(c.en)||grammarNote(c)}<div class="note" style="opacity:.6;margin-top:8px">${ICONS.globe} ${c.de}</div>`
           : `${c.note?`<div class="note">${c.note}</div>`:""}${backTip(c)}`}
       </div>
     </div></div>
@@ -2764,7 +2775,7 @@ function renderQuiz(){
     main.innerHTML=`<div class="done">
       <div class="k-lbl" style="color:var(--ink-soft);letter-spacing:.1em">Prüfungsergebnis</div>
       <div class="score-ring" style="color:${sc>=80?'var(--teal-lite)':sc>=50?'var(--amber)':'var(--rust)'}">${sc}%</div>
-      <p>${quiz.correct} von ${n} richtig.${quiz.correct===n?' 🎉':''}</p>
+      <p>${quiz.correct} von ${n} richtig.${quiz.correct===n?' Perfekt!':''}</p>
       ${reviewHTML}
       <div class="btnrow">
         ${quiz.wrong.length?`<button class="btn again" id="qRetry">Fehler üben (${quiz.wrong.length})</button>`:""}
@@ -2785,11 +2796,11 @@ function renderQuiz(){
   const engVisible = isCloze ? quiz.checked : (engProm || quiz.checked);
   const say = engVisible ? `<div style="margin:6px 0">${sayBlock(c.en)}${pronLine(c.en)}</div>` : "";
   const promptBlock = isCloze ? clozePromptHTML(c) : `<div class="prompt">${engProm ? c.en : c.de}</div>`;
-  const dirBadge = isCloze ? `<span class="dir-badge">✍︎ Lücke</span>` : `<span class="dir-badge">${engProm?"EN → DE":"DE → EN"}</span>`;
+  const dirBadge = isCloze ? `<span class="dir-badge">${ICONS.pen} Lücke</span>` : `<span class="dir-badge">${engProm?"EN → DE":"DE → EN"}</span>`;
   const placeholder = isCloze ? "Fehlendes Wort…" : (engProm?"Deutsche":"Englische")+" Antwort…";
   main.innerHTML=`
     <div class="stage"><div class="card flat" id="card"><div class="face front">
-      <div class="tagrow"><span class="lvl-badge">${c.lvl}</span><span class="tag">🎯 Prüfung</span>${dirBadge}</div>
+      <div class="tagrow"><span class="lvl-badge">${c.lvl}</span><span class="tag">${ICONS.target} Prüfung</span>${dirBadge}</div>
       ${banner}
       ${promptBlock}
       ${say}
@@ -2873,7 +2884,7 @@ function renderGram(){
     main.innerHTML=`<div class="done">
       <div class="k-lbl" style="color:var(--ink-soft);letter-spacing:.1em">Grammatik-Ergebnis</div>
       <div class="score-ring" style="color:${sc>=80?'var(--teal-lite)':sc>=50?'var(--amber)':'var(--rust)'}">${sc}%</div>
-      <p>${gram.correct} von ${n} richtig.${gram.correct===n?' 🎉':''}</p>
+      <p>${gram.correct} von ${n} richtig.${gram.correct===n?' Perfekt!':''}</p>
       ${reviewHTML}
       <div class="btnrow">
         ${gram.wrong.length?`<button class="btn again" id="gRetry">Fehler üben (${gram.wrong.length})</button>`:""}
@@ -2890,7 +2901,7 @@ function renderGram(){
   const banner = gram.checked ? (gram.lastOK?`<div class="banner ok">✓ Richtig!</div>`:`<div class="banner no">✗ Richtig: <b style="margin-left:4px">${it.answer}</b>${gram.typed?` <span class="typed">· du: „${gram.typed}“</span>`:""}</div>`) : "";
   main.innerHTML=`
     <div class="stage"><div class="card flat" id="card"><div class="face front">
-      <div class="tagrow"><span class="tag">🧩 Grammatik</span><span class="dir-badge">Zeitformen</span></div>
+      <div class="tagrow"><span class="tag">${ICONS.puzzle} Grammatik</span><span class="dir-badge">Zeitformen</span></div>
       ${banner}
       <div class="prompt">to ${it.gv.v} <span style="color:var(--ink-soft);font-size:.62em">→ ${it.form.q}</span></div>
       <div class="cloze-hint">Bedeutung: <b>${it.gv.de}</b> · ${it.form.tip}</div>
@@ -3007,7 +3018,7 @@ function openTenses(){
     </div>`).join("");
   document.getElementById("modalRoot").innerHTML=`
     <div class="modal-bg" id="modalBg"><div class="modal tense-modal">
-      <h3>📘 Englische Zeitformen</h3>
+      <h3 class="info-title"><span class="info-ic v">${ICONS.book}</span>Englische Zeitformen</h3>
       <div class="tense-list">${rows}</div>
       <div class="m-actions"><button class="btn reveal" id="tClose">Schließen</button></div>
     </div></div>`;
@@ -3026,6 +3037,17 @@ const ICONS={
   book:   svgI('<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'),
   sliders:svgI('<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>'),
   users:  svgI('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
+  puzzle: svgI('<path d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.214 3.214c.446.166.855.497.925.968a.979.979 0 0 1-.276.837l-1.61 1.61a2.404 2.404 0 0 1-1.705.707 2.402 2.402 0 0 1-1.704-.706l-1.568-1.568a1.026 1.026 0 0 0-.877-.29c-.493.074-.84.504-1.02.968a2.5 2.5 0 1 1-3.237-3.237c.464-.18.894-.527.967-1.02a1.026 1.026 0 0 0-.289-.877l-1.568-1.568A2.402 2.402 0 0 1 1.998 12c0-.617.236-1.234.706-1.704L4.23 8.77c.24-.24.581-.353.917-.303.515.077.877.528 1.073 1.01a2.5 2.5 0 1 0 3.259-3.259c-.482-.196-.933-.558-1.01-1.073-.05-.336.062-.676.303-.917l1.525-1.525A2.402 2.402 0 0 1 12 1.998c.617 0 1.234.236 1.704.706l1.568 1.568c.23.23.556.338.877.29.493-.074.84-.504 1.02-.968a2.5 2.5 0 1 1 3.237 3.237c-.464.18-.894.527-.967 1.02Z"/>'),
+  flame:  svgI('<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>'),
+  volume: svgI('<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>'),
+  repeat: svgI('<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>'),
+  wrench: svgI('<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>'),
+  box:    svgI('<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>'),
+  zap:    svgI('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
+  chat:   svgI('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>'),
+  tagIc:  svgI('<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>'),
+  pen:    svgI('<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>'),
+  globe:  svgI('<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>'),
 };
 function openInfo(){
   const sec=(ic,tint,title,body)=>`<div class="info-sec"><h4><span class="info-ic ${tint}">${ic}</span>${title}</h4>${body}</div>`;
