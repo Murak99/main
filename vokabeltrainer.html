@@ -43,8 +43,18 @@
   .brand .eyebrow{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--amber);font-weight:600;margin-bottom:6px}
   .brand h1{font-family:"Fraunces",serif;font-weight:500;font-size:27px;line-height:1.05;letter-spacing:-.01em}
   .brand h1 em{font-style:italic;color:var(--amber-soft)}
+  .head-right{display:flex;align-items:center;gap:9px;flex-shrink:0}
+  .info-btn{width:34px;height:34px;border-radius:99px;flex-shrink:0;background:var(--surface);border:1px solid var(--stroke);color:var(--teal);font-size:16px;font-weight:700;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif}
+  .info-btn:hover{border-color:var(--teal);box-shadow:0 0 0 1.5px var(--teal);color:var(--teal-lite)}
   .streak-pill{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--stroke);border-radius:99px;padding:9px 15px;font-weight:600;font-size:14px;flex-shrink:0}
   .streak-pill .fire{font-size:16px}
+  /* Info-Modal */
+  .info-list{max-height:66vh;overflow-y:auto;margin:2px -4px 16px;padding:2px 4px}
+  .info-sec{margin-bottom:14px}
+  .info-sec h4{font-size:14px;font-weight:600;color:var(--text);margin-bottom:5px;display:flex;align-items:center;gap:7px}
+  .info-sec p{font-size:13.5px;line-height:1.55;color:var(--muted)}
+  .info-sec p b{color:var(--teal-lite);font-weight:600}
+  .info-sec .pill{display:inline-block;font-size:12px;font-weight:600;color:var(--teal-lite);background:rgba(67,194,173,.14);border:1px solid rgba(67,194,173,.3);border-radius:7px;padding:1px 7px;margin:0 1px}
 
   .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
   .kpi{background:linear-gradient(180deg,var(--surface) 0%,var(--bg-2) 100%);border:1px solid var(--stroke);border-radius:16px;padding:13px 12px;position:relative;overflow:hidden}
@@ -226,6 +236,7 @@
   .tense-ex em{font-style:normal;color:var(--teal-soft);font-weight:600}
 
   @media (max-width:420px){.prompt{font-size:29px}.answer{font-size:27px}.cloze-de{font-size:20px}.cloze-en{font-size:16px}}
+  @media (max-width:360px){header{gap:9px}.brand h1{font-size:21px}.brand .eyebrow{font-size:10px;letter-spacing:.14em}.streak-pill{padding:7px 11px;font-size:13px}.info-btn{width:30px;height:30px;font-size:15px}}
   @media (prefers-reduced-motion:reduce){.card,.bar>span,.week .col,.btn{transition:none}}
 </style>
 </head>
@@ -236,7 +247,10 @@
       <div class="eyebrow">Englisch · A1 → C2</div>
       <h1>Der <em>Vokabel</em>trainer</h1>
     </div>
-    <div class="streak-pill"><span class="fire">🔥</span><span id="daysStreak">0</span>&nbsp;<span style="color:var(--muted);font-weight:500">Tage</span></div>
+    <div class="head-right">
+      <button class="info-btn" id="infoBtn" title="Was ist das? / Erklärung" aria-label="Info">ℹ︎</button>
+      <div class="streak-pill"><span class="fire">🔥</span><span id="daysStreak">0</span>&nbsp;<span style="color:var(--muted);font-weight:500">Tage</span></div>
+    </div>
   </header>
 
   <div class="kpis" id="kpis"></div>
@@ -1631,6 +1645,40 @@ const CARDS = [
   {lvl:"B2",cat:"work",de:"sich abstimmen / kurz austauschen",en:"to sync up",ex:"Let's <b>sync up</b> tomorrow morning."},
   {lvl:"C1",cat:"work",de:"einbeziehen / mit ins Boot holen",en:"to loop in",ex:"Please <b>loop</b> me <b>in</b> on that thread."},
   {lvl:"C1",cat:"work",de:"(eine Sitzung) leiten",en:"to chair",ex:"She'll <b>chair</b> the meeting."},
+
+  // ================= NEU · Büro/Business & Alltag (Runde 2) =================
+  {lvl:"B2",cat:"work",de:"planen / terminieren",en:"to schedule",ex:"Let's <b>schedule</b> a call."},
+  {lvl:"B2",cat:"work",de:"vereinbaren / organisieren",en:"to arrange",ex:"I'll <b>arrange</b> a meeting."},
+  {lvl:"B2",cat:"work",de:"benachrichtigen",en:"to notify",ex:"Please <b>notify</b> the team."},
+  {lvl:"B2",cat:"work",de:"einreichen / abschicken",en:"to submit",ex:"<b>Submit</b> the form by Friday."},
+  {lvl:"B2",cat:"work",de:"überprüfen / durchsehen",en:"to review",ex:"Can you <b>review</b> the draft?"},
+  {lvl:"B2",cat:"work",de:"genehmigen / zustimmen",en:"to approve",ex:"The budget was <b>approved</b>."},
+  {lvl:"B2",cat:"work",de:"ablehnen / zurückweisen",en:"to reject",ex:"They <b>rejected</b> the offer."},
+  {lvl:"B2",cat:"email",de:"weiterleiten",en:"to forward",ex:"I'll <b>forward</b> the email to you."},
+  {lvl:"B1",cat:"email",de:"antworten",en:"to reply",ex:"Please <b>reply</b> as soon as you can."},
+  {lvl:"B2",cat:"work",de:"unterstützen / helfen",en:"to assist",ex:"How can I <b>assist</b> you?"},
+  {lvl:"B2",cat:"work",de:"bewältigen / umgehen mit",en:"to handle",ex:"I'll <b>handle</b> it."},
+  {lvl:"B2",cat:"work",de:"bewältigen / leiten",en:"to manage",ex:"She <b>manages</b> a big team."},
+  {lvl:"B2",cat:"work",de:"koordinieren / abstimmen",en:"to coordinate",ex:"<b>Coordinate</b> with the sales team."},
+  {lvl:"B2",cat:"work",de:"überwachen / beobachten",en:"to monitor",ex:"We <b>monitor</b> the results daily."},
+  {lvl:"C1",cat:"work",de:"prognostizieren / vorhersagen",en:"to forecast",ex:"They <b>forecast</b> strong demand."},
+  {lvl:"B2",cat:"work",de:"zusammenfassen",en:"to summarize",ex:"Let me <b>summarize</b> the key points."},
+  {lvl:"B2",cat:"work",de:"hervorheben / betonen",en:"to highlight",ex:"I'd like to <b>highlight</b> two risks."},
+  {lvl:"B2",cat:"travel",de:"pendeln",en:"to commute",ex:"I <b>commute</b> by train every day."},
+  {lvl:"B2",cat:"work",de:"das Ziel / die Vorgabe",en:"the target",ex:"We hit our sales <b>target</b>."},
+  {lvl:"C1",cat:"work",de:"der Maßstab / Vergleichswert",en:"the benchmark",ex:"An industry <b>benchmark</b>."},
+  {lvl:"C1",cat:"work",de:"die Regelkonformität / Einhaltung",en:"compliance",ex:"Ensure full <b>compliance</b> with the rules."},
+  {lvl:"C1",cat:"work",de:"die Prüfung / das Audit",en:"audit",ex:"An external <b>audit</b> of the accounts."},
+  {lvl:"C1",cat:"work",de:"die Haftung / Verbindlichkeit",en:"liability",ex:"Limited <b>liability</b>."},
+  {lvl:"C1",cat:"work",de:"der Vermögenswert",en:"asset",ex:"A valuable <b>asset</b> for the company."},
+  {lvl:"C1",cat:"work",de:"die Fusion / der Zusammenschluss",en:"merger",ex:"A <b>merger</b> of two firms."},
+  {lvl:"C1",cat:"work",de:"die Übernahme / der Erwerb",en:"acquisition",ex:"A major <b>acquisition</b>."},
+  {lvl:"C1",cat:"work",de:"die Gewinnspanne / Marge",en:"profit margin",ex:"A thin <b>profit margin</b>."},
+  {lvl:"C1",cat:"work",de:"der Cashflow / Geldfluss",en:"cash flow",ex:"Keep an eye on the <b>cash flow</b>."},
+  {lvl:"B1",cat:"home",de:"die Nachbarschaft / das Viertel",en:"neighbourhood",ex:"A quiet <b>neighbourhood</b>."},
+  {lvl:"B2",cat:"home",de:"die Besorgung / der Botengang",en:"errand",ex:"I have to run an <b>errand</b>."},
+  {lvl:"B2",cat:"home",de:"die (lästige) Pflicht / Hausarbeit",en:"chore",ex:"Household <b>chores</b>."},
+  {lvl:"B1",cat:"travel",de:"die Hauptverkehrszeit / der Berufsverkehr",en:"rush hour",ex:"Stuck in <b>rush hour</b> traffic."},
 ];
 const CAT_LABELS = {
   all:"Alle", smalltalk:"Smalltalk", basics:"Grundwörter", work:"Arbeit", meetings:"Meetings", email:"E-Mail",
@@ -1659,7 +1707,7 @@ let customCards = [];
 
 let filter = "all", levelFilter = "A1", direction = "de2en";
 let catsOpen = false; // Themenliste standardmäßig eingeklappt (spart Platz)
-let mode = "type", checked = false, lastCorrect = false, lastTyped = "";
+let mode = "type", checked = false, lastCorrect = false, lastSyn = false, lastTyped = "";
 let queue = [], pos = 0, flipped = false;
 let quiz = null;   // {items, i, wrong:[], checked, correct, typed, size}
 
@@ -1918,6 +1966,13 @@ const IPA_DICT = {
   "perk":"pɜːk","benefits":"ˈbenɪfɪts","applicant":"ˈæplɪkənt","annual":"ˈænjuəl","leave":"liːv","delegate":"ˈdelɪɡeɪt",
   "escalate":"ˈeskəleɪt","reschedule":"ˌriːˈʃedjuːl","postpone":"pəˈspəʊn","attend":"əˈtend","brief":"briːf",
   "implement":"ˈɪmplɪment","outsource":"ˈaʊtsɔːs",
+  // NEU · Büro/Business & Alltag (Runde 2)
+  "schedule":"ˈʃedjuːl","arrange":"əˈreɪndʒ","notify":"ˈnəʊtɪfaɪ","submit":"səbˈmɪt","review":"rɪˈvjuː",
+  "approve":"əˈpruːv","reject":"rɪˈdʒekt","forward":"ˈfɔːwəd","reply":"rɪˈplaɪ","assist":"əˈsɪst",
+  "handle":"ˈhændəl","manage":"ˈmænɪdʒ","coordinate":"kəʊˈɔːdɪneɪt","monitor":"ˈmɒnɪtə","forecast":"ˈfɔːkɑːst",
+  "summarize":"ˈsʌməraɪz","highlight":"ˈhaɪlaɪt","commute":"kəˈmjuːt","target":"ˈtɑːɡɪt","benchmark":"ˈbentʃmɑːk",
+  "compliance":"kəmˈplaɪəns","audit":"ˈɔːdɪt","liability":"ˌlaɪəˈbɪləti","asset":"ˈæset","merger":"ˈmɜːdʒə",
+  "acquisition":"ˌækwɪˈzɪʃən","neighbourhood":"ˈneɪbəhʊd","errand":"ˈerənd","chore":"tʃɔː",
 };
 function ipaFallbackWord(w){
   // very rough grapheme->IPA (approximate; marked with ≈)
@@ -2078,14 +2133,19 @@ function coreForms(str){
   s2.forEach(s=>{ if(s) spellingSwaps(s).forEach(v=> v && out.add(v)); });
   out.delete(""); return out;
 }
-function acceptedSetEN(c){
+function enAcceptSet(c, withSyn){
   const set = new Set();
   c.en.split("/").map(x=>x.trim()).filter(Boolean).forEach(alt=>{
     coreForms(alt.replace(/[()]/g,"")).forEach(v=>set.add(v));
     coreForms(alt.replace(/\([^)]*\)/g," ")).forEach(v=>set.add(v));
   });
+  if(withSyn){ // Synonyme werden ebenfalls als richtig akzeptiert
+    const s = SYNONYMS[synKey(c.en)];
+    if(s) s.split(",").map(x=>x.trim()).filter(Boolean).forEach(syn=> coreForms(syn).forEach(v=>set.add(v)));
+  }
   return set;
 }
+function acceptedSetEN(c){ return enAcceptSet(c, true); }
 // German side matching
 function deVariants(s){
   let x = s.replace(/\([^)]*\)/g," ").toLowerCase().replace(/[.,!?;:"'’`…]/g,"").replace(/[-–—]/g," ").replace(/\s+/g," ").trim();
@@ -2114,6 +2174,16 @@ function isCorrect(card, input){
 }
 // quiz uses explicit direction param
 function isCorrectDir(card, input, dir){ const save=direction; direction=dir; const r=isCorrect(card,input); direction=save; return r; }
+// 'wrong' | 'exact' | 'synonym' – erkennt, ob nur über ein Synonym getroffen wurde
+function answerKind(card, input){
+  if(!isCorrect(card,input)) return "wrong";
+  const engAnswer = card.cloze || direction==="de2en"; // nur bei englischer Antwort gibt es Synonyme
+  if(!engAnswer) return "exact";
+  const cand = coreForms(input); const exact = enAcceptSet(card, false);
+  for(const x of cand){ if(exact.has(x)) return "exact"; }
+  return "synonym";
+}
+function answerKindDir(card, input, dir){ const save=direction; direction=dir; const k=answerKind(card,input); direction=save; return k; }
 
 /* ============================================================ PERSISTENCE */
 async function loadProfiles(){
@@ -2506,6 +2576,17 @@ const SYNONYMS = {
   reschedule:"rearrange, move, postpone", attend:"go to, be present at, take part in",
   brief:"inform, update, fill in", implement:"carry out, execute, put in place",
   outsource:"contract out, subcontract, farm out", quote:"estimate, quotation, price",
+  // Büro/Business & Alltag (Runde 2)
+  schedule:"arrange, book, plan", arrange:"organize, set up, coordinate", notify:"inform, tell, alert",
+  submit:"hand in, send in, present", review:"check, examine, go over", approve:"authorize, endorse, sign off",
+  reject:"turn down, decline, refuse", forward:"send on, pass on, relay", reply:"respond, answer, get back",
+  assist:"help, aid, support", handle:"deal with, manage, cope with", manage:"run, oversee, handle",
+  coordinate:"organize, align, synchronize", monitor:"track, observe, watch", forecast:"predict, project, anticipate",
+  summarize:"sum up, recap, condense", highlight:"emphasize, stress, point out", commute:"travel, journey, drive in",
+  target:"goal, objective, aim", benchmark:"standard, yardstick, reference", compliance:"conformity, adherence, observance",
+  audit:"inspection, examination, review", liability:"responsibility, obligation; debt", asset:"resource, advantage, holding",
+  merger:"amalgamation, consolidation, tie-up", acquisition:"takeover, purchase, buyout",
+  errand:"task, chore, job", chore:"task, duty, errand",
 };
 function synKey(en){ return (en||"").split("/")[0].replace(/\([^)]*\)/g,"").replace(/^(to|the|a|an)\s+/i,"").trim().toLowerCase().replace(/[^a-z\- ]/g,"").trim(); }
 function synonymsHTML(en){
@@ -2569,7 +2650,7 @@ function render(){
   const isCloze = !!c.cloze;
   const engProm = isCloze ? false : direction==="en2de";   // English is the prompt
   const banner=(mode==="type"&&checked)
-    ? (lastCorrect?`<div class="banner ok">✓ Richtig!</div>`
+    ? (lastCorrect?`<div class="banner ok">✓ Richtig!${lastSyn?` <span class="typed">· Synonym – gesucht war „${c.en}"</span>`:""}</div>`
         :`<div class="banner no">✗ Nicht ganz.${lastTyped?` <span class="typed">Du: „${lastTyped}“</span>`:` <span class="typed">(keine Eingabe)</span>`}</div>`):"";
   const dirBadge = isCloze ? "" : `<span class="dir-badge">${direction==="en2de"?"EN → DE":"DE → EN"}</span>`;
   const tagLabel = isCloze ? "✍︎ Lückentext" : (CAT_LABELS[c.cat]||c.cat);
@@ -2624,7 +2705,8 @@ function bindSay(){ document.querySelectorAll(".say-btn").forEach(b=>{ b.onclick
 
 function submitAnswer(){
   const c=allCards()[queue[pos]]; const inp=document.getElementById("answerInput");
-  lastTyped=inp?inp.value.trim():""; lastCorrect=isCorrect(c,lastTyped); checked=true; flipped=true; render();
+  lastTyped=inp?inp.value.trim():""; const kind=answerKind(c,lastTyped);
+  lastCorrect=(kind!=="wrong"); lastSyn=(kind==="synonym"); checked=true; flipped=true; render();
 }
 function renderActions(){
   const a=document.getElementById("actions"); if(!a)return;
@@ -2640,11 +2722,11 @@ function renderActions(){
 function doFlip(){ flipped=!flipped; const card=document.getElementById("card"); if(card)card.classList.toggle("flipped",flipped); renderActions(); }
 async function rate(known){
   const i=queue[pos], k=keyOf(i), box=ensureBox(k); box.seen++;
-  if(known){ box.b=Math.min(3,box.b+1); stats.correct++; stats.streak++; if(stats.streak>stats.best)stats.best=stats.streak; }
+  if(known){ box.b=Math.min(3,box.b+1); if(box.b>=3) box.wrong=0; stats.correct++; stats.streak++; if(stats.streak>stats.best)stats.best=stats.streak; } // gemeistert → nicht mehr „schwierig"
   else{ box.b=1; box.wrong++; stats.streak=0; queue.push(i); }
   stats.reviewed++; registerActivity();
   await saveBoxes(); await saveStats();
-  pos++; flipped=false; checked=false; lastTyped=""; render();
+  pos++; flipped=false; checked=false; lastSyn=false; lastTyped=""; render();
 }
 async function resetAll(){ activeIndices().forEach(i=>{ boxes[keyOf(i)]={b:1,wrong:0,seen:0}; }); await saveBoxes(); buildQueue(); render(); }
 
@@ -2686,7 +2768,7 @@ function renderQuiz(){
   const isCloze = !!c.cloze;
   const engProm = isCloze ? false : quiz.dir==="en2de";
   const answer = isCloze ? c.en : (engProm ? c.de : c.en);
-  const banner = quiz.checked ? (quiz.lastOK?`<div class="banner ok">✓ Richtig!</div>`:`<div class="banner no">✗ Richtig: <b style="margin-left:4px">${answer}</b>${quiz.typed?` <span class="typed">· du: „${quiz.typed}“</span>`:""}</div>`) : "";
+  const banner = quiz.checked ? (quiz.lastOK?`<div class="banner ok">✓ Richtig!${quiz.lastSyn?` <span class="typed">· Synonym – gesucht war „${answer}"</span>`:""}</div>`:`<div class="banner no">✗ Richtig: <b style="margin-left:4px">${answer}</b>${quiz.typed?` <span class="typed">· du: „${quiz.typed}“</span>`:""}</div>`) : "";
   const engVisible = isCloze ? quiz.checked : (engProm || quiz.checked);
   const say = engVisible ? `<div style="margin:6px 0">${sayBlock(c.en)}${pronLine(c.en)}</div>` : "";
   const promptBlock = isCloze ? clozePromptHTML(c) : `<div class="prompt">${engProm ? c.en : c.de}</div>`;
@@ -2713,12 +2795,12 @@ function renderQuiz(){
 }
 async function quizCheck(){
   const idx=quiz.items[quiz.i]; const c=allCards()[idx]; const inp=document.getElementById("quizInput");
-  quiz.typed=inp?inp.value.trim():""; quiz.lastOK=isCorrectDir(c,quiz.typed,quiz.dir); quiz.checked=true;
+  quiz.typed=inp?inp.value.trim():""; const kind=answerKindDir(c,quiz.typed,quiz.dir); quiz.lastOK=(kind!=="wrong"); quiz.lastSyn=(kind==="synonym"); quiz.checked=true;
   const box=ensureBox(keyOf(idx)); box.seen++;
   const qPrompt = c.cloze ? c.de : (quiz.dir==="en2de"?c.en:c.de);
   const qAnswer = c.cloze ? c.en : (quiz.dir==="en2de"?c.de:c.en);
   quiz.log.push({prompt:qPrompt, answer:qAnswer, ok:quiz.lastOK, typed:quiz.typed}); // für die Ergebnis-Übersicht
-  if(quiz.lastOK){ quiz.correct++; box.b=Math.min(3,box.b+1); stats.correct++; stats.streak++; if(stats.streak>stats.best)stats.best=stats.streak; }
+  if(quiz.lastOK){ quiz.correct++; box.b=Math.min(3,box.b+1); if(box.b>=3) box.wrong=0; stats.correct++; stats.streak++; if(stats.streak>stats.best)stats.best=stats.streak; }
   else{ box.b=1; box.wrong++; stats.streak=0; quiz.wrong.push({idx, prompt:qPrompt, answer:qAnswer}); }
   stats.reviewed++; registerActivity();
   await saveBoxes(); await saveStats();
@@ -2919,6 +3001,24 @@ function openTenses(){
   document.getElementById("modalBg").onclick=(e)=>{ if(e.target.id==="modalBg") closeModal(); };
   document.getElementById("tClose").onclick=closeModal;
 }
+function openInfo(){
+  document.getElementById("modalRoot").innerHTML=`
+    <div class="modal-bg" id="modalBg"><div class="modal tense-modal">
+      <h3>ℹ︎ So funktioniert der Trainer</h3>
+      <div class="info-list">
+        <div class="info-sec"><h4>🎯 Ziel</h4><p>Übe englische Vokabeln (A1–C2) per <b>Eintippen</b> oder <b>Umdrehen</b>. Tippst du ein passendes <b>Synonym</b>, zählt es ebenfalls als richtig.</p></div>
+        <div class="info-sec"><h4>📦 Lernstufen (1 → 3)</h4><p>Jede Karte hat eine Stufe. <b>Richtig</b> = eine Stufe höher, <b>falsch</b> = zurück auf Stufe 1. Bei <span class="pill">Stufe 3</span> gilt die Karte als <b>gemeistert</b>.</p></div>
+        <div class="info-sec"><h4>⚠︎ Schwierige Wörter</h4><p>Eine Karte landet nach <span class="pill">2 Fehlern</span> unter „⚠︎ Schwierige". Sie <b>verschwindet dort wieder</b>, sobald du sie erneut <b>meisterst</b> (Stufe 3). Über <b>zurücksetzen</b> startest du die aktuelle Auswahl neu.</p></div>
+        <div class="info-sec"><h4>🎯 Prüfung</h4><p>12 zufällige Karten aus deiner Auswahl. Am Ende siehst du eine <b>Übersicht mit jeder Frage</b>, der richtigen Antwort und ✓/✗.</p></div>
+        <div class="info-sec"><h4>🧩 Grammatik & 📘 Zeitformen</h4><p><b>Grammatik-Übung:</b> Verbformen (Simple Past, Past Participle, ‑ing, 3. Person). <b>Zeitformen erklärt:</b> kurze Referenz zu allen englischen Zeiten.</p></div>
+        <div class="info-sec"><h4>🎚 Auswahl</h4><p><b>Niveau</b> (A1–C2), <b>Thema</b> (auf-/zuklappbar) und <b>Richtung</b> (DE→EN / EN→DE) bestimmen, welche Karten du übst.</p></div>
+        <div class="info-sec"><h4>👤 Profile & Speicherung</h4><p>Zwei Profile unter „Wer lernt?". Fortschritt und Serie werden <b>lokal im Browser</b> gespeichert (pro Profil).</p></div>
+      </div>
+      <div class="m-actions"><button class="btn reveal" id="iClose">Alles klar</button></div>
+    </div></div>`;
+  document.getElementById("modalBg").onclick=(e)=>{ if(e.target.id==="modalBg") closeModal(); };
+  document.getElementById("iClose").onclick=closeModal;
+}
 async function saveNewCard(){
   const de=document.getElementById("fDe").value.trim();
   const en=document.getElementById("fEn").value.trim();
@@ -2964,6 +3064,7 @@ function advance(){ if(mode==="type"&&checked) rate(lastCorrect); else rate(true
 document.getElementById("quizBtn").onclick=startQuiz;
 document.getElementById("gramBtn").onclick=startGram;
 document.getElementById("tenseBtn").onclick=openTenses;
+document.getElementById("infoBtn").onclick=openInfo;
 document.getElementById("addBtn").onclick=openAddCard;
 
 (async function init(){ await loadProfiles(); await loadProfileData(); buildQueue(); render(); })();
