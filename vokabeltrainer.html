@@ -55,6 +55,9 @@
   .info-sec p{font-size:13.5px;line-height:1.55;color:var(--muted)}
   .info-sec p b{color:var(--teal-lite);font-weight:600}
   .info-sec .pill{display:inline-block;font-size:12px;font-weight:600;color:var(--teal-lite);background:rgba(67,194,173,.14);border:1px solid rgba(67,194,173,.3);border-radius:7px;padding:1px 7px;margin:0 1px}
+  .info-sec .wipe{margin-top:9px;font-family:inherit;font-size:13px;font-weight:600;color:var(--rust);background:none;border:1.5px solid var(--rust);border-radius:10px;padding:9px 14px;cursor:pointer;transition:.15s}
+  .info-sec .wipe:hover{background:rgba(224,131,99,.14)}
+  .info-sec .wipe.confirm{background:var(--rust);color:#2a0f06}
 
   .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
   .kpi{background:linear-gradient(180deg,var(--surface) 0%,var(--bg-2) 100%);border:1px solid var(--stroke);border-radius:16px;padding:13px 12px;position:relative;overflow:hidden}
@@ -2691,11 +2694,11 @@ function render(){
     <div class="footline">
       <span class="count">Karte ${pos+1} / ${queue.length}</span>
       <span class="kb"><kbd>Leertaste</kbd> weiter · <kbd>1</kbd> nochmal · <kbd>2</kbd> kann ich · <kbd>P</kbd> Ton</span>
-      <button class="reset" id="reset">zurücksetzen</button>
+      <button class="reset" id="reset" title="Mischt nur die Runde neu – Lernstufen bleiben erhalten">neu mischen</button>
     </div>`;
 
   document.getElementById("card").onclick=()=>{ if(mode==="type"&&!checked)return; if(!flipped) doFlip(); };
-  document.getElementById("reset").onclick=resetAll;
+  document.getElementById("reset").onclick=reshuffle;
   const inp=document.getElementById("answerInput");
   if(inp){ inp.focus(); inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){e.preventDefault();submitAnswer();} }); }
   bindSay();
@@ -2728,6 +2731,9 @@ async function rate(known){
   await saveBoxes(); await saveStats();
   pos++; flipped=false; checked=false; lastSyn=false; lastTyped=""; render();
 }
+// mischt nur die Runde neu – Lernstufen bleiben unangetastet
+function reshuffle(){ buildQueue(); render(); }
+// löscht die Lernstufen der aktuellen Auswahl – nur über das Info-Menü mit Bestätigung erreichbar
 async function resetAll(){ activeIndices().forEach(i=>{ boxes[keyOf(i)]={b:1,wrong:0,seen:0}; }); await saveBoxes(); buildQueue(); render(); }
 
 /* ============================================================ QUIZ */
@@ -3008,7 +3014,9 @@ function openInfo(){
       <div class="info-list">
         <div class="info-sec"><h4>🎯 Ziel</h4><p>Übe englische Vokabeln (A1–C2) per <b>Eintippen</b> oder <b>Umdrehen</b>. Tippst du ein passendes <b>Synonym</b>, zählt es ebenfalls als richtig.</p></div>
         <div class="info-sec"><h4>📦 Lernstufen (1 → 3)</h4><p>Jede Karte hat eine Stufe. <b>Richtig</b> = eine Stufe höher, <b>falsch</b> = zurück auf Stufe 1. Bei <span class="pill">Stufe 3</span> gilt die Karte als <b>gemeistert</b>.</p></div>
-        <div class="info-sec"><h4>⚠︎ Schwierige Wörter</h4><p>Eine Karte landet nach <span class="pill">2 Fehlern</span> unter „⚠︎ Schwierige". Sie <b>verschwindet dort wieder</b>, sobald du sie erneut <b>meisterst</b> (Stufe 3). Über <b>zurücksetzen</b> startest du die aktuelle Auswahl neu.</p></div>
+        <div class="info-sec"><h4>⚠︎ Schwierige Wörter</h4><p>Eine Karte landet nach <span class="pill">2 Fehlern</span> unter „⚠︎ Schwierige". Sie <b>verschwindet dort wieder</b>, sobald du sie erneut <b>meisterst</b> (Stufe 3).</p></div>
+        <div class="info-sec"><h4>🔀 Neu mischen vs. Fortschritt löschen</h4><p>„<b>neu mischen</b>" unter der Karte mischt nur die Runde – <b>deine Lernstufen bleiben erhalten</b>. Den Fortschritt der aktuellen Auswahl löschst du ausschließlich hier, mit Bestätigung:</p>
+        <button class="wipe" id="wipeBtn">Fortschritt der Auswahl löschen…</button></div>
         <div class="info-sec"><h4>🎯 Prüfung</h4><p>12 zufällige Karten aus deiner Auswahl. Am Ende siehst du eine <b>Übersicht mit jeder Frage</b>, der richtigen Antwort und ✓/✗.</p></div>
         <div class="info-sec"><h4>🧩 Grammatik & 📘 Zeitformen</h4><p><b>Grammatik-Übung:</b> Verbformen (Simple Past, Past Participle, ‑ing, 3. Person). <b>Zeitformen erklärt:</b> kurze Referenz zu allen englischen Zeiten.</p></div>
         <div class="info-sec"><h4>🎚 Auswahl</h4><p><b>Niveau</b> (A1–C2), <b>Thema</b> (auf-/zuklappbar) und <b>Richtung</b> (DE→EN / EN→DE) bestimmen, welche Karten du übst.</p></div>
@@ -3018,6 +3026,13 @@ function openInfo(){
     </div></div>`;
   document.getElementById("modalBg").onclick=(e)=>{ if(e.target.id==="modalBg") closeModal(); };
   document.getElementById("iClose").onclick=closeModal;
+  // Fortschritt löschen: bewusst zweistufig (erst „scharf schalten", dann bestätigen)
+  let armed=false;
+  const wb=document.getElementById("wipeBtn");
+  wb.onclick=async()=>{
+    if(!armed){ armed=true; wb.textContent="Wirklich löschen? Nochmal tippen"; wb.classList.add("confirm"); return; }
+    await resetAll(); closeModal();
+  };
 }
 async function saveNewCard(){
   const de=document.getElementById("fDe").value.trim();
